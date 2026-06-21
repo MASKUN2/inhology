@@ -1,20 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostStatus, Prisma } from '@prisma/client';
+import { slugify } from '../common/slug.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { QueryPostsDto } from './dto/query-posts.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-
-/** "Hello World" -> "hello-world"; keeps unicode letters (Hangul ok). */
-function slugify(input: string): string {
-  return input
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^\p{L}\p{N}-]+/gu, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
 
 /** Rough reading time in minutes at ~200 wpm, minimum 1. */
 function readingTimeMinutes(content: string): number {
