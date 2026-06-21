@@ -7,13 +7,13 @@ import { getPostsByTag, getTag } from '@/lib/api';
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const tag = await getTag(slug);
   return { title: tag ? `#${tag.name}` : '태그를 찾을 수 없습니다' };
 }
 
 export default async function TagPage({ params }: Params) {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const tag = await getTag(slug);
   if (!tag) notFound();
 

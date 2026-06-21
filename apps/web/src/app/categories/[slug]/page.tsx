@@ -7,13 +7,13 @@ import { getCategory, getPostsByCategory } from '@/lib/api';
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const category = await getCategory(slug);
   return { title: category ? `${category.name} 글` : '카테고리를 찾을 수 없습니다' };
 }
 
 export default async function CategoryPage({ params }: Params) {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const category = await getCategory(slug);
   if (!category) notFound();
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { deletePost, updatePost } from '../../../actions';
-import { getAdminPost, getCategories } from '@/lib/api';
+import { getAdminPost, getCategories, getSeriesList } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 
 export const metadata: Metadata = { title: '글 수정' };
@@ -19,9 +19,10 @@ export default async function EditPostPage({
 }) {
   if (!(await isAuthed())) redirect('/admin/login');
   const [{ id }, { error }] = await Promise.all([params, searchParams]);
-  const [post, categories] = await Promise.all([
+  const [post, categories, series] = await Promise.all([
     getAdminPost(id),
     getCategories(),
+    getSeriesList(),
   ]);
   if (!post) notFound();
 
@@ -68,6 +69,31 @@ export default async function EditPostPage({
             </option>
           ))}
         </select>
+
+        {series.length > 0 ? (
+          <div className="flex gap-3">
+            <select
+              name="seriesId"
+              defaultValue={post.series?.id ?? ''}
+              className={`${field} flex-1`}
+            >
+              <option value="">시리즈 없음</option>
+              {series.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.title}
+                </option>
+              ))}
+            </select>
+            <input
+              name="seriesOrder"
+              type="number"
+              min={0}
+              placeholder="순서"
+              defaultValue={post.seriesOrder ?? ''}
+              className={`${field} w-24`}
+            />
+          </div>
+        ) : null}
 
         <textarea
           name="content"

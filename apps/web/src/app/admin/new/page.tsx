@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createPost, logout } from '../actions';
-import { getCategories } from '@/lib/api';
+import { getCategories, getSeriesList } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 
 export const metadata: Metadata = { title: '새 글 쓰기' };
@@ -16,9 +16,10 @@ export default async function NewPostPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   if (!(await isAuthed())) redirect('/admin/login');
-  const [{ error }, categories] = await Promise.all([
+  const [{ error }, categories, series] = await Promise.all([
     searchParams,
     getCategories(),
+    getSeriesList(),
   ]);
 
   return (
@@ -55,6 +56,30 @@ export default async function NewPostPage({
             </option>
           ))}
         </select>
+
+        {series.length > 0 ? (
+          <div className="flex gap-3">
+            <select
+              name="seriesId"
+              defaultValue=""
+              className={`${field} flex-1`}
+            >
+              <option value="">시리즈 없음</option>
+              {series.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.title}
+                </option>
+              ))}
+            </select>
+            <input
+              name="seriesOrder"
+              type="number"
+              min={0}
+              placeholder="순서"
+              className={`${field} w-24`}
+            />
+          </div>
+        ) : null}
 
         <textarea
           name="content"

@@ -13,14 +13,18 @@ type Params = {
 };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const post = await getPostBySlug(slug);
   if (!post) return { title: '글을 찾을 수 없습니다' };
   return { title: post.title, description: post.excerpt ?? undefined };
 }
 
 export default async function PostPage({ params, searchParams }: Params) {
-  const [{ slug }, { comment }] = await Promise.all([params, searchParams]);
+  const [{ slug: rawSlug }, { comment }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+  const slug = decodeURIComponent(rawSlug);
   const post = await getPostBySlug(slug);
   if (!post || post.status !== 'PUBLISHED') notFound();
   const flash =
@@ -66,6 +70,19 @@ export default async function PostPage({ params, searchParams }: Params) {
             </div>
           ) : null}
         </header>
+
+        {post.series ? (
+          <Link
+            href={`/series/${post.series.slug}`}
+            className="mb-8 block rounded-md border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+          >
+            <span className="text-zinc-400">시리즈</span>{' '}
+            <span className="font-medium">{post.series.title}</span>
+            {post.seriesOrder ? (
+              <span className="text-zinc-400"> · {post.seriesOrder}편</span>
+            ) : null}
+          </Link>
+        ) : null}
 
         <div className="markdown">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>

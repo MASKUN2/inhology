@@ -14,6 +14,16 @@ export interface Tag {
   name: string;
 }
 
+export interface Series {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string | null;
+  coverImage?: string | null;
+  _count?: { posts: number };
+  posts?: Post[];
+}
+
 /** Public, approved comment as returned on a post detail. */
 export interface PostComment {
   id: string;
@@ -52,6 +62,8 @@ export interface Post {
   category: Category;
   tags: Tag[];
   comments?: PostComment[];
+  series?: Series | null;
+  seriesOrder?: number | null;
 }
 
 async function getPosts(params: Record<string, string>): Promise<Post[]> {
@@ -127,6 +139,21 @@ export async function getCategory(slug: string): Promise<Category | null> {
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to load category (${res.status})`);
+  return res.json();
+}
+
+export async function getSeriesList(): Promise<Series[]> {
+  const res = await fetch(`${API_URL}/series`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load series (${res.status})`);
+  return res.json();
+}
+
+export async function getSeries(slug: string): Promise<Series | null> {
+  const res = await fetch(`${API_URL}/series/${encodeURIComponent(slug)}`, {
+    cache: 'no-store',
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Failed to load series (${res.status})`);
   return res.json();
 }
 
