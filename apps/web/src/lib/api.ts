@@ -50,6 +50,12 @@ export function getPostsByTag(slug: string): Promise<Post[]> {
   return getPosts({ tag: slug });
 }
 
+export async function getCategories(): Promise<Category[]> {
+  const res = await fetch(`${API_URL}/categories`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load categories (${res.status})`);
+  return res.json();
+}
+
 export async function getCategory(slug: string): Promise<Category | null> {
   const res = await fetch(`${API_URL}/categories/${encodeURIComponent(slug)}`, {
     cache: 'no-store',
