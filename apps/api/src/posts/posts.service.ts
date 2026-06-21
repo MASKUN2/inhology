@@ -68,6 +68,14 @@ export class PostsService {
         comments: {
           where: { status: 'APPROVED' },
           orderBy: { createdAt: 'asc' },
+          // authorEmail and status are intentionally omitted from public output.
+          select: {
+            id: true,
+            content: true,
+            authorName: true,
+            createdAt: true,
+            parentId: true,
+          },
         },
       },
     });
