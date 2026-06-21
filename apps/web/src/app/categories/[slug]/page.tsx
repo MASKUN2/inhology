@@ -1,0 +1,46 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { PostList } from '@/components/post-list';
+import { getCategory, getPostsByCategory } from '@/lib/api';
+
+type Params = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { slug } = await params;
+  const category = await getCategory(slug);
+  return { title: category ? `${category.name} 글` : '카테고리를 찾을 수 없습니다' };
+}
+
+export default async function CategoryPage({ params }: Params) {
+  const { slug } = await params;
+  const category = await getCategory(slug);
+  if (!category) notFound();
+
+  const posts = await getPostsByCategory(slug);
+
+  return (
+    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+      <Link
+        href="/"
+        className="text-sm text-zinc-500 hover:underline underline-offset-4"
+      >
+        ← 목록으로
+      </Link>
+
+      <header className="mb-12 mt-8">
+        <p className="text-sm text-zinc-500">카테고리</p>
+        <h1 className="mt-1 text-3xl font-bold tracking-tight">
+          {category.name}
+        </h1>
+        {category.description ? (
+          <p className="mt-2 text-zinc-500 dark:text-zinc-400">
+            {category.description}
+          </p>
+        ) : null}
+      </header>
+
+      <PostList posts={posts} />
+    </main>
+  );
+}

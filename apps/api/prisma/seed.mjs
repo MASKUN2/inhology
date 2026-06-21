@@ -2,23 +2,23 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Idempotent: re-running upserts by unique slug, so it is safe to run repeatedly.
+// Idempotent + self-healing: `update` mirrors `create`, so re-running keeps
+// existing rows in sync with the seed definition (backfills missing fields).
 async function main() {
-  const dev = await prisma.category.upsert({
-    where: { slug: 'dev' },
-    update: {},
-    create: { slug: 'dev', name: '개발', description: '개발과 기술 이야기' },
-  });
-  await prisma.category.upsert({
-    where: { slug: 'life' },
-    update: {},
-    create: { slug: 'life', name: '일상', description: '하루하루의 기록' },
-  });
-  await prisma.category.upsert({
-    where: { slug: 'essay' },
-    update: {},
-    create: { slug: 'essay', name: '에세이', description: '생각과 단상' },
-  });
+  const categoryDefs = [
+    { slug: 'dev', name: '개발', description: '개발과 기술 이야기' },
+    { slug: 'life', name: '일상', description: '하루하루의 기록' },
+    { slug: 'essay', name: '에세이', description: '생각과 단상' },
+  ];
+  const categories = {};
+  for (const c of categoryDefs) {
+    categories[c.slug] = await prisma.category.upsert({
+      where: { slug: c.slug },
+      update: { name: c.name, description: c.description },
+      create: c,
+    });
+  }
+  const dev = categories.dev;
 
   const tagDefs = [
     { slug: 'typescript', name: 'TypeScript' },
@@ -28,7 +28,11 @@ async function main() {
   const tags = [];
   for (const t of tagDefs) {
     tags.push(
-      await prisma.tag.upsert({ where: { slug: t.slug }, update: {}, create: t }),
+      await prisma.tag.upsert({
+        where: { slug: t.slug },
+        update: { name: t.name },
+        create: t,
+      }),
     );
   }
 

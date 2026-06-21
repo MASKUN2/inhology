@@ -46,6 +46,7 @@ export class PostsService {
     const where: Prisma.PostWhereInput = {
       ...(query.status && { status: query.status }),
       ...(query.categoryId && { categoryId: query.categoryId }),
+      ...(query.category && { category: { slug: query.category } }),
       ...(query.tag && { tags: { some: { slug: query.tag } } }),
     };
     return this.prisma.post.findMany({

@@ -32,9 +32,12 @@ export default async function PostPage({ params }: Params) {
       <article className="mt-8">
         <header className="mb-8">
           <div className="flex items-center gap-2 text-xs text-zinc-500">
-            <span className="rounded-full bg-zinc-100 px-2 py-0.5 dark:bg-zinc-800">
+            <Link
+              href={`/categories/${post.category.slug}`}
+              className="rounded-full bg-zinc-100 px-2 py-0.5 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            >
               {post.category.name}
-            </span>
+            </Link>
             <time dateTime={post.publishedAt ?? undefined}>
               {formatDate(post.publishedAt)}
             </time>
@@ -46,7 +49,13 @@ export default async function PostPage({ params }: Params) {
           {post.tags.length > 0 ? (
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
               {post.tags.map((tag) => (
-                <span key={tag.id}>#{tag.name}</span>
+                <Link
+                  key={tag.id}
+                  href={`/tags/${tag.slug}`}
+                  className="hover:text-zinc-800 dark:hover:text-zinc-200"
+                >
+                  #{tag.name}
+                </Link>
               ))}
             </div>
           ) : null}

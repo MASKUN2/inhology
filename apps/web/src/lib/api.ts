@@ -31,11 +31,40 @@ export interface Post {
   tags: Tag[];
 }
 
-export async function getPublishedPosts(): Promise<Post[]> {
-  const res = await fetch(`${API_URL}/posts?status=PUBLISHED`, {
+async function getPosts(params: Record<string, string>): Promise<Post[]> {
+  const qs = new URLSearchParams({ status: 'PUBLISHED', ...params });
+  const res = await fetch(`${API_URL}/posts?${qs}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load posts (${res.status})`);
+  return res.json();
+}
+
+export function getPublishedPosts(): Promise<Post[]> {
+  return getPosts({});
+}
+
+export function getPostsByCategory(slug: string): Promise<Post[]> {
+  return getPosts({ category: slug });
+}
+
+export function getPostsByTag(slug: string): Promise<Post[]> {
+  return getPosts({ tag: slug });
+}
+
+export async function getCategory(slug: string): Promise<Category | null> {
+  const res = await fetch(`${API_URL}/categories/${encodeURIComponent(slug)}`, {
     cache: 'no-store',
   });
-  if (!res.ok) throw new Error(`Failed to load posts (${res.status})`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Failed to load category (${res.status})`);
+  return res.json();
+}
+
+export async function getTag(slug: string): Promise<Tag | null> {
+  const res = await fetch(`${API_URL}/tags/${encodeURIComponent(slug)}`, {
+    cache: 'no-store',
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Failed to load tag (${res.status})`);
   return res.json();
 }
 

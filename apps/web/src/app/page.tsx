@@ -1,6 +1,5 @@
-import Link from 'next/link';
+import { PostList } from '@/components/post-list';
 import { getPublishedPosts } from '@/lib/api';
-import { formatDate } from '@/lib/format';
 
 export default async function Home() {
   const posts = await getPublishedPosts();
@@ -14,50 +13,7 @@ export default async function Home() {
         </p>
       </header>
 
-      {posts.length === 0 ? (
-        <p className="text-zinc-500">아직 발행된 글이 없습니다.</p>
-      ) : (
-        <ul className="flex flex-col gap-10">
-          {posts.map((post) => (
-            <li key={post.id}>
-              <article>
-                <div className="flex items-center gap-2 text-xs text-zinc-500">
-                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 dark:bg-zinc-800">
-                    {post.category.name}
-                  </span>
-                  <time dateTime={post.publishedAt ?? undefined}>
-                    {formatDate(post.publishedAt)}
-                  </time>
-                  {post.readingTime ? <span>· {post.readingTime}분</span> : null}
-                </div>
-
-                <h2 className="mt-2 text-xl font-semibold">
-                  <Link
-                    href={`/posts/${post.slug}`}
-                    className="hover:underline underline-offset-4"
-                  >
-                    {post.title}
-                  </Link>
-                </h2>
-
-                {post.excerpt ? (
-                  <p className="mt-1 line-clamp-2 text-zinc-600 dark:text-zinc-400">
-                    {post.excerpt}
-                  </p>
-                ) : null}
-
-                {post.tags.length > 0 ? (
-                  <div className="mt-2 flex flex-wrap gap-2 text-xs text-zinc-500">
-                    {post.tags.map((tag) => (
-                      <span key={tag.id}>#{tag.name}</span>
-                    ))}
-                  </div>
-                ) : null}
-              </article>
-            </li>
-          ))}
-        </ul>
-      )}
+      <PostList posts={posts} />
     </main>
   );
 }

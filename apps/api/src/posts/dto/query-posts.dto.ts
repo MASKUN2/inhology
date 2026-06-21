@@ -11,6 +11,11 @@ export class QueryPostsDto {
   @IsString()
   categoryId?: string;
 
+  /** Filter by category slug. */
+  @IsOptional()
+  @IsString()
+  category?: string;
+
   /** Filter by tag slug. */
   @IsOptional()
   @IsString()
