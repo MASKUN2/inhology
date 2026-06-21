@@ -18,7 +18,7 @@ export async function login(formData: FormData) {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 8, // 8h
   });
-  redirect('/admin/new');
+  redirect('/admin');
 }
 
 export async function logout() {
@@ -52,5 +52,54 @@ export async function createPost(formData: FormData) {
     redirect('/admin/new?error=1');
   }
   const post = await res.json();
-  redirect(`/posts/${post.slug}`);
+  // A draft has no public page (it 404s), so land on the dashboard instead.
+  redirect(post.status === 'PUBLISHED' ? `/posts/${post.slug}` : '/admin');
+}
+
+export async function updatePost(formData: FormData) {
+  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+
+  const id = String(formData.get('id') ?? '');
+  if (!id) redirect('/admin');
+
+  const payload = {
+    title: String(formData.get('title') ?? ''),
+    content: String(formData.get('content') ?? ''),
+    excerpt: String(formData.get('excerpt') ?? '').trim() || undefined,
+    categoryId: String(formData.get('categoryId') ?? ''),
+    status: String(formData.get('status') ?? 'DRAFT'),
+  };
+
+  const res = await fetch(`${API_URL}/posts/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    redirect(`/admin/posts/${id}/edit?error=1`);
+  }
+  const post = await res.json();
+  redirect(post.status === 'PUBLISHED' ? `/posts/${post.slug}` : '/admin');
+}
+
+export async function deletePost(formData: FormData) {
+  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+
+  const id = String(formData.get('id') ?? '');
+  if (!id) redirect('/admin');
+
+  await fetch(`${API_URL}/posts/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
+  });
+
+  redirect('/admin');
 }

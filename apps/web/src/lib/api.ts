@@ -50,6 +50,17 @@ export function getPostsByTag(slug: string): Promise<Post[]> {
   return getPosts({ tag: slug });
 }
 
+/**
+ * Every post regardless of status (drafts included), newest first.
+ * For the admin dashboard only — the public endpoint is unauthenticated,
+ * so this also exposes drafts to anyone who calls GET /posts directly.
+ */
+export async function getAllPosts(): Promise<Post[]> {
+  const res = await fetch(`${API_URL}/posts`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load posts (${res.status})`);
+  return res.json();
+}
+
 export async function getCategories(): Promise<Category[]> {
   const res = await fetch(`${API_URL}/categories`, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to load categories (${res.status})`);

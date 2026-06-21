@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createPost, logout } from '../actions';
 import { getCategories } from '@/lib/api';
@@ -24,11 +25,14 @@ export default async function NewPostPage({
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">새 글 쓰기</h1>
-        <form action={logout}>
-          <button className="text-sm text-zinc-500 hover:underline">
-            로그아웃
-          </button>
-        </form>
+        <div className="flex items-center gap-4 text-sm">
+          <Link href="/admin" className="text-zinc-500 hover:underline">
+            ← 목록
+          </Link>
+          <form action={logout}>
+            <button className="text-zinc-500 hover:underline">로그아웃</button>
+          </form>
+        </div>
       </div>
 
       {error ? (
