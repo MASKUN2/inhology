@@ -50,14 +50,34 @@ export function getPostsByTag(slug: string): Promise<Post[]> {
   return getPosts({ tag: slug });
 }
 
+// Server-only: the admin token unlocks drafts on the API's read endpoints.
+// Never import this into a Client Component — it would ship the token.
+function adminHeaders(): Record<string, string> {
+  const token = process.env.ADMIN_TOKEN;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 /**
  * Every post regardless of status (drafts included), newest first.
- * For the admin dashboard only — the public endpoint is unauthenticated,
- * so this also exposes drafts to anyone who calls GET /posts directly.
+ * Admin dashboard only — sends the admin token so the API returns drafts.
  */
 export async function getAllPosts(): Promise<Post[]> {
-  const res = await fetch(`${API_URL}/posts`, { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/posts`, {
+    cache: 'no-store',
+    headers: adminHeaders(),
+  });
   if (!res.ok) throw new Error(`Failed to load posts (${res.status})`);
+  return res.json();
+}
+
+/** A single post by id or slug, drafts included. Admin pages only. */
+export async function getAdminPost(idOrSlug: string): Promise<Post | null> {
+  const res = await fetch(`${API_URL}/posts/${encodeURIComponent(idOrSlug)}`, {
+    cache: 'no-store',
+    headers: adminHeaders(),
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Failed to load post (${res.status})`);
   return res.json();
 }
 

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
+import { isAdminToken } from './is-admin';
 
 /**
  * Protects write endpoints. Requires `Authorization: Bearer <ADMIN_TOKEN>`.
@@ -17,12 +18,10 @@ export class AdminGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const expected = this.config.get<string>('ADMIN_TOKEN');
-    if (!expected) {
+    if (!this.config.get<string>('ADMIN_TOKEN')) {
       throw new UnauthorizedException('Admin token is not configured');
     }
-    const header = request.headers.authorization;
-    if (header !== `Bearer ${expected}`) {
+    if (!isAdminToken(request.headers.authorization, this.config)) {
       throw new UnauthorizedException('Invalid or missing admin token');
     }
     return true;

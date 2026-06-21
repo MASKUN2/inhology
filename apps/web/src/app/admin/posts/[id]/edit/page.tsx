@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { deletePost, updatePost } from '../../../actions';
-import { getCategories, getPostBySlug } from '@/lib/api';
+import { getAdminPost, getCategories } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 
 export const metadata: Metadata = { title: '글 수정' };
@@ -20,7 +20,7 @@ export default async function EditPostPage({
   if (!(await isAuthed())) redirect('/admin/login');
   const [{ id }, { error }] = await Promise.all([params, searchParams]);
   const [post, categories] = await Promise.all([
-    getPostBySlug(id),
+    getAdminPost(id),
     getCategories(),
   ]);
   if (!post) notFound();

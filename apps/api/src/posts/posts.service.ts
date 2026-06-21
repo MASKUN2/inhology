@@ -42,9 +42,11 @@ export class PostsService {
     });
   }
 
-  findAll(query: QueryPostsDto) {
+  findAll(query: QueryPostsDto, isAdmin = false) {
     const where: Prisma.PostWhereInput = {
-      ...(query.status && { status: query.status }),
+      // Non-admins only ever see published posts; any client-supplied
+      // status filter is ignored so drafts can't leak.
+      status: isAdmin ? query.status : PostStatus.PUBLISHED,
       ...(query.categoryId && { categoryId: query.categoryId }),
       ...(query.category && { category: { slug: query.category } }),
       ...(query.tag && { tags: { some: { slug: query.tag } } }),
@@ -56,7 +58,7 @@ export class PostsService {
     });
   }
 
-  async findOne(idOrSlug: string) {
+  async findOne(idOrSlug: string, isAdmin = false) {
     const post = await this.prisma.post.findFirst({
       where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
       include: {
@@ -69,7 +71,10 @@ export class PostsService {
         },
       },
     });
-    if (!post) throw new NotFoundException(`Post not found: ${idOrSlug}`);
+    // Hide a draft's existence from non-admins (404, not 403).
+    if (!post || (!isAdmin && post.status !== PostStatus.PUBLISHED)) {
+      throw new NotFoundException(`Post not found: ${idOrSlug}`);
+    }
     return post;
   }
 
