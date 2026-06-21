@@ -3,6 +3,12 @@
 A general blog by **Inho Jeong** — written as both a developer and a person.
 The name is a play on *inho* + *anthology*: a personal selection of writing, code, and thought.
 
+## Documentation
+
+- **[SPEC.md](./SPEC.md)** — what inhology *is*: purpose, requirements, and policies (no implementation detail).
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** — how to deploy it to a home-server VM.
+- This README — how it's built and how to run it locally.
+
 ## Stack
 
 - **[pnpm](https://pnpm.io) workspaces** monorepo (`apps/*`, `packages/*`) with **[Turborepo](https://turborepo.com)** as the task runner.
