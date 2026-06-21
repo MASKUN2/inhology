@@ -9,6 +9,9 @@ packages:
 #   sharp         - native image processing, used by Next.js image optimization
 #   unrs-resolver - native module resolver, pulled in by eslint-config-next
 allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true
   sharp: true
   unrs-resolver: true
 
