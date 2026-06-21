@@ -14,6 +14,28 @@ export interface Tag {
   name: string;
 }
 
+/** Public, approved comment as returned on a post detail. */
+export interface PostComment {
+  id: string;
+  content: string;
+  authorName: string;
+  createdAt: string;
+  parentId: string | null;
+}
+
+/** Full comment shape for the admin moderation list. */
+export interface AdminComment {
+  id: string;
+  content: string;
+  authorName: string;
+  authorEmail: string | null;
+  status: 'PENDING' | 'APPROVED' | 'SPAM';
+  createdAt: string;
+  postId: string;
+  parentId: string | null;
+  post: { title: string; slug: string };
+}
+
 export interface Post {
   id: string;
   slug: string;
@@ -29,6 +51,7 @@ export interface Post {
   updatedAt: string;
   category: Category;
   tags: Tag[];
+  comments?: PostComment[];
 }
 
 async function getPosts(params: Record<string, string>): Promise<Post[]> {
@@ -78,6 +101,17 @@ export async function getAdminPost(idOrSlug: string): Promise<Post | null> {
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to load post (${res.status})`);
+  return res.json();
+}
+
+/** Comments for moderation, optionally filtered by status. Admin only. */
+export async function getComments(status?: string): Promise<AdminComment[]> {
+  const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+  const res = await fetch(`${API_URL}/comments${qs}`, {
+    cache: 'no-store',
+    headers: adminHeaders(),
+  });
+  if (!res.ok) throw new Error(`Failed to load comments (${res.status})`);
   return res.json();
 }
 

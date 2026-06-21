@@ -103,3 +103,40 @@ export async function deletePost(formData: FormData) {
 
   redirect('/admin');
 }
+
+export async function moderateComment(formData: FormData) {
+  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+
+  const id = String(formData.get('id') ?? '');
+  const status = String(formData.get('status') ?? '');
+  if (!id || !status) redirect('/admin/comments');
+
+  await fetch(`${API_URL}/comments/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+    cache: 'no-store',
+  });
+
+  redirect('/admin/comments');
+}
+
+export async function deleteComment(formData: FormData) {
+  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+
+  const id = String(formData.get('id') ?? '');
+  if (!id) redirect('/admin/comments');
+
+  await fetch(`${API_URL}/comments/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
+  });
+
+  redirect('/admin/comments');
+}

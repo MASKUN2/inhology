@@ -1,0 +1,118 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { deleteComment, moderateComment } from '../actions';
+import { getComments } from '@/lib/api';
+import { isAuthed } from '@/lib/auth';
+import { formatDate } from '@/lib/format';
+
+export const metadata: Metadata = { title: '댓글 관리' };
+
+const TABS = [
+  { key: 'PENDING', label: '대기' },
+  { key: 'APPROVED', label: '승인' },
+  { key: 'SPAM', label: '스팸' },
+] as const;
+
+export default async function AdminCommentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  if (!(await isAuthed())) redirect('/admin/login');
+  const { status } = await searchParams;
+  const active = TABS.some((t) => t.key === status) ? status! : 'PENDING';
+  const comments = await getComments(active);
+
+  return (
+    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight">댓글 관리</h1>
+        <Link href="/admin" className="text-sm text-zinc-500 hover:underline">
+          ← 글 관리
+        </Link>
+      </div>
+
+      <nav className="mt-6 flex gap-2 text-sm">
+        {TABS.map((t) => (
+          <Link
+            key={t.key}
+            href={`/admin/comments?status=${t.key}`}
+            className={
+              t.key === active
+                ? 'rounded-full bg-zinc-900 px-3 py-1 text-white dark:bg-white dark:text-black'
+                : 'rounded-full bg-zinc-100 px-3 py-1 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300'
+            }
+          >
+            {t.label}
+          </Link>
+        ))}
+      </nav>
+
+      {comments.length === 0 ? (
+        <p className="mt-8 text-zinc-500">해당 상태의 댓글이 없습니다.</p>
+      ) : (
+        <ul className="mt-8 flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+          {comments.map((c) => (
+            <li key={c.id} className="py-5">
+              <div className="flex items-baseline gap-2 text-sm">
+                <span className="font-medium">{c.authorName}</span>
+                {c.authorEmail ? (
+                  <span className="text-xs text-zinc-400">{c.authorEmail}</span>
+                ) : null}
+                <time className="text-xs text-zinc-400">
+                  {formatDate(c.createdAt)}
+                </time>
+              </div>
+              <p className="mt-1 whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">
+                {c.content}
+              </p>
+              <div className="mt-2 flex items-center gap-3 text-xs text-zinc-500">
+                <Link
+                  href={`/posts/${c.post.slug}#comments`}
+                  className="hover:underline"
+                >
+                  {c.post.title}
+                </Link>
+              </div>
+
+              <div className="mt-3 flex items-center gap-3 text-sm">
+                {active !== 'APPROVED' ? (
+                  <form action={moderateComment}>
+                    <input type="hidden" name="id" value={c.id} />
+                    <input type="hidden" name="status" value="APPROVED" />
+                    <button className="text-green-700 hover:underline dark:text-green-400">
+                      승인
+                    </button>
+                  </form>
+                ) : null}
+                {active !== 'SPAM' ? (
+                  <form action={moderateComment}>
+                    <input type="hidden" name="id" value={c.id} />
+                    <input type="hidden" name="status" value="SPAM" />
+                    <button className="text-amber-700 hover:underline dark:text-amber-400">
+                      스팸
+                    </button>
+                  </form>
+                ) : null}
+                {active !== 'PENDING' ? (
+                  <form action={moderateComment}>
+                    <input type="hidden" name="id" value={c.id} />
+                    <input type="hidden" name="status" value="PENDING" />
+                    <button className="text-zinc-500 hover:underline">
+                      대기로
+                    </button>
+                  </form>
+                ) : null}
+                <form action={deleteComment}>
+                  <input type="hidden" name="id" value={c.id} />
+                  <button className="text-red-600 hover:underline">삭제</button>
+                </form>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </main>
+  );
+}

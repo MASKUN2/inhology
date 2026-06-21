@@ -17,6 +17,9 @@ export default async function AdminPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">글 관리</h1>
         <div className="flex items-center gap-4 text-sm">
+          <Link href="/admin/comments" className="text-zinc-500 hover:underline">
+            댓글
+          </Link>
           <Link
             href="/admin/new"
             className="rounded-md bg-zinc-900 px-3 py-1.5 text-white hover:bg-zinc-700 dark:bg-white dark:text-black dark:hover:bg-zinc-200"

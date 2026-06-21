@@ -5,8 +5,12 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getPostBySlug } from '@/lib/api';
 import { formatDate } from '@/lib/format';
+import { Comments } from '@/components/comments';
 
-type Params = { params: Promise<{ slug: string }> };
+type Params = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ comment?: string }>;
+};
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
@@ -15,10 +19,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return { title: post.title, description: post.excerpt ?? undefined };
 }
 
-export default async function PostPage({ params }: Params) {
-  const { slug } = await params;
+export default async function PostPage({ params, searchParams }: Params) {
+  const [{ slug }, { comment }] = await Promise.all([params, searchParams]);
   const post = await getPostBySlug(slug);
   if (!post || post.status !== 'PUBLISHED') notFound();
+  const flash =
+    comment === 'ok' ? 'ok' : comment === 'error' ? 'error' : undefined;
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -67,6 +73,13 @@ export default async function PostPage({ params }: Params) {
           </ReactMarkdown>
         </div>
       </article>
+
+      <Comments
+        postId={post.id}
+        slug={post.slug}
+        comments={post.comments ?? []}
+        flash={flash}
+      />
     </main>
   );
 }
