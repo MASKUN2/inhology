@@ -25,13 +25,25 @@ inhology/
 └── package.json         # root scripts proxy to turbo
 ```
 
+## Local development
+
+```bash
+colima start && docker compose up -d   # start Postgres (see Commands below)
+pnpm install                              # install all workspace deps
+pnpm --filter @inhology/api db:seed        # seed categories/tags/sample post
+pnpm dev                                   # run web + api together
+```
+
+- **web** (Next.js) → http://localhost:3000
+- **api** (NestJS) → http://localhost:4000 (web reads it via `API_URL`)
+
 ## Commands
 
 Run from the repo root — Turbo fans each task out to every workspace that defines it.
 
 ```bash
 pnpm install        # install all workspace deps
-pnpm dev            # run web + api in watch mode
+pnpm dev            # run web (:3000) + api (:4000) together
 pnpm build          # build all apps
 pnpm lint           # lint all apps
 pnpm type-check     # type-check all apps

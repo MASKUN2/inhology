@@ -1,5 +1,5 @@
 // Server-side base URL for the Nest API. Override with API_URL in .env.local.
-const API_URL = process.env.API_URL ?? 'http://localhost:3000';
+const API_URL = process.env.API_URL ?? 'http://localhost:4000';
 
 export interface Category {
   id: string;
