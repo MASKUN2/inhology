@@ -23,13 +23,13 @@ export default async function TagPage({ params }: Params) {
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <Link
         href="/"
-        className="text-sm text-zinc-500 hover:underline underline-offset-4"
+        className="text-sm text-muted hover:underline underline-offset-4"
       >
         ← 목록으로
       </Link>
 
       <header className="mb-12 mt-8">
-        <p className="text-sm text-zinc-500">태그</p>
+        <p className="text-sm text-muted">태그</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">#{tag.name}</h1>
       </header>
 

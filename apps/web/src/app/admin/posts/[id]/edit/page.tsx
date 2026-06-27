@@ -7,8 +7,7 @@ import { isAuthed } from '@/lib/auth';
 
 export const metadata: Metadata = { title: '글 수정' };
 
-const field =
-  'rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900';
+const field = 'rounded-md border border-border bg-background px-3 py-2';
 
 export default async function EditPostPage({
   params,
@@ -30,7 +29,7 @@ export default async function EditPostPage({
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">글 수정</h1>
-        <Link href="/admin" className="text-sm text-zinc-500 hover:underline">
+        <Link href="/admin" className="text-sm text-muted hover:underline">
           ← 목록
         </Link>
       </div>
@@ -111,13 +110,13 @@ export default async function EditPostPage({
 
         <button
           type="submit"
-          className="rounded-md bg-zinc-900 px-3 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+          className="rounded-md bg-strong px-3 py-2 text-strong-foreground hover:opacity-90"
         >
           저장
         </button>
       </form>
 
-      <form action={deletePost} className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
+      <form action={deletePost} className="mt-4 border-t border-border pt-4">
         <input type="hidden" name="id" value={post.id} />
         <button className="text-sm text-red-600 hover:underline">
           이 글 삭제

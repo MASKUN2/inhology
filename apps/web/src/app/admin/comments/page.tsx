@@ -28,7 +28,7 @@ export default async function AdminCommentsPage({
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">댓글 관리</h1>
-        <Link href="/admin" className="text-sm text-zinc-500 hover:underline">
+        <Link href="/admin" className="text-sm text-muted hover:underline">
           ← 글 관리
         </Link>
       </div>
@@ -40,8 +40,8 @@ export default async function AdminCommentsPage({
             href={`/admin/comments?status=${t.key}`}
             className={
               t.key === active
-                ? 'rounded-full bg-zinc-900 px-3 py-1 text-white dark:bg-white dark:text-black'
-                : 'rounded-full bg-zinc-100 px-3 py-1 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300'
+                ? 'rounded-full bg-strong px-3 py-1 text-strong-foreground'
+                : 'rounded-full bg-subtle px-3 py-1 text-muted hover:opacity-80'
             }
           >
             {t.label}
@@ -50,24 +50,24 @@ export default async function AdminCommentsPage({
       </nav>
 
       {comments.length === 0 ? (
-        <p className="mt-8 text-zinc-500">해당 상태의 댓글이 없습니다.</p>
+        <p className="mt-8 text-muted">해당 상태의 댓글이 없습니다.</p>
       ) : (
-        <ul className="mt-8 flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+        <ul className="mt-8 flex flex-col divide-y divide-border">
           {comments.map((c) => (
             <li key={c.id} className="py-5">
               <div className="flex items-baseline gap-2 text-sm">
                 <span className="font-medium">{c.authorName}</span>
                 {c.authorEmail ? (
-                  <span className="text-xs text-zinc-400">{c.authorEmail}</span>
+                  <span className="text-xs text-muted">{c.authorEmail}</span>
                 ) : null}
-                <time className="text-xs text-zinc-400">
+                <time className="text-xs text-muted">
                   {formatDate(c.createdAt)}
                 </time>
               </div>
-              <p className="mt-1 whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">
+              <p className="mt-1 whitespace-pre-wrap text-foreground">
                 {c.content}
               </p>
-              <div className="mt-2 flex items-center gap-3 text-xs text-zinc-500">
+              <div className="mt-2 flex items-center gap-3 text-xs text-muted">
                 <Link
                   href={`/posts/${c.post.slug}#comments`}
                   className="hover:underline"
@@ -99,7 +99,7 @@ export default async function AdminCommentsPage({
                   <form action={moderateComment}>
                     <input type="hidden" name="id" value={c.id} />
                     <input type="hidden" name="status" value="PENDING" />
-                    <button className="text-zinc-500 hover:underline">
+                    <button className="text-muted hover:underline">
                       대기로
                     </button>
                   </form>

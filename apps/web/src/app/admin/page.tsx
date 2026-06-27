@@ -17,28 +17,31 @@ export default async function AdminPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">글 관리</h1>
         <div className="flex items-center gap-4 text-sm">
-          <Link href="/admin/series" className="text-zinc-500 hover:underline">
+          <Link href="/" className="text-muted hover:underline">
+            사이트 보기
+          </Link>
+          <Link href="/admin/series" className="text-muted hover:underline">
             시리즈
           </Link>
-          <Link href="/admin/comments" className="text-zinc-500 hover:underline">
+          <Link href="/admin/comments" className="text-muted hover:underline">
             댓글
           </Link>
           <Link
             href="/admin/new"
-            className="rounded-md bg-zinc-900 px-3 py-1.5 text-white hover:bg-zinc-700 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+            className="rounded-md bg-strong px-3 py-1.5 text-strong-foreground hover:opacity-90"
           >
             새 글
           </Link>
           <form action={logout}>
-            <button className="text-zinc-500 hover:underline">로그아웃</button>
+            <button className="text-muted hover:underline">로그아웃</button>
           </form>
         </div>
       </div>
 
       {posts.length === 0 ? (
-        <p className="mt-8 text-zinc-500">아직 글이 없습니다.</p>
+        <p className="mt-8 text-muted">아직 글이 없습니다.</p>
       ) : (
-        <ul className="mt-8 flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+        <ul className="mt-8 flex flex-col divide-y divide-border">
           {posts.map((post) => (
             <li
               key={post.id}
@@ -55,9 +58,9 @@ export default async function AdminPage() {
                       초안
                     </span>
                   )}
-                  <span className="text-zinc-400">{post.category.name}</span>
+                  <span className="text-muted">{post.category.name}</span>
                   {post.publishedAt ? (
-                    <time className="text-zinc-400">
+                    <time className="text-muted">
                       {formatDate(post.publishedAt)}
                     </time>
                   ) : null}
@@ -68,13 +71,13 @@ export default async function AdminPage() {
               <div className="flex shrink-0 items-center gap-3 text-sm">
                 <Link
                   href={`/posts/${post.slug}`}
-                  className="text-zinc-500 hover:underline"
+                  className="text-muted hover:underline"
                 >
                   보기
                 </Link>
                 <Link
                   href={`/admin/posts/${post.id}/edit`}
-                  className="text-zinc-500 hover:underline"
+                  className="text-muted hover:underline"
                 >
                   수정
                 </Link>

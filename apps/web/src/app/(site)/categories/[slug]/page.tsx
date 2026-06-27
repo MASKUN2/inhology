@@ -23,20 +23,18 @@ export default async function CategoryPage({ params }: Params) {
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <Link
         href="/"
-        className="text-sm text-zinc-500 hover:underline underline-offset-4"
+        className="text-sm text-muted hover:underline underline-offset-4"
       >
         ← 목록으로
       </Link>
 
       <header className="mb-12 mt-8">
-        <p className="text-sm text-zinc-500">카테고리</p>
+        <p className="text-sm text-muted">카테고리</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">
           {category.name}
         </h1>
         {category.description ? (
-          <p className="mt-2 text-zinc-500 dark:text-zinc-400">
-            {category.description}
-          </p>
+          <p className="mt-2 text-muted">{category.description}</p>
         ) : null}
       </header>
 

@@ -1,9 +1,8 @@
 import type { PostComment } from '@/lib/api';
 import { formatDate } from '@/lib/format';
-import { createComment } from '@/app/posts/actions';
+import { createComment } from '@/app/(site)/posts/actions';
 
-const field =
-  'rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900';
+const field = 'rounded-md border border-border bg-background px-3 py-2';
 
 export function Comments({
   postId,
@@ -17,7 +16,7 @@ export function Comments({
   flash?: 'ok' | 'error';
 }) {
   return (
-    <section id="comments" className="mt-16 border-t border-zinc-200 pt-10 dark:border-zinc-800">
+    <section id="comments" className="mt-16 border-t border-border pt-10">
       <h2 className="text-lg font-semibold">댓글 {comments.length}</h2>
 
       {flash === 'ok' ? (
@@ -36,22 +35,22 @@ export function Comments({
           {comments.map((c) => (
             <li
               key={c.id}
-              className={c.parentId ? 'border-l-2 border-zinc-200 pl-4 dark:border-zinc-800' : ''}
+              className={c.parentId ? 'border-l-2 border-border pl-4' : ''}
             >
               <div className="flex items-baseline gap-2 text-sm">
                 <span className="font-medium">{c.authorName}</span>
-                <time className="text-xs text-zinc-400">
+                <time className="text-xs text-muted">
                   {formatDate(c.createdAt)}
                 </time>
               </div>
-              <p className="mt-1 whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">
+              <p className="mt-1 whitespace-pre-wrap text-foreground">
                 {c.content}
               </p>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mt-6 text-sm text-zinc-500">첫 댓글을 남겨보세요.</p>
+        <p className="mt-6 text-sm text-muted">첫 댓글을 남겨보세요.</p>
       )}
 
       <form action={createComment} className="mt-10 flex flex-col gap-3">
@@ -82,7 +81,7 @@ export function Comments({
         />
         <button
           type="submit"
-          className="self-end rounded-md bg-zinc-900 px-4 py-2 text-sm text-white hover:bg-zinc-700 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+          className="self-end rounded-md bg-strong px-4 py-2 text-sm text-strong-foreground hover:opacity-90"
         >
           댓글 등록
         </button>

@@ -4,7 +4,7 @@ import { formatDate } from '@/lib/format';
 
 export function PostList({ posts }: { posts: Post[] }) {
   if (posts.length === 0) {
-    return <p className="text-zinc-500">아직 발행된 글이 없습니다.</p>;
+    return <p className="text-muted">아직 발행된 글이 없습니다.</p>;
   }
 
   return (
@@ -12,10 +12,10 @@ export function PostList({ posts }: { posts: Post[] }) {
       {posts.map((post) => (
         <li key={post.id}>
           <article>
-            <div className="flex items-center gap-2 text-xs text-zinc-500">
+            <div className="flex items-center gap-2 text-xs text-muted">
               <Link
                 href={`/categories/${post.category.slug}`}
-                className="rounded-full bg-zinc-100 px-2 py-0.5 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+                className="rounded-full bg-subtle px-2 py-0.5 hover:opacity-80"
               >
                 {post.category.name}
               </Link>
@@ -35,18 +35,16 @@ export function PostList({ posts }: { posts: Post[] }) {
             </h2>
 
             {post.excerpt ? (
-              <p className="mt-1 line-clamp-2 text-zinc-600 dark:text-zinc-400">
-                {post.excerpt}
-              </p>
+              <p className="mt-1 line-clamp-2 text-muted">{post.excerpt}</p>
             ) : null}
 
             {post.tags.length > 0 ? (
-              <div className="mt-2 flex flex-wrap gap-2 text-xs text-zinc-500">
+              <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted">
                 {post.tags.map((tag) => (
                   <Link
                     key={tag.id}
                     href={`/tags/${tag.slug}`}
-                    className="hover:text-zinc-800 dark:hover:text-zinc-200"
+                    className="hover:text-foreground"
                   >
                     #{tag.name}
                   </Link>

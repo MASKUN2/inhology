@@ -7,8 +7,7 @@ import { isAuthed } from '@/lib/auth';
 
 export const metadata: Metadata = { title: '새 글 쓰기' };
 
-const field =
-  'rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900';
+const field = 'rounded-md border border-border bg-background px-3 py-2';
 
 export default async function NewPostPage({
   searchParams,
@@ -27,11 +26,11 @@ export default async function NewPostPage({
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">새 글 쓰기</h1>
         <div className="flex items-center gap-4 text-sm">
-          <Link href="/admin" className="text-zinc-500 hover:underline">
+          <Link href="/admin" className="text-muted hover:underline">
             ← 목록
           </Link>
           <form action={logout}>
-            <button className="text-zinc-500 hover:underline">로그아웃</button>
+            <button className="text-muted hover:underline">로그아웃</button>
           </form>
         </div>
       </div>
@@ -96,7 +95,7 @@ export default async function NewPostPage({
 
         <button
           type="submit"
-          className="rounded-md bg-zinc-900 px-3 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+          className="rounded-md bg-strong px-3 py-2 text-strong-foreground hover:opacity-90"
         >
           저장
         </button>

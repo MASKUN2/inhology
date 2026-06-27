@@ -34,17 +34,17 @@ export default async function PostPage({ params, searchParams }: Params) {
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <Link
         href="/"
-        className="text-sm text-zinc-500 hover:underline underline-offset-4"
+        className="text-sm text-muted hover:underline underline-offset-4"
       >
         ← 목록으로
       </Link>
 
       <article className="mt-8">
         <header className="mb-8">
-          <div className="flex items-center gap-2 text-xs text-zinc-500">
+          <div className="flex items-center gap-2 text-xs text-muted">
             <Link
               href={`/categories/${post.category.slug}`}
-              className="rounded-full bg-zinc-100 px-2 py-0.5 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              className="rounded-full bg-subtle px-2 py-0.5 hover:opacity-80"
             >
               {post.category.name}
             </Link>
@@ -57,12 +57,12 @@ export default async function PostPage({ params, searchParams }: Params) {
             {post.title}
           </h1>
           {post.tags.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
+            <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
               {post.tags.map((tag) => (
                 <Link
                   key={tag.id}
                   href={`/tags/${tag.slug}`}
-                  className="hover:text-zinc-800 dark:hover:text-zinc-200"
+                  className="hover:text-foreground"
                 >
                   #{tag.name}
                 </Link>
@@ -74,12 +74,12 @@ export default async function PostPage({ params, searchParams }: Params) {
         {post.series ? (
           <Link
             href={`/series/${post.series.slug}`}
-            className="mb-8 block rounded-md border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+            className="mb-8 block rounded-md border border-border bg-subtle px-4 py-3 text-sm hover:opacity-80"
           >
-            <span className="text-zinc-400">시리즈</span>{' '}
+            <span className="text-muted">시리즈</span>{' '}
             <span className="font-medium">{post.series.title}</span>
             {post.seriesOrder ? (
-              <span className="text-zinc-400"> · {post.seriesOrder}편</span>
+              <span className="text-muted"> · {post.seriesOrder}편</span>
             ) : null}
           </Link>
         ) : null}
