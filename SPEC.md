@@ -40,7 +40,7 @@ content meaningfully, and letting readers respond.
 
 | Actor | Description | How they're identified |
 |---|---|---|
-| **Author** | Inho. The sole privileged user. Creates, edits, deletes, and publishes content; moderates comments. | Holds a shared admin secret. There is exactly one. |
+| **Author** | Inho. The sole privileged user. Creates, edits, deletes, and publishes content; moderates comments. | Authenticates via the homelab SSO (Authentik OIDC). There is exactly one. |
 | **Reader** | Anyone on the public internet. Reads published content and submits comments. | Anonymous. No accounts, no login. |
 
 There is no registration, no reader account, and no second author. Any future
@@ -146,11 +146,13 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 
 ### 5.5 Authorisation
 - All create/edit/delete/moderate actions are restricted to the **author**.
-- The author is authenticated via a single shared secret. This secret is a
-  credential: it must be strong, kept out of version control, and rotated for
-  production (distinct from any local/development value).
+- The author authenticates through the **homelab single sign-on (Authentik OIDC)**.
+  The web app gates the admin area on a valid SSO session; calls from web to the
+  API carry an **internal shared token** (web↔api only, on the cluster's private
+  network — the API is not publicly exposed). Both credentials are kept out of
+  version control. (See `homelab/sso.md`.)
 - Reading published content and submitting a (pending) comment are the only
-  actions available without the secret.
+  actions available without authentication.
 
 ### 5.6 Data ownership
 - All content and data are self-hosted and owned by the author. No third-party
