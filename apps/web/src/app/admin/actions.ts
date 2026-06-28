@@ -1,34 +1,30 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ADMIN_COOKIE } from '@/lib/auth';
+import { isAuthed } from '@/lib/auth';
+import { signIn, signOut } from '@/auth';
 
 const API_URL = process.env.API_URL ?? 'http://localhost:4000';
 
-export async function login(formData: FormData) {
-  const password = String(formData.get('password') ?? '');
-  if (!process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD) {
-    redirect('/admin/login?error=1');
-  }
-  (await cookies()).set(ADMIN_COOKIE, process.env.ADMIN_TOKEN ?? '', {
-    httpOnly: true,
-    sameSite: 'lax',
-    path: '/',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 8, // 8h
-  });
-  redirect('/admin');
+/**
+ * 관리자 세션(Authentik OIDC) 확인 후 API 호출용 토큰을 반환.
+ * web→api 는 클러스터 내부 전용이라 공유 ADMIN_TOKEN(서버 환경변수)을 그대로 사용한다.
+ */
+async function adminToken(): Promise<string> {
+  if (!(await isAuthed())) redirect('/admin/login');
+  return process.env.ADMIN_TOKEN ?? '';
+}
+
+export async function login() {
+  await signIn('authentik', { redirectTo: '/admin' });
 }
 
 export async function logout() {
-  (await cookies()).delete(ADMIN_COOKIE);
-  redirect('/admin/login');
+  await signOut({ redirectTo: '/admin/login' });
 }
 
 export async function createPost(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const seriesId = String(formData.get('seriesId') ?? '').trim();
   const seriesOrder = String(formData.get('seriesOrder') ?? '').trim();
@@ -63,8 +59,7 @@ export async function createPost(formData: FormData) {
 }
 
 export async function updatePost(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const id = String(formData.get('id') ?? '');
   if (!id) redirect('/admin');
@@ -100,8 +95,7 @@ export async function updatePost(formData: FormData) {
 }
 
 export async function deletePost(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const id = String(formData.get('id') ?? '');
   if (!id) redirect('/admin');
@@ -116,8 +110,7 @@ export async function deletePost(formData: FormData) {
 }
 
 export async function createSeries(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const payload = {
     title: String(formData.get('title') ?? ''),
@@ -138,8 +131,7 @@ export async function createSeries(formData: FormData) {
 }
 
 export async function deleteSeries(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const id = String(formData.get('id') ?? '');
   if (!id) redirect('/admin/series');
@@ -154,8 +146,7 @@ export async function deleteSeries(formData: FormData) {
 }
 
 export async function moderateComment(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const id = String(formData.get('id') ?? '');
   const status = String(formData.get('status') ?? '');
@@ -175,8 +166,7 @@ export async function moderateComment(formData: FormData) {
 }
 
 export async function deleteComment(formData: FormData) {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!token || token !== process.env.ADMIN_TOKEN) redirect('/admin/login');
+  const token = await adminToken();
 
   const id = String(formData.get('id') ?? '');
   if (!id) redirect('/admin/comments');
