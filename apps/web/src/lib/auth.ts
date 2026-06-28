@@ -1,9 +1,11 @@
-import { cookies } from 'next/headers';
+import { auth } from '@/auth';
 
-export const ADMIN_COOKIE = 'admin_token';
-
-/** True when the request carries a valid admin session cookie. */
+/**
+ * True when a valid Authentik OIDC session exists.
+ * 단일 작성자 블로그라 "로그인됨 = 관리자". API 호출용 토큰은 서버 환경변수
+ * ADMIN_TOKEN(클러스터 내부 전용)을 쓴다 — adminToken() 참고.
+ */
 export async function isAuthed(): Promise<boolean> {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  return !!token && token === process.env.ADMIN_TOKEN;
+  const session = await auth();
+  return !!session?.user;
 }

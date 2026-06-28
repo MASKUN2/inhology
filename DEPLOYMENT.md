@@ -10,7 +10,22 @@
 
 ---
 
-## 0. 아키텍처 한눈에 보기
+## ⚑ 현행 배포 (homelab k3s) — 이게 실제 운영 방식
+
+이 문서의 아래 Compose 가이드는 **단독 VM**용 *원본* 방식입니다. **현재 inhology는 별도 홈랩 k3s 클러스터에 배포**되어 운영 중입니다:
+
+- **실행**: k3s `apps` 네임스페이스의 `inhology-web`(공개) + `inhology-api`(내부) Deployment. 매니페스트는 `homelab/k8s/apps/inhology.yaml`.
+- **DB**: 클러스터 밖 Postgres LXC(`postgres.data.svc.cluster.local`)의 `inhology` DB. 부팅 시 `prisma migrate deploy` 자동.
+- **외부 노출**: 공유 Cloudflare Tunnel(gateway) → Traefik → `https://inhology.jwih.org`.
+- **인증**: 비밀번호(`ADMIN_PASSWORD`) 폐지 → **Authentik OIDC(SSO)**. `web`은 OIDC 세션으로 `/admin` 보호, `web→api`는 내부 공유 `ADMIN_TOKEN` 유지.
+- **이미지 빌드/배포·접근·운영**: → **`homelab/OPERATIONS.md`** 참고 (레지스트리 없이 노드 빌드→`k3s ctr import`→rollout).
+- 코드의 인증 전환은 `feat/authentik-oidc` 브랜치.
+
+> 아래 Compose 방식도 여전히 유효한 대안(단독 VM/오프-클러스터)입니다. 단 **`ADMIN_PASSWORD`는 현행 코드에서 제거**되었으니, Compose로 갈 경우 web에 Authentik OIDC 환경변수(`AUTH_*`)를 대신 주입해야 합니다.
+
+---
+
+## 0. 아키텍처 한눈에 보기 (원본: 단독 VM + Compose)
 
 ```
                  인터넷

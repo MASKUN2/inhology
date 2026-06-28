@@ -43,6 +43,20 @@ pnpm dev                                   # run web + api together
 - **web** (Next.js) → http://localhost:3000
 - **api** (NestJS) → http://localhost:4000 (web reads it via `API_URL`)
 
+## Authentication & deployment
+
+- **Admin auth = homelab SSO (Authentik OIDC).** The web app gates `/admin` on an
+  Authentik OIDC session (Auth.js v5); `web→api` calls use an internal shared
+  `ADMIN_TOKEN` (the API is cluster-internal only). The old password login
+  (`ADMIN_PASSWORD`) is removed. Auth wiring: `apps/web/src/auth.ts`,
+  `apps/web/src/lib/auth.ts`, `apps/web/src/app/admin/actions.ts`.
+- **Production runs on the homelab k3s cluster** (`inhology.jwih.org`), not the
+  standalone Compose flow. See **`homelab/OPERATIONS.md`** + `homelab/k8s/apps/inhology.yaml`.
+  [DEPLOYMENT.md](./DEPLOYMENT.md) keeps the original single-VM Compose guide as an alternative.
+- Container images: `apps/web/Dockerfile`, `apps/api/Dockerfile` (monorepo, build context = repo root).
+- Local dev: public pages need only the API. To exercise `/admin` locally, set the web
+  `AUTH_*` env (Authentik client id/secret/issuer + `AUTH_SECRET`) against a reachable Authentik.
+
 ## Commands
 
 Run from the repo root — Turbo fans each task out to every workspace that defines it.
