@@ -69,12 +69,18 @@ multi-author need is explicitly out of scope for this version.
 
 ### 4.1 Posts (Author)
 - Create a post with: title, slug, Markdown body, category (required), optional
-  summary, optional cover image, optional tags, optional series + position.
+  summary, optional tags, optional series + position.
 - Save a post as a **draft** or **publish** it.
 - Edit any field of an existing post, including changing its publication state.
 - Delete a post.
 - View a list of **all** posts — drafts included — with their current state
   clearly distinguished.
+- **Insert images into the Markdown body** by pasting (e.g. a screenshot),
+  dragging a file onto the editor, or choosing a file. The image is uploaded and
+  a Markdown image reference is inserted automatically at the cursor. Images are
+  content within the body — there is no separate cover-image field (see §8).
+- **Toggle the body editor between edit and preview** to see the rendered
+  Markdown — including uploaded images — before publishing.
 
 ### 4.2 Posts (Reader)
 - Browse a list of published posts, newest first.
@@ -89,7 +95,7 @@ multi-author need is explicitly out of scope for this version.
 
 ### 4.4 Series
 - Author can create, edit, and delete a series (title, slug, optional
-  description, optional cover image).
+  description).
 - Author can assign a post to a series and set its order.
 - Readers can browse a series index and a single series page that lists its
   posts **in author-defined order**.
@@ -157,6 +163,18 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 ### 5.6 Data ownership
 - All content and data are self-hosted and owned by the author. No third-party
   service is required to read or write content.
+
+### 5.7 Images
+- Uploaded images are stored in the author-owned object storage and served
+  **under the site's own domain**, never exposing the storage backend's address
+  or a third-party URL. To a reader an image looks like part of the site.
+- Only raster image types are accepted (**PNG, JPEG, WebP, GIF**); **SVG is
+  rejected** (script-injection risk). Each upload is bounded by a size cap to
+  limit abuse.
+- Uploading an image is an **author-only** action, gated by the same
+  authorisation as other writes (§5.5).
+- Images are embedded by reference in Markdown; they are **not** separately
+  catalogued or managed (§8). Deleting a post does not chase down its images.
 
 ---
 
@@ -237,6 +255,13 @@ These are the recurring building blocks; reuse them rather than inventing new on
 - **Primary button** — solid `strong` surface with inverted text; one per form.
 - **Form field** — bordered input/textarea with placeholder; fields stack on
   mobile, may sit in a row on wider screens.
+- **Editor image insert** — in the post editor, an image can be added by pasting,
+  dragging a file onto the body, or a file-picker button. On drop the image
+  uploads and a Markdown image reference is inserted at the cursor; an
+  in-progress placeholder marks the spot until it is replaced on success, or
+  removed with an error flash on failure.
+- **Edit / preview toggle** — the body editor switches between raw Markdown and a
+  rendered preview, using the same renderer as the public post page.
 - **Back link** — a quiet "← 목록으로" affordance returning to the list.
 - **Empty state** — a single muted sentence, never a blank screen (e.g. a post
   list with nothing to show still says so).
@@ -269,7 +294,10 @@ These are the recurring building blocks; reuse them rather than inventing new on
 - Full-text search, related-posts, recommendations.
 - Email delivery / notifications / newsletters.
 - Analytics beyond a simple view count.
-- Media library / image upload management (cover images are referenced, not hosted-and-managed).
+- A **media library / gallery** for browsing, re-selecting, or managing uploaded
+  images. Inline image *upload* is supported (§4.1, §5.7), but images are
+  fire-and-forget — inserted once, not curated in a browsable collection.
+- **Cover images** for posts or series. Images live inline in the body only.
 - Scheduled publishing.
 - RSS/Atom feeds *(candidate for a future version)*.
 
