@@ -13,8 +13,4 @@ export class CreateSeriesDto {
   @IsOptional()
   @IsString()
   description?: string;
-
-  @IsOptional()
-  @IsString()
-  coverImage?: string;
 }

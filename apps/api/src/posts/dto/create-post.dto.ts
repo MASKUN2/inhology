@@ -23,10 +23,6 @@ export class CreatePostDto {
   @IsString()
   excerpt?: string;
 
-  @IsOptional()
-  @IsString()
-  coverImage?: string;
-
   /** URL slug; generated from the title when omitted. */
   @IsOptional()
   @IsString()

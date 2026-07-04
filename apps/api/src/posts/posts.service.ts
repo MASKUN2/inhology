@@ -22,7 +22,6 @@ export class PostsService {
       title: dto.title,
       content: dto.content,
       excerpt: dto.excerpt,
-      coverImage: dto.coverImage,
       slug: dto.slug ? slugify(dto.slug) : slugify(dto.title),
       status,
       readingTime: readingTimeMinutes(dto.content),
@@ -97,7 +96,6 @@ export class PostsService {
         readingTime: readingTimeMinutes(dto.content),
       }),
       ...(dto.excerpt !== undefined && { excerpt: dto.excerpt }),
-      ...(dto.coverImage !== undefined && { coverImage: dto.coverImage }),
       ...(dto.slug !== undefined && { slug: slugify(dto.slug) }),
       ...(dto.seriesOrder !== undefined && { seriesOrder: dto.seriesOrder }),
       ...(dto.categoryId !== undefined && {

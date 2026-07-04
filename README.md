@@ -60,6 +60,23 @@ pnpm dev                                   # run web + api together
 - Local dev: public pages need only the API. To exercise `/admin` locally, set the web
   `AUTH_*` env (Authentik client id/secret/issuer + `AUTH_SECRET`) against a reachable Authentik.
 
+## Images (본문 이미지)
+
+Inline post images live in **MinIO**, served under the site's own domain — the API is not
+involved (images aren't catalogued; SPEC §5.7). All handled by the **web** app:
+
+- **Upload** — `POST /admin/api/upload` (`apps/web/src/app/admin/api/upload/route.ts`): author-only
+  (Authentik session), magic-byte type check (PNG/JPEG/WebP/GIF, **SVG rejected**), 10MB cap,
+  content-addressed key `<sha256>.<ext>` (dedup + immutable), `PUT` to MinIO. Returns `/images/<key>`.
+- **Serve** — `GET /images/[...key]` (`apps/web/src/app/images/[...key]/route.ts`): **streams** the
+  object from MinIO (no redirect → MinIO stays hidden), `Cache-Control: immutable`. Keys are content
+  hashes, so Cloudflare's edge caches indefinitely; origin is hit rarely. Bucket stays **private**.
+- **Editor** — `BodyEditor` (`apps/web/src/components/body-editor.tsx`): paste / drag-drop / file-picker
+  → upload → auto-insert `![](…)` at the cursor (placeholder while in flight). `[편집|미리보기]` toggle
+  renders via the shared `<Markdown>` (same renderer as the public post).
+- **S3 client** — `apps/web/src/lib/storage.ts` (the `minio` package). Config via `MINIO_ENDPOINT`,
+  `MINIO_BUCKET`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY` (scoped svcacct; see `homelab/minio.md`).
+
 ## Commands
 
 Run from the repo root — Turbo fans each task out to every workspace that defines it.

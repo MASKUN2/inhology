@@ -20,7 +20,6 @@ export class SeriesService {
           title: dto.title,
           slug: dto.slug ? slugify(dto.slug) : slugify(dto.title),
           description: dto.description,
-          coverImage: dto.coverImage,
         },
       });
     } catch (err) {
@@ -60,7 +59,6 @@ export class SeriesService {
           ...(dto.title !== undefined && { title: dto.title }),
           ...(dto.slug !== undefined && { slug: slugify(dto.slug) }),
           ...(dto.description !== undefined && { description: dto.description }),
-          ...(dto.coverImage !== undefined && { coverImage: dto.coverImage }),
         },
       });
     } catch (err) {

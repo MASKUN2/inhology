@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { getPostBySlug } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import { Comments } from '@/components/comments';
+import { Markdown } from '@/components/markdown';
 
 type Params = {
   params: Promise<{ slug: string }>;
@@ -84,11 +83,7 @@ export default async function PostPage({ params, searchParams }: Params) {
           </Link>
         ) : null}
 
-        <div className="markdown">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {post.content}
-          </ReactMarkdown>
-        </div>
+        <Markdown>{post.content}</Markdown>
       </article>
 
       <Comments

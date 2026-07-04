@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { deletePost, updatePost } from '../../../actions';
 import { getAdminPost, getCategories, getSeriesList } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
+import { BodyEditor } from '@/components/body-editor';
 
 export const metadata: Metadata = { title: '글 수정' };
 
@@ -94,14 +95,7 @@ export default async function EditPostPage({
           </div>
         ) : null}
 
-        <textarea
-          name="content"
-          placeholder="본문 (Markdown)"
-          required
-          rows={16}
-          defaultValue={post.content}
-          className={`${field} font-mono`}
-        />
+        <BodyEditor defaultValue={post.content} />
 
         <select name="status" defaultValue={post.status} className={field}>
           <option value="DRAFT">초안</option>

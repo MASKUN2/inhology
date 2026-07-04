@@ -19,7 +19,6 @@ export interface Series {
   slug: string;
   title: string;
   description?: string | null;
-  coverImage?: string | null;
   _count?: { posts: number };
   posts?: Post[];
 }
@@ -52,7 +51,6 @@ export interface Post {
   title: string;
   excerpt: string | null;
   content: string;
-  coverImage: string | null;
   status: 'DRAFT' | 'PUBLISHED';
   publishedAt: string | null;
   readingTime: number | null;

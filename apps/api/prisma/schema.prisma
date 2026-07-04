@@ -23,7 +23,6 @@ model Post {
   title       String
   excerpt     String? // short summary for list views
   content     String // markdown body
-  coverImage  String?
   status      PostStatus @default(DRAFT)
   publishedAt DateTime? // set when first published
   readingTime Int? // minutes, computed on save
@@ -76,7 +75,6 @@ model Series {
   slug        String   @unique
   title       String
   description String?
-  coverImage  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

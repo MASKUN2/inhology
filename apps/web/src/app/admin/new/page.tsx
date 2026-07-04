@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { createPost, logout } from '../actions';
 import { getCategories, getSeriesList } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
+import { BodyEditor } from '@/components/body-editor';
 
 export const metadata: Metadata = { title: '새 글 쓰기' };
 
@@ -80,13 +81,7 @@ export default async function NewPostPage({
           </div>
         ) : null}
 
-        <textarea
-          name="content"
-          placeholder="본문 (Markdown)"
-          required
-          rows={16}
-          className={`${field} font-mono`}
-        />
+        <BodyEditor />
 
         <select name="status" defaultValue="DRAFT" className={field}>
           <option value="DRAFT">초안</option>
