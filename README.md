@@ -50,8 +50,11 @@ pnpm dev                                   # run web + api together
   `ADMIN_TOKEN` (the API is cluster-internal only). The old password login
   (`ADMIN_PASSWORD`) is removed. Auth wiring: `apps/web/src/auth.ts`,
   `apps/web/src/lib/auth.ts`, `apps/web/src/app/admin/actions.ts`.
-- **Production runs on the homelab k3s cluster** (`inhology.jwih.org`), not the
-  standalone Compose flow. See **`homelab/OPERATIONS.md`** + `homelab/k8s/apps/inhology.yaml`.
+- **Production runs on the homelab k3s cluster** (`inhology.jwih.org`) via **GitOps** —
+  push to `main` is the deploy. `.github/workflows/deploy.yml` builds `web`/`api` (amd64)
+  and pushes to `ghcr.io/maskun2/inhology-*:<sha>`, then bumps the tag in `deploy/`
+  (kustomize). Argo CD in the cluster watches `deploy/` and auto-syncs (rollback = revert
+  the tag commit). Cluster-side setup: **`homelab/OPERATIONS.md` §3a** + `homelab/k8s/system/argocd/`.
   [DEPLOYMENT.md](./DEPLOYMENT.md) keeps the original single-VM Compose guide as an alternative.
 - Container images: `apps/web/Dockerfile`, `apps/api/Dockerfile` (monorepo, build context = repo root).
 - Local dev: public pages need only the API. To exercise `/admin` locally, set the web
