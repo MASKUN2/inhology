@@ -4,11 +4,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: apps
 resources:
-  - manifest.yaml
+- manifest.yaml
 images:
-  - name: inhology-web
-    newName: ghcr.io/maskun2/inhology-web
-    newTag: latest   # CI 가 commit sha 로 교체
-  - name: inhology-api
-    newName: ghcr.io/maskun2/inhology-api
-    newTag: latest   # CI 가 commit sha 로 교체
+- name: inhology-api
+  newName: ghcr.io/maskun2/inhology-api
+  newTag: e005c8fe9432bb5c59f0dcf91ecc7e1554b5f691
+- name: inhology-web
+  newName: ghcr.io/maskun2/inhology-web
+  newTag: e005c8fe9432bb5c59f0dcf91ecc7e1554b5f691
