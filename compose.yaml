@@ -3,10 +3,11 @@ services:
     image: postgres:17-alpine
     container_name: inhology-postgres
     restart: unless-stopped
+    # 로컬 개발 전용 DB. 프로덕션(홈랩)과 무관. 필요 시 .env로 오버라이드.
     environment:
-      POSTGRES_USER: inho
-      POSTGRES_PASSWORD: inho
-      POSTGRES_DB: inhology
+      POSTGRES_USER: ${POSTGRES_USER:-inho}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-inho}
+      POSTGRES_DB: ${POSTGRES_DB:-inhology}
     ports:
       - "5432:5432"
     volumes:

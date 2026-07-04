@@ -1,0 +1,14 @@
+# Argo CD 가 watch 하는 GitOps 소스. CI(.github/workflows/deploy.yml)가 빌드 후
+# `kustomize edit set image ...` 로 아래 images 의 newTag(=commit sha)를 갱신 커밋한다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: apps
+resources:
+  - manifest.yaml
+images:
+  - name: inhology-web
+    newName: ghcr.io/maskun2/inhology-web
+    newTag: latest   # CI 가 commit sha 로 교체
+  - name: inhology-api
+    newName: ghcr.io/maskun2/inhology-api
+    newTag: latest   # CI 가 commit sha 로 교체

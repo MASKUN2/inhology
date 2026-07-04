@@ -15,10 +15,11 @@ out
 # testing
 coverage
 
-# env
+# env — never commit real env files; only *.env.example templates are allowed
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!**/.env.example
 
 # logs
 *.log
