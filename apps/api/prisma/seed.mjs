@@ -18,40 +18,22 @@ async function main() {
       create: c,
     });
   }
-  const dev = categories.dev;
 
+  // 기본 태그 (신규 DB 편의용). 실제 글은 에디터/이관으로 생성한다.
   const tagDefs = [
     { slug: 'typescript', name: 'TypeScript' },
     { slug: 'nestjs', name: 'NestJS' },
     { slug: 'retrospective', name: '회고' },
   ];
-  const tags = [];
   for (const t of tagDefs) {
-    tags.push(
-      await prisma.tag.upsert({
-        where: { slug: t.slug },
-        update: { name: t.name },
-        create: t,
-      }),
-    );
+    await prisma.tag.upsert({
+      where: { slug: t.slug },
+      update: { name: t.name },
+      create: t,
+    });
   }
 
-  await prisma.post.upsert({
-    where: { slug: 'hello-inhology' },
-    update: {},
-    create: {
-      slug: 'hello-inhology',
-      title: 'inhology를 시작하며',
-      excerpt: 'inhology 블로그의 첫 글입니다.',
-      content:
-        '# 안녕하세요\n\ninhology — 개발자이자 한 사람으로서의 기록을 모으는 공간입니다.',
-      status: 'PUBLISHED',
-      publishedAt: new Date(),
-      readingTime: 1,
-      category: { connect: { id: dev.id } },
-      tags: { connect: [{ id: tags[0].id }, { id: tags[1].id }] },
-    },
-  });
+  // 플레이스홀더 글은 두지 않는다 (실제 콘텐츠는 에디터/이관으로).
 
   console.log('Seed complete:', {
     categories: await prisma.category.count(),
