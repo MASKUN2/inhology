@@ -22,7 +22,7 @@ live in [`../ui-design/`](../ui-design/).
 - **Generous vertical rhythm** — large top/bottom breathing room around the
   article; clear separation between meta, body, and comments.
 - **A persistent site header** on every page: the brand wordmark (links home)
-  plus a small primary nav (currently *홈*, *시리즈*).
+  plus a small primary nav (currently *Home*, *Series*).
 - **Mobile-first and responsive.** The single-column layout collapses cleanly;
   multi-field rows (e.g. the comment form) stack on narrow viewports.
 
@@ -49,7 +49,8 @@ live in [`../ui-design/`](../ui-design/).
 - A small, fixed type scale: *page title* (largest, bold, tight tracking) →
   *list/section title* → *body* → *meta* (smallest, muted). Headings inside
   rendered Markdown step down within the body.
-- **Korean-first.** Type, line-height, and wrapping must read well for Hangul;
+- **English UI, multilingual content.** UI copy is English, but type,
+  line-height, and wrapping must still read well for **Korean/CJK content**;
   nothing may break on non-ASCII titles, slugs, or comment text.
 
 ## 7.5 Shared UI patterns
@@ -78,15 +79,19 @@ These are the recurring building blocks; reuse them rather than inventing new on
   (success) or reporting a problem (error), shown after a form submission.
 
 ## 7.6 Copy & microcopy
-- **All reader-facing copy is Korean**, in a polite, personal register (존댓말).
-- **Dates** render in long Korean form (`YYYY년 M월 D일`); reading time as *N분*.
+- **All UI copy is English**, in a plain, friendly register. **User content and
+  data — post titles/bodies, comments, and category/tag/series names — may be
+  Korean or any language** and are shown exactly as authored; only the app's own
+  chrome is translated. The brand name *inhology* is never translated.
+- **Dates** render in ISO form (`YYYY-MM-DD`, e.g. `2026-07-11`); reading time as
+  *N min*; series position as *Part N*; counts as *N posts*.
 - Microcopy is reassuring and specific. Required, fixed strings:
-  - Empty post list → *"아직 발행된 글이 없습니다."*
-  - No comments yet → *"첫 댓글을 남겨보세요."*
-  - Comment accepted → *"댓글이 등록되었습니다. 검토 후 공개됩니다."* (reflects the
-    moderation policy in [§5.4](./policies.md#54-comments) — every comment is
+  - Empty post list → *"No posts published yet."*
+  - No comments yet → *"Be the first to comment."*
+  - Comment accepted → *"Comment submitted — it'll appear after review."* (reflects
+    the moderation policy in [§5.4](./policies.md#54-comments) — every comment is
     pending until approved).
-  - Comment rejected → *"등록에 실패했습니다. 입력값을 확인해 주세요."*
+  - Comment rejected → *"Submission failed. Please check your input."*
 - The email field is always labelled as **optional and private**, reinforcing
   [§5.4](./policies.md#54-comments).
 

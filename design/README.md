@@ -1,4 +1,4 @@
-# design/
+# design/  ·  v[`1.0.0`](./VERSION)
 
 The design surface for inhology — the durable, human-readable expression of what
 the product is and how it behaves, kept diffable and reviewable independently of

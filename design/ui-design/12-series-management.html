@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>시리즈 관리 · inhology</title>
+<title>Manage series · inhology</title>
 <style>
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
@@ -34,39 +34,39 @@
 <body>
 <main class="wrap">
   <aside class="note">
-    <a href="index.html">← UI 화면 목록</a>
-    <h3>이 화면 — 시리즈 관리 (<code>/admin/series</code>)</h3>
+    <a href="index.html">← UI screens</a>
+    <h3>This screen — Series management (<code>/admin/series</code>)</h3>
     <ul>
-      <li>작성자가 시리즈를 만들고 지우는 화면입니다(§4.4).</li>
-      <li>상단에 생성 폼(제목 필수 · 설명 선택 · "시리즈 추가"), 아래에 시리즈 목록(제목 링크 + <code>글 N편</code> + 삭제)이 놓입니다.</li>
-      <li>하단 도움말은 "글은 편집 화면에서 시리즈에 넣으며, 시리즈 삭제가 글을 지우지 않는다"는 정책(§5.3)을 안내합니다.</li>
-      <li>없으면 "아직 시리즈가 없습니다."를 표시합니다.</li>
+      <li>The author creates and deletes series (§4.4).</li>
+      <li>A create form at the top (title required · description optional · "Add series"), the series list below (title link + <code>N posts</code> + Delete).</li>
+      <li>The help text explains that posts are added to a series from the post editor, and that deleting a series does not delete its posts (§5.3).</li>
+      <li>When there are none: "No series yet."</li>
     </ul>
   </aside>
 
   <div class="toolbar">
-    <h1>시리즈 관리</h1>
-    <div class="actions"><a href="08-post-dashboard.html">← 글 관리</a></div>
+    <h1>Manage series</h1>
+    <div class="actions"><a href="08-post-dashboard.html">← Manage posts</a></div>
   </div>
 
   <form class="form">
-    <input placeholder="시리즈 제목" required>
-    <input placeholder="설명 (선택)">
-    <button type="button">시리즈 추가</button>
+    <input placeholder="Series title" required>
+    <input placeholder="Description (optional)">
+    <button type="button">Add series</button>
   </form>
 
   <div>
     <div class="item">
-      <div><a href="06-series-detail.html">홈랩 구축기</a><span class="count">글 4편</span></div>
-      <button type="button">삭제</button>
+      <div><a href="06-series-detail.html">홈랩 구축기</a><span class="count">4 posts</span></div>
+      <button type="button">Delete</button>
     </div>
     <div class="item">
-      <div><a href="06-series-detail.html">이 블로그를 만들며</a><span class="count">글 3편</span></div>
-      <button type="button">삭제</button>
+      <div><a href="06-series-detail.html">이 블로그를 만들며</a><span class="count">3 posts</span></div>
+      <button type="button">Delete</button>
     </div>
   </div>
 
-  <p class="help">글은 각 글의 편집 화면에서 시리즈에 추가합니다. 시리즈를 삭제해도 소속 글은 삭제되지 않으며, 글의 시리즈 연결만 해제됩니다.</p>
+  <p class="help">Add posts to a series from each post's editor by setting the series and order. Deleting a series does not delete its posts; they are only detached from the series.</p>
 </main>
 </body>
 </html>

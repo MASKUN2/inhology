@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>새 글 쓰기 · inhology</title>
+<title>New post · inhology</title>
 <style>
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
@@ -40,50 +40,50 @@
 <body>
 <main class="wrap">
   <aside class="note">
-    <a href="index.html">← UI 화면 목록</a>
-    <h3>이 화면 — 새 글 쓰기 (<code>/admin/new</code>)</h3>
+    <a href="index.html">← UI screens</a>
+    <h3>This screen — New post (<code>/admin/new</code>)</h3>
     <ul>
-      <li>글을 새로 작성하는 폼입니다(§4.1).</li>
-      <li>제목(필수)·요약(선택)·카테고리(필수)·(시리즈가 있을 때만 노출되는) 시리즈+순서, 본문 에디터, 상태(초안/발행)로 구성됩니다.</li>
-      <li>에디터 툴바의 편집 | 미리보기 토글은 공개 글과 같은 렌더러로 미리보기를 보여줍니다.</li>
-      <li>"이미지 추가"는 업로드 후 커서에 <code>![](…)</code>를 삽입합니다(§7.5).</li>
-      <li>아래 토글은 최소 JS로 시연합니다.</li>
+      <li>The form for writing a new post (§4.1).</li>
+      <li>Title (required) · Excerpt (optional) · Category (required) · (series + order, shown only when series exist), the body editor, and status (Draft/Published).</li>
+      <li>The editor's Edit | Preview toggle uses the same renderer as the public post.</li>
+      <li>"Add image" uploads, then inserts <code>![](…)</code> at the cursor (§7.5).</li>
+      <li>The toggle below is demonstrated with minimal JS.</li>
     </ul>
   </aside>
 
   <div class="toolbar">
-    <h1>새 글 쓰기</h1>
-    <div class="actions"><a href="08-post-dashboard.html">← 목록</a><button type="button">로그아웃</button></div>
+    <h1>New post</h1>
+    <div class="actions"><a href="08-post-dashboard.html">← Back</a><button type="button">Log out</button></div>
   </div>
 
   <form class="form">
-    <input placeholder="제목" required>
-    <input placeholder="요약 (선택)">
+    <input placeholder="Title" required>
+    <input placeholder="Excerpt (optional)">
 
     <select required>
-      <option value="" disabled selected>카테고리 선택</option>
+      <option value="" disabled selected>Select category</option>
       <option>개발</option><option>일상</option><option>에세이</option>
     </select>
 
     <div class="row">
-      <select><option value="">시리즈 없음</option><option>홈랩 구축기</option><option>이 블로그를 만들며</option></select>
-      <input class="w24" type="number" min="0" placeholder="순서">
+      <select><option value="">No series</option><option>홈랩 구축기</option><option>이 블로그를 만들며</option></select>
+      <input class="w24" type="number" min="0" placeholder="Order">
     </div>
 
     <div class="editor">
       <div class="editor-bar">
         <span class="seg">
-          <button type="button" class="active" onclick="setMode('edit')">편집</button>
-          <button type="button" onclick="setMode('preview')">미리보기</button>
+          <button type="button" class="active" onclick="setMode('edit')">Edit</button>
+          <button type="button" onclick="setMode('preview')">Preview</button>
         </span>
-        <button type="button" class="img-btn">이미지 추가</button>
+        <button type="button" class="img-btn">Add image</button>
       </div>
-      <textarea class="body" id="body" placeholder="마크다운으로 본문을 작성하세요. 이미지는 붙여넣기·드래그·파일 선택으로 추가됩니다."></textarea>
-      <div class="preview" id="preview"><em style="opacity:.7">내용이 없습니다.</em></div>
+      <textarea class="body" id="body" placeholder="Body (Markdown) — paste, drag, or pick images to add them."></textarea>
+      <div class="preview" id="preview"><em style="opacity:.7">Nothing to preview.</em></div>
     </div>
 
-    <select><option selected>초안</option><option>발행</option></select>
-    <button class="btn" type="button">저장</button>
+    <select><option selected>Draft</option><option>Published</option></select>
+    <button class="btn" type="button">Save</button>
   </form>
 </main>
 
@@ -96,7 +96,7 @@
     if(m==='preview'){
       ta.style.display='none'; pv.style.display='block';
       var t=ta.value.trim();
-      pv.innerHTML = t ? t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]}).replace(/\n/g,'<br>') : '<em style="opacity:.7">내용이 없습니다.</em>';
+      pv.innerHTML = t ? t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]}).replace(/\n/g,'<br>') : '<em style="opacity:.7">Nothing to preview.</em>';
     }else{ ta.style.display='block'; pv.style.display='none'; }
   }
 </script>

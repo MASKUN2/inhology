@@ -72,5 +72,5 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 | **Security** | Secrets never committed; drafts never leak; reader email never exposed; admin actions gated by the shared secret. |
 | **Backup** | Content lives in a database that can be backed up and restored. Loss of the host must not mean loss of writing. |
 | **Accessibility & readability** | Clean typography, dark-mode support, mobile-friendly layout. |
-| **Internationalisation** | Korean-first content and UI; must not break on non-ASCII titles, slugs, or comments. |
+| **Internationalisation** | **English UI**; content, comments, and identifiers may be non-ASCII (e.g. Korean) and must work end-to-end (URLs, storage, rendering). |
 | **Maintainability** | A single author should be able to operate and update the whole system unaided. |

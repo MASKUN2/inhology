@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자 로그인 · inhology</title>
+<title>Admin login · inhology</title>
 <style>
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
@@ -28,22 +28,22 @@
 <body>
 <main class="wrap">
   <aside class="note">
-    <a href="index.html">← UI 화면 목록</a>
-    <h3>이 화면 — 관리자 로그인 (<code>/admin/login</code>)</h3>
+    <a href="index.html">← UI screens</a>
+    <h3>This screen — Admin login (<code>/admin/login</code>)</h3>
     <ul>
-      <li>관리자(Inho) 전용 진입점입니다.</li>
-      <li>좁은 컬럼에 제목·부제와 SSO 로그인 버튼 하나만 둡니다.</li>
-      <li>버튼은 <code>login</code> 서버액션으로 Authentik OIDC 로그인을 시작합니다(§5.5).</li>
-      <li>이미 로그인 상태면 <code>/admin</code>으로 넘어갑니다.</li>
+      <li>The author-only (Inho) entry point.</li>
+      <li>A narrow column with title/subtitle and a single SSO sign-in button.</li>
+      <li>The button starts Authentik OIDC login via the <code>login</code> server action (§5.5).</li>
+      <li>If already signed in, it redirects to <code>/admin</code>.</li>
     </ul>
   </aside>
 
-  <h1>관리자 로그인</h1>
-  <p class="subtitle">Authentik 계정(SSO)으로 로그인합니다.</p>
+  <h1>Admin login</h1>
+  <p class="subtitle">Sign in with your Authentik (SSO) account.</p>
 
-  <form><button class="btn" type="button">Authentik으로 로그인</button></form>
+  <form><button class="btn" type="button">Sign in with Authentik</button></form>
 
-  <a class="home" href="01-home.html">← 사이트로 돌아가기</a>
+  <a class="home" href="01-home.html">← Back to site</a>
 </main>
 </body>
 </html>

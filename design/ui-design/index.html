@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>inhology — UI 화면 목록</title>
+<title>inhology — UI screens</title>
 <style>
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
@@ -20,31 +20,32 @@
 </head>
 <body>
 <main class="wrap">
-  <h1>inhology — UI 화면 목록</h1>
+  <h1>inhology — UI screens</h1>
   <p class="muted">
-    실제 앱의 12개 화면을 정적 HTML로 재현한 <strong>와이어프레임</strong>입니다. 외부 리소스 없이
-    독립 실행되며, 최소한의 CSS(하나의 회색 테두리 · 시스템 폰트 · 색상 없음)로 구조와 문구만
-    보여줍니다. OS 설정에 따라 라이트/다크가 자동 전환됩니다.
+    Static-HTML <strong>wireframes</strong> reproducing the app's 12 screens. Each file is
+    self-contained (no external resources) and uses minimal CSS (a single grey border ·
+    system font · no color) to show structure and copy only. The UI is English; sample
+    content stays as authored (Korean). Light/dark follows the OS setting.
   </p>
 
-  <h2>공개 화면 (Public)</h2>
+  <h2>Public screens</h2>
   <ol>
-    <li><a href="01-home.html">홈 / 글 목록</a> — <code>/</code></li>
-    <li><a href="02-post-detail.html">글 상세</a> — <code>/posts/{slug}</code></li>
-    <li><a href="03-category-archive.html">카테고리 아카이브</a> — <code>/categories/{slug}</code></li>
-    <li><a href="04-tag-archive.html">태그 아카이브</a> — <code>/tags/{slug}</code></li>
-    <li><a href="05-series-index.html">시리즈 목록</a> — <code>/series</code></li>
-    <li><a href="06-series-detail.html">시리즈 상세</a> — <code>/series/{slug}</code></li>
+    <li><a href="01-home.html">Home / post list</a> — <code>/</code></li>
+    <li><a href="02-post-detail.html">Post detail</a> — <code>/posts/{slug}</code></li>
+    <li><a href="03-category-archive.html">Category archive</a> — <code>/categories/{slug}</code></li>
+    <li><a href="04-tag-archive.html">Tag archive</a> — <code>/tags/{slug}</code></li>
+    <li><a href="05-series-index.html">Series index</a> — <code>/series</code></li>
+    <li><a href="06-series-detail.html">Series detail</a> — <code>/series/{slug}</code></li>
   </ol>
 
-  <h2>관리자 화면 (Admin)</h2>
+  <h2>Admin screens</h2>
   <ol start="7">
-    <li><a href="07-admin-login.html">관리자 로그인</a> — <code>/admin/login</code></li>
-    <li><a href="08-post-dashboard.html">글 관리 대시보드</a> — <code>/admin</code></li>
-    <li><a href="09-new-post.html">새 글 쓰기</a> — <code>/admin/new</code></li>
-    <li><a href="10-edit-post.html">글 수정</a> — <code>/admin/posts/{id}/edit</code></li>
-    <li><a href="11-comment-moderation.html">댓글 관리</a> — <code>/admin/comments</code></li>
-    <li><a href="12-series-management.html">시리즈 관리</a> — <code>/admin/series</code></li>
+    <li><a href="07-admin-login.html">Admin login</a> — <code>/admin/login</code></li>
+    <li><a href="08-post-dashboard.html">Post dashboard</a> — <code>/admin</code></li>
+    <li><a href="09-new-post.html">New post</a> — <code>/admin/new</code></li>
+    <li><a href="10-edit-post.html">Edit post</a> — <code>/admin/posts/{id}/edit</code></li>
+    <li><a href="11-comment-moderation.html">Comment moderation</a> — <code>/admin/comments</code></li>
+    <li><a href="12-series-management.html">Series management</a> — <code>/admin/series</code></li>
   </ol>
 </main>
 </body>

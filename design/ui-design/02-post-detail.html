@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,34 +54,34 @@
 <header class="header">
   <div class="nav">
     <a class="brand" href="01-home.html">inhology</a>
-    <div class="nav-right"><a href="01-home.html">홈</a><a href="05-series-index.html">시리즈</a></div>
+    <div class="nav-right"><a href="01-home.html">Home</a><a href="05-series-index.html">Series</a></div>
   </div>
 </header>
 
 <main class="wrap">
   <aside class="note">
-    <a href="index.html">← UI 화면 목록</a>
-    <h3>이 화면 — 글 상세 (<code>/posts/{slug}</code>)</h3>
+    <a href="index.html">← UI screens</a>
+    <h3>This screen — Post detail (<code>/posts/{slug}</code>)</h3>
     <ul>
-      <li>발행된 글 한 편을 읽는 화면입니다.</li>
-      <li>뒤로가기, 메타행, 제목, 태그, (시리즈 소속 시) 시리즈 배너, 마크다운 본문을 거쳐 댓글 영역으로 이어집니다.</li>
-      <li>댓글은 승인된 것만 보이고 답글은 들여쓰기됩니다(§5.4).</li>
-      <li>폼은 이름(필수)·이메일(선택·비공개)·내용(필수)을 받고, 제출 시 대기 상태로 접수되어 상단 플래시로 안내합니다.</li>
-      <li>초안이거나 없는 슬러그면 404입니다.</li>
+      <li>Reads a single published post.</li>
+      <li>Back link, meta row, title, tags, (if in a series) a series banner, and the Markdown body, then the comments area.</li>
+      <li>Only approved comments are shown; replies are indented (§5.4).</li>
+      <li>The form takes name (required), email (optional, private), and body (required); on submit it's accepted as pending and confirmed by the top flash.</li>
+      <li>A draft or unknown slug returns 404.</li>
     </ul>
   </aside>
 
-  <a class="back" href="01-home.html">← 목록으로</a>
+  <a class="back" href="01-home.html">← Back to list</a>
 
   <article>
     <div class="meta">
       <a class="chip" href="03-category-archive.html">개발</a>
-      <time datetime="2026-07-04">2026년 7월 4일</time><span>· 6분</span>
+      <time datetime="2026-07-04">2026-07-04</time><span>· 6 min</span>
     </div>
     <h1>본문 이미지 업로드를 MinIO로 옮긴 이야기</h1>
     <div class="tags"><a href="04-tag-archive.html">#MinIO</a> <a href="04-tag-archive.html">#Next.js</a></div>
 
-    <a class="banner" href="06-series-detail.html">시리즈 · 홈랩 구축기 · 2편</a>
+    <a class="banner" href="06-series-detail.html">Series · 홈랩 구축기 · Part 2</a>
 
     <div class="body">
       <p>커버 이미지 필드를 걷어내고, 이미지를 <strong>본문 안에서만</strong> 다루기로 했습니다. 붙여넣기 · 드래그 · 파일 선택 중 무엇으로 올려도 커서 위치에 <code>![](…)</code>가 자동으로 삽입됩니다.</p>
@@ -93,25 +93,25 @@
   </article>
 
   <section class="comments">
-    <h2 style="font-size:1.1rem">댓글 2</h2>
-    <div class="flash">댓글이 등록되었습니다. 검토 후 공개됩니다.</div>
+    <h2 style="font-size:1.1rem">Comments 2</h2>
+    <div class="flash">Comment submitted — it'll appear after review.</div>
 
     <div class="comment">
-      <div class="chead"><span class="name">지훈</span><time datetime="2026-07-05">2026년 7월 5일</time></div>
+      <div class="chead"><span class="name">지훈</span><time datetime="2026-07-05">2026-07-05</time></div>
       <p>내용 주소 지정 키 아이디어 좋네요. 중복 업로드가 자연스럽게 dedup 되겠어요.</p>
     </div>
     <div class="comment reply">
-      <div class="chead"><span class="name">Inho</span><time datetime="2026-07-05">2026년 7월 5일</time></div>
+      <div class="chead"><span class="name">Inho</span><time datetime="2026-07-05">2026-07-05</time></div>
       <p>맞아요. 게다가 불변이라 엣지 캐시가 아주 잘 먹습니다.</p>
     </div>
 
     <form class="form">
       <div class="row">
-        <input placeholder="이름" required maxlength="50">
-        <input placeholder="이메일 (선택 · 비공개)" type="email">
+        <input placeholder="Name" required maxlength="50">
+        <input placeholder="Email (optional, private)" type="email">
       </div>
-      <textarea rows="4" placeholder="댓글을 남겨주세요" required maxlength="5000"></textarea>
-      <button class="btn" type="button">댓글 등록</button>
+      <textarea rows="4" placeholder="Write a comment" required maxlength="5000"></textarea>
+      <button class="btn" type="button">Post comment</button>
     </form>
   </section>
 </main>
