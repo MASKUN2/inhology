@@ -55,7 +55,13 @@ export async function createPost(formData: FormData) {
   }
   const post = await res.json();
   // A draft has no public page (it 404s), so land on the dashboard instead.
-  redirect(post.status === 'PUBLISHED' ? `/posts/${post.slug}` : '/admin');
+  // Encode the slug: Hangul slugs are non-Latin1 and would otherwise crash the
+  // server-action redirect (Next sets it as the x-action-redirect header).
+  redirect(
+    post.status === 'PUBLISHED'
+      ? `/posts/${encodeURIComponent(post.slug)}`
+      : '/admin',
+  );
 }
 
 export async function updatePost(formData: FormData) {
@@ -91,7 +97,13 @@ export async function updatePost(formData: FormData) {
     redirect(`/admin/posts/${id}/edit?error=1`);
   }
   const post = await res.json();
-  redirect(post.status === 'PUBLISHED' ? `/posts/${post.slug}` : '/admin');
+  // Encode the slug (see createPost): a Hangul slug would otherwise crash the
+  // server-action redirect via an invalid x-action-redirect header character.
+  redirect(
+    post.status === 'PUBLISHED'
+      ? `/posts/${encodeURIComponent(post.slug)}`
+      : '/admin',
+  );
 }
 
 export async function deletePost(formData: FormData) {
