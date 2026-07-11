@@ -8,7 +8,7 @@ resources:
 images:
 - name: inhology-api
   newName: ghcr.io/maskun2/inhology-api
-  newTag: bc12a9ea682a8d0041299a33ea708f171cf512ff
+  newTag: e0fe39220eabdc8c19d8951b6ddabfaed62c33f8
 - name: inhology-web
   newName: ghcr.io/maskun2/inhology-web
-  newTag: bc12a9ea682a8d0041299a33ea708f171cf512ff
+  newTag: e0fe39220eabdc8c19d8951b6ddabfaed62c33f8
