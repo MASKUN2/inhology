@@ -5,7 +5,8 @@ The name is a play on *inho* + *anthology*: a personal selection of writing, cod
 
 ## Documentation
 
-- **[SPEC.md](./SPEC.md)** — what inhology *is*: purpose, requirements, and policies (no implementation detail).
+- **[design/](./design/)** — the design surface: product spec, glossary, domain model, API contract, and UI mockups.
+  - **[design/spec/](./design/spec/)** — what inhology *is*: purpose, requirements, and policies (no implementation detail).
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** — how to deploy it to a home-server VM.
 - This README — how it's built and how to run it locally.
 
@@ -24,6 +25,7 @@ inhology/
 │   ├── web/        # Next.js frontend  (@inhology/web)
 │   └── api/        # NestJS backend    (@inhology/api)
 ├── packages/            # shared packages (tbd)
+├── design/              # design surface: spec, glossary, domain model, openapi, UI mockups (+ validate.py)
 ├── turbo.json           # task pipeline: build / dev / lint / test / type-check
 ├── tsconfig.base.json
 ├── pnpm-workspace.yaml  # workspace globs + pnpm supply-chain settings
@@ -63,7 +65,7 @@ pnpm dev                                   # run web + api together
 ## Images (본문 이미지)
 
 Inline post images live in **MinIO**, served under the site's own domain — the API is not
-involved (images aren't catalogued; SPEC §5.7). All handled by the **web** app:
+involved (images aren't catalogued; [design/spec §5.7](./design/spec/policies.md#57-images)). All handled by the **web** app:
 
 - **Upload** — `POST /admin/api/upload` (`apps/web/src/app/admin/api/upload/route.ts`): author-only
   (Authentik session), magic-byte type check (PNG/JPEG/WebP/GIF, **SVG rejected**), 10MB cap,

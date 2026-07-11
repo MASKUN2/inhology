@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>개발 · inhology</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
+  @media(prefers-color-scheme:dark){body{color:#eee;background:#111}}
+  a{color:inherit}
+  .header{border-bottom:1px solid gray}
+  .nav{max-width:672px;margin:0 auto;padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.9rem}
+  .brand{font-weight:700;text-decoration:none}
+  .nav-right{display:flex;gap:1rem}
+  .nav-right a{text-decoration:none}
+  .wrap{max-width:672px;margin:0 auto;padding:3rem 1.5rem}
+  .back{font-size:.875rem;opacity:.7;text-decoration:none}
+  .eyebrow{font-size:.75rem;opacity:.7;text-transform:uppercase;letter-spacing:.05em;margin-top:2rem}
+  h1{font-size:1.6rem;font-weight:700;margin:.4rem 0}
+  h2{font-size:1.2rem;margin:.3rem 0}
+  .desc{opacity:.7}
+  .list{margin-top:2.5rem}
+  .card{margin-bottom:2rem}
+  .meta{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;font-size:.8rem;opacity:.7}
+  .chip{border:1px solid gray;padding:.05rem .5rem;text-decoration:none}
+  .card h2 a{text-decoration:none}
+  .excerpt{opacity:.7;font-size:.95rem;margin:.25rem 0 0}
+  .tags{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.8rem;opacity:.7;margin-top:.5rem}
+  .tags a{text-decoration:none}
+  code{border:1px solid gray;padding:0 .25em;font-family:ui-monospace,monospace;font-size:.9em}
+  .note{border:1px solid #2563eb;color:#2563eb;padding:.9rem 1.1rem;margin-bottom:2rem;font-size:.85rem}
+  @media(prefers-color-scheme:dark){.note{border-color:#7ab8ff;color:#7ab8ff}}
+  .note a{color:inherit;text-decoration:underline}
+  .note h3{font-size:.9rem;margin:.5rem 0}
+  .note ul{margin:.4rem 0 0;padding-left:1.15rem}
+  .note li{margin:.3rem 0}
+  .note code{border:1px solid currentColor;padding:0 .25em}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="nav">
+    <a class="brand" href="01-home.html">inhology</a>
+    <div class="nav-right"><a href="01-home.html">홈</a><a href="05-series-index.html">시리즈</a></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="note">
+    <a href="index.html">← UI 화면 목록</a>
+    <h3>이 화면 — 카테고리 아카이브 (<code>/categories/{slug}</code>)</h3>
+    <ul>
+      <li>한 카테고리에 속한 발행 글만 모아 보여줍니다(§4.3).</li>
+      <li>뒤로가기, "카테고리" 아이라벨, 이름(<code>h1</code>), 선택적 설명, 글 목록으로 구성됩니다.</li>
+      <li>태그 아카이브와 레이아웃이 동일하며 헤더 문구만 다릅니다.</li>
+    </ul>
+  </aside>
+
+  <a class="back" href="01-home.html">← 목록으로</a>
+  <p class="eyebrow">카테고리</p>
+  <h1>개발</h1>
+  <p class="desc">코드, 인프라, 그리고 만들며 배운 것들.</p>
+
+  <div class="list">
+    <article class="card">
+      <div class="meta"><a class="chip" href="03-category-archive.html">개발</a><time datetime="2026-07-04">2026년 7월 4일</time><span>· 6분</span></div>
+      <h2><a href="02-post-detail.html">본문 이미지 업로드를 MinIO로 옮긴 이야기</a></h2>
+      <p class="excerpt">커버 이미지를 걷어내고 본문 이미지 업로드를 MinIO 위에 다시 세운 기록.</p>
+      <div class="tags"><a href="04-tag-archive.html">#MinIO</a> <a href="04-tag-archive.html">#Next.js</a></div>
+    </article>
+    <article class="card">
+      <div class="meta"><a class="chip" href="03-category-archive.html">개발</a><time datetime="2026-05-30">2026년 5월 30일</time><span>· 8분</span></div>
+      <h2><a href="02-post-detail.html">NestJS에서 슬러그를 한글로 다루기</a></h2>
+      <p class="excerpt">유니코드 슬러그를 URL 끝단까지 안전하게 흘려보내는 법.</p>
+      <div class="tags"><a href="04-tag-archive.html">#NestJS</a></div>
+    </article>
+  </div>
+</main>
+</body>
+</html>

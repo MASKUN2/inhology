@@ -18,7 +18,7 @@ const minio = new Client({
   secretKey: process.env.MINIO_SECRET_KEY ?? '',
 });
 
-/** 업로드 정책 (SPEC §5.7). */
+/** 업로드 정책 (design/spec/policies.md §5.7). */
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10MB
 
 interface ImageKind {

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>홈 · inhology</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
+  @media(prefers-color-scheme:dark){body{color:#eee;background:#111}}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:transparent;border:1px solid gray;padding:.2rem .4rem;cursor:pointer;line-height:0}
+  .header{border-bottom:1px solid gray}
+  .nav{max-width:672px;margin:0 auto;padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.9rem}
+  .brand{font-weight:700}
+  .nav-right{display:flex;gap:1rem;align-items:center;position:relative}
+  .menu{position:absolute;right:0;top:1.8rem;border:1px solid gray;background:inherit;display:none}
+  .menu.open{display:block}
+  .menu a{display:block;padding:.4rem .9rem;white-space:nowrap}
+  .wrap{max-width:672px;margin:0 auto;padding:3rem 1.5rem}
+  h1{font-size:1.6rem;font-weight:700;margin:0}
+  h2{font-size:1.2rem;margin:.3rem 0}
+  .subtitle,.excerpt,.meta,.tags{opacity:.7}
+  .list{margin-top:2.5rem}
+  .card{margin-bottom:2rem}
+  .meta{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;font-size:.8rem}
+  .chip{border:1px solid gray;padding:.05rem .5rem;font-size:.75rem}
+  .excerpt{font-size:.95rem;margin:.25rem 0 0}
+  .tags{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.8rem;margin-top:.5rem}
+  code{border:1px solid gray;padding:0 .25em;font-family:ui-monospace,monospace;font-size:.9em}
+  .note{border:1px solid #2563eb;color:#2563eb;padding:.9rem 1.1rem;margin-bottom:2.5rem;font-size:.85rem}
+  @media(prefers-color-scheme:dark){.note{border-color:#7ab8ff;color:#7ab8ff}}
+  .note a{color:inherit;text-decoration:underline}
+  .note h3{font-size:.9rem;margin:.5rem 0}
+  .note ul{margin:.4rem 0 0;padding-left:1.15rem}
+  .note li{margin:.3rem 0}
+  .note code{border-color:currentColor}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="nav">
+    <a class="brand" href="01-home.html">inhology</a>
+    <div class="nav-right">
+      <a href="01-home.html">홈</a>
+      <a href="05-series-index.html">시리즈</a>
+      <button aria-label="메뉴" onclick="document.getElementById('m').classList.toggle('open')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="menu" id="m"><a href="08-post-dashboard.html">관리자</a></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="note">
+    <a href="index.html">← UI 화면 목록</a>
+    <h3>이 화면 — 홈 / 글 목록 (<code>/</code>)</h3>
+    <ul>
+      <li>발행된 글을 최신순으로 보여주는 진입 화면입니다.</li>
+      <li>상단 사이트 헤더(워드마크 · 홈 · 시리즈 · 관리자 메뉴)와 본문의 사이트 제목/부제, 글 카드 목록으로 구성됩니다.</li>
+      <li>각 카드는 메타행(카테고리 · 발행일 · 읽는 시간 <code>N분</code>), 제목, 요약, 태그를 담습니다.</li>
+      <li>초안은 노출되지 않습니다(§5.1).</li>
+      <li>글이 없으면 "아직 발행된 글이 없습니다."를 표시합니다.</li>
+    </ul>
+  </aside>
+
+  <header>
+    <h1>inhology</h1>
+    <p class="subtitle">개발자이자 한 사람으로서의 기록</p>
+  </header>
+
+  <div class="list">
+    <article class="card">
+      <div class="meta">
+        <a class="chip" href="03-category-archive.html">개발</a>
+        <time datetime="2026-07-04">2026년 7월 4일</time><span>· 6분</span>
+      </div>
+      <h2><a href="02-post-detail.html">본문 이미지 업로드를 MinIO로 옮긴 이야기</a></h2>
+      <p class="excerpt">커버 이미지를 걷어내고, 본문에 붙여넣기·드래그로 이미지를 올리는 흐름을 MinIO 위에 다시 세웠습니다.</p>
+      <div class="tags"><a href="04-tag-archive.html">#MinIO</a> <a href="04-tag-archive.html">#Next.js</a></div>
+    </article>
+
+    <article class="card">
+      <div class="meta">
+        <a class="chip" href="03-category-archive.html">일상</a>
+        <time datetime="2026-06-21">2026년 6월 21일</time><span>· 3분</span>
+      </div>
+      <h2><a href="02-post-detail.html">홈서버를 k3s로 다시 세웠다</a></h2>
+      <p class="excerpt">단일 VM에서 2노드 k3s로. 집에서 굴리는 클러스터의 소박한 즐거움에 대하여.</p>
+      <div class="tags"><a href="04-tag-archive.html">#homelab</a> <a href="04-tag-archive.html">#k3s</a></div>
+    </article>
+  </div>
+</main>
+</body>
+</html>

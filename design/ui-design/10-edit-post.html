@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>글 수정 · inhology</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
+  @media(prefers-color-scheme:dark){body{color:#eee;background:#111}}
+  a{color:inherit;text-decoration:none}
+  button,input,select,textarea{font:inherit;color:inherit;background:transparent;border:1px solid gray;padding:.5rem .75rem;width:100%}
+  button{width:auto;cursor:pointer;padding:.3rem .7rem}
+  .wrap{max-width:672px;margin:0 auto;padding:3rem 1.5rem}
+  .toolbar{display:flex;align-items:center;justify-content:space-between}
+  h1{font-size:1.5rem;font-weight:700;margin:0}
+  .actions{display:flex;gap:1rem;align-items:center;font-size:.85rem;opacity:.9}
+  .form{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+  .row{display:flex;gap:.75rem}
+  .w24{width:6rem;flex:none}
+  .editor{border:1px solid gray}
+  .editor-bar{display:flex;align-items:center;gap:.5rem;padding:.5rem;border-bottom:1px solid gray;font-size:.8rem}
+  .seg button{border:1px solid gray;padding:.2rem .6rem;font-size:.8rem}
+  .seg button.active{font-weight:700;text-decoration:underline}
+  .img-btn{border:1px solid gray;padding:.2rem .6rem;font-size:.8rem}
+  textarea.body{border:none;padding:.75rem;font-family:ui-monospace,monospace;font-size:.9rem;min-height:15rem;resize:vertical}
+  .preview{padding:.75rem;min-height:15rem;display:none}
+  .btn{border:1px solid gray;padding:.55rem 1rem}
+  .delete-zone{margin-top:1rem;border-top:1px solid gray;padding-top:1rem}
+  code{border:1px solid gray;padding:0 .25em;font-family:ui-monospace,monospace;font-size:.9em}
+  .note{border:1px solid #2563eb;color:#2563eb;padding:.9rem 1.1rem;margin-bottom:2rem;font-size:.85rem}
+  @media(prefers-color-scheme:dark){.note{border-color:#7ab8ff;color:#7ab8ff}}
+  .note a{color:inherit;text-decoration:underline}
+  .note h3{font-size:.9rem;margin:.5rem 0}
+  .note ul{margin:.4rem 0 0;padding-left:1.15rem}
+  .note li{margin:.3rem 0}
+  .note code{border:1px solid currentColor;padding:0 .25em}
+  @media(max-width:520px){.row{flex-direction:column}.w24{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <aside class="note">
+    <a href="index.html">← UI 화면 목록</a>
+    <h3>이 화면 — 글 수정 (<code>/admin/posts/{id}/edit</code>)</h3>
+    <ul>
+      <li>기존 글의 모든 필드를 값이 채워진 상태로 편집합니다(§4.1).</li>
+      <li>구성은 "새 글 쓰기"와 같되 값이 프리필됩니다.</li>
+      <li>하단에 상단 경계선으로 구분된 "이 글 삭제" 버튼이 있습니다.</li>
+      <li>저장 성공 시 발행 글이면 공개 페이지로 이동하는데, 슬러그가 한글이면 리다이렉트 URL을 <code>encodeURIComponent</code>로 인코딩해야 헤더 오류를 피합니다(과거 500 원인).</li>
+    </ul>
+  </aside>
+
+  <div class="toolbar">
+    <h1>글 수정</h1>
+    <div class="actions"><a href="08-post-dashboard.html">← 목록</a></div>
+  </div>
+
+  <form class="form">
+    <input value="본문 이미지 업로드를 MinIO로 옮긴 이야기">
+    <input value="사이트 도메인 뒤로 객체 저장소를 숨기고, 이미지를 스트리밍으로 서빙하기.">
+
+    <select><option selected>개발</option><option>일상</option><option>에세이</option></select>
+
+    <div class="row">
+      <select><option value="">시리즈 없음</option><option selected>홈랩 구축기</option></select>
+      <input class="w24" type="number" min="0" value="2">
+    </div>
+
+    <div class="editor">
+      <div class="editor-bar">
+        <span class="seg">
+          <button type="button" class="active" onclick="setMode('edit')">편집</button>
+          <button type="button" onclick="setMode('preview')">미리보기</button>
+        </span>
+        <button type="button" class="img-btn">이미지 추가</button>
+      </div>
+      <textarea class="body" id="body">커버 이미지 필드를 걷어내고, 이미지를 **본문 안에서만** 다루기로 했습니다.
+
+## 업로드 경로
+매직바이트 검사 후 내용 해시를 키로 MinIO에 PUT.</textarea>
+      <div class="preview" id="preview"></div>
+    </div>
+
+    <select><option>초안</option><option selected>발행</option></select>
+    <button class="btn" type="button">저장</button>
+  </form>
+
+  <div class="delete-zone"><button type="button">이 글 삭제</button></div>
+</main>
+
+<script>
+  function setMode(m){
+    var seg=document.querySelectorAll('.seg button');
+    seg[0].classList.toggle('active',m==='edit');
+    seg[1].classList.toggle('active',m==='preview');
+    var ta=document.getElementById('body'), pv=document.getElementById('preview');
+    if(m==='preview'){
+      ta.style.display='none'; pv.style.display='block';
+      var t=ta.value.trim();
+      pv.innerHTML = t ? t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]}).replace(/\n/g,'<br>') : '<em style="opacity:.7">내용이 없습니다.</em>';
+    }else{ ta.style.display='block'; pv.style.display='none'; }
+  }
+</script>
+</body>
+</html>

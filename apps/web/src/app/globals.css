@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Role tokens — see SPEC.md §7.3. Both themes derive from the same set;
+/* Role tokens — see design/spec/ui-design.md §7.3. Both themes derive from the same set;
    the dark values are swapped in via prefers-color-scheme below. Use the
    generated utilities (text-muted, bg-subtle, border-border, bg-strong …)
    instead of raw zinc-* classes so the palette stays in one place. */

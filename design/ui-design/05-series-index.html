@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시리즈 · inhology</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111;background:#fff;line-height:1.6}
+  @media(prefers-color-scheme:dark){body{color:#eee;background:#111}}
+  a{color:inherit}
+  .header{border-bottom:1px solid gray}
+  .nav{max-width:672px;margin:0 auto;padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.9rem}
+  .brand{font-weight:700;text-decoration:none}
+  .nav-right{display:flex;gap:1rem}
+  .nav-right a{text-decoration:none}
+  .wrap{max-width:672px;margin:0 auto;padding:3rem 1.5rem}
+  h1{font-size:1.5rem;font-weight:700}
+  .item{padding:1.1rem 0;border-top:1px solid gray}
+  .item:first-of-type{border-top:none}
+  .item a{font-weight:600;text-decoration:none}
+  .count{opacity:.7;font-size:.8rem;margin-left:.5rem}
+  .item p{opacity:.7;font-size:.9rem;margin:.35rem 0 0}
+  code{border:1px solid gray;padding:0 .25em;font-family:ui-monospace,monospace;font-size:.9em}
+  .note{border:1px solid #2563eb;color:#2563eb;padding:.9rem 1.1rem;margin-bottom:2rem;font-size:.85rem}
+  @media(prefers-color-scheme:dark){.note{border-color:#7ab8ff;color:#7ab8ff}}
+  .note a{color:inherit;text-decoration:underline}
+  .note h3{font-size:.9rem;margin:.5rem 0}
+  .note ul{margin:.4rem 0 0;padding-left:1.15rem}
+  .note li{margin:.3rem 0}
+  .note code{border:1px solid currentColor;padding:0 .25em}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="nav">
+    <a class="brand" href="01-home.html">inhology</a>
+    <div class="nav-right"><a href="01-home.html">홈</a><a href="05-series-index.html">시리즈</a></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="note">
+    <a href="index.html">← UI 화면 목록</a>
+    <h3>이 화면 — 시리즈 목록 (<code>/series</code>)</h3>
+    <ul>
+      <li>발행된 시리즈들을 나열합니다.</li>
+      <li>각 행은 제목 링크, <code>글 N편</code> 개수, 선택적 설명으로 구성됩니다.</li>
+      <li>시리즈가 없으면 "아직 시리즈가 없습니다."를 표시합니다.</li>
+    </ul>
+  </aside>
+
+  <h1>시리즈</h1>
+
+  <div style="margin-top:2rem">
+    <div class="item">
+      <a href="06-series-detail.html">홈랩 구축기</a><span class="count">글 4편</span>
+      <p>프록스목스에서 k3s, GitOps 배포까지 — 집에서 클러스터를 세운 여정.</p>
+    </div>
+    <div class="item">
+      <a href="06-series-detail.html">이 블로그를 만들며</a><span class="count">글 3편</span>
+      <p>Next.js와 NestJS로 1인 블로그를 짓는 과정의 기록.</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
