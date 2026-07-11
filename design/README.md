@@ -15,24 +15,36 @@ that code and cite it.
 | [`domain-model/`](./domain-model/) | **Domain model** — Mermaid ER diagrams: a full overview plus one file per aggregate root (Post, Category, Tag, Series, Comment). Derived from `apps/api/prisma/schema.prisma`. |
 | [`openapi.yaml`](./openapi.yaml) | **API contract** — OpenAPI 3.1 description of all HTTP endpoints, auth, request/response schemas, and error codes. Derived from `apps/api` (controllers, DTOs, services). |
 | [`ui-design/`](./ui-design/) | **UI mockups** — one standalone HTML file per user-facing screen (12 total) plus an [`index.html`](./ui-design/index.html). Deliberately **bare wireframes**: minimal inline CSS (a single hairline border, system font, one foreground/background pair, auto light/dark), no color/hover/shadow — structure and copy only, with an explanation block on each screen. Derived from the Next.js pages. |
-| [`validate.py`](./validate.py) | **Consistency linter** — checks the artifacts against each other and the Prisma schema, in dependency order (glossary → domain-model → openapi + ui-design). Stdlib only. |
+| [`validate.py`](./validate.py) | **Design consistency linter** — checks the artifacts against each other and the Prisma schema. Stdlib only. |
+| [`conformance.py`](./conformance.py) | **Source conformance checker** — checks the implementation (`apps/`) actually follows the design. Stdlib only. |
 
 ## Validation
 
-Run the linter to check the artifacts stay consistent with each other and with
-the code (`apps/api/prisma/schema.prisma` is the ground truth):
+Two separate scripts answer two different questions:
 
 ```bash
-python3 design/validate.py        # full report
-python3 design/validate.py -q     # failures + summary only
+python3 design/validate.py        # "is the design internally consistent?"
+python3 design/conformance.py     # "does the code follow the design?"
+# add -q to either for a failures-only report; non-zero exit on any problem
 ```
 
-It verifies, layer by layer: the glossary parses and its domain terms match the
-aggregate roots; the domain-model ER diagrams and enums match the Prisma schema;
-the OpenAPI spec is 3.1, exposes every resource/aggregate, has unique
-operationIds, no dangling `$ref`s, and enums that match the schema; and the UI
-mockups all exist, link to the index, avoid `<footer>`, and pull no external
-assets. Exit code is non-zero on any error, so it drops into CI easily.
+**`validate.py`** (reads `design/` only) verifies, layer by layer: the glossary
+parses and its domain terms match the aggregate roots; the domain-model ER
+diagrams and enums match the Prisma schema; the OpenAPI spec is 3.1, exposes
+every resource/aggregate, has unique operationIds, no dangling `$ref`s, and
+enums that match the schema; and the UI mockups all exist, link to the index,
+avoid `<footer>`, and pull no external assets. A failure means the **design** is
+malformed.
+
+**`conformance.py`** (reads `apps/` vs `design/`) checks structural drift: the
+NestJS controllers and `openapi.yaml` expose the same routes (both directions);
+each route's admin-guard requirement (`@UseGuards(AdminGuard)`) matches its spec
+`security`; and every documented UI screen maps to a real Next.js `page.tsx`. A
+failure means the **code** drifted from the design (or the design needs
+updating). It reuses `validate.py`'s parsers, so there's no duplication.
+
+Both exit non-zero on any problem, so they drop into CI easily — `validate.py`
+on `design/` changes, `conformance.py` on `apps/` changes.
 
 ## Conventions
 
