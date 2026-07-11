@@ -14,7 +14,7 @@ type Params = {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const slug = decodeURIComponent((await params).slug);
   const post = await getPostBySlug(slug);
-  if (!post) return { title: '글을 찾을 수 없습니다' };
+  if (!post) return { title: 'Post not found' };
   return { title: post.title, description: post.excerpt ?? undefined };
 }
 
@@ -35,7 +35,7 @@ export default async function PostPage({ params, searchParams }: Params) {
         href="/"
         className="text-sm text-muted hover:underline underline-offset-4"
       >
-        ← 목록으로
+        ← Back to list
       </Link>
 
       <article className="mt-8">
@@ -50,7 +50,7 @@ export default async function PostPage({ params, searchParams }: Params) {
             <time dateTime={post.publishedAt ?? undefined}>
               {formatDate(post.publishedAt)}
             </time>
-            {post.readingTime ? <span>· {post.readingTime}분</span> : null}
+            {post.readingTime ? <span>· {post.readingTime} min</span> : null}
           </div>
           <h1 className="mt-3 text-3xl font-bold tracking-tight">
             {post.title}
@@ -75,10 +75,10 @@ export default async function PostPage({ params, searchParams }: Params) {
             href={`/series/${post.series.slug}`}
             className="mb-8 block rounded-md border border-border bg-subtle px-4 py-3 text-sm hover:opacity-80"
           >
-            <span className="text-muted">시리즈</span>{' '}
+            <span className="text-muted">Series</span>{' '}
             <span className="font-medium">{post.series.title}</span>
             {post.seriesOrder ? (
-              <span className="text-muted"> · {post.seriesOrder}편</span>
+              <span className="text-muted"> · Part {post.seriesOrder}</span>
             ) : null}
           </Link>
         ) : null}

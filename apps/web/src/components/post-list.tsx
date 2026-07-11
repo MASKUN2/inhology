@@ -4,7 +4,7 @@ import { formatDate } from '@/lib/format';
 
 export function PostList({ posts }: { posts: Post[] }) {
   if (posts.length === 0) {
-    return <p className="text-muted">아직 발행된 글이 없습니다.</p>;
+    return <p className="text-muted">No posts published yet.</p>;
   }
 
   return (
@@ -22,7 +22,7 @@ export function PostList({ posts }: { posts: Post[] }) {
               <time dateTime={post.publishedAt ?? undefined}>
                 {formatDate(post.publishedAt)}
               </time>
-              {post.readingTime ? <span>· {post.readingTime}분</span> : null}
+              {post.readingTime ? <span>· {post.readingTime} min</span> : null}
             </div>
 
             <h2 className="mt-2 text-xl font-semibold">

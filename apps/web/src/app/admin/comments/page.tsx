@@ -6,12 +6,12 @@ import { getComments } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
 
-export const metadata: Metadata = { title: '댓글 관리' };
+export const metadata: Metadata = { title: 'Manage comments' };
 
 const TABS = [
-  { key: 'PENDING', label: '대기' },
-  { key: 'APPROVED', label: '승인' },
-  { key: 'SPAM', label: '스팸' },
+  { key: 'PENDING', label: 'Pending' },
+  { key: 'APPROVED', label: 'Approved' },
+  { key: 'SPAM', label: 'Spam' },
 ] as const;
 
 export default async function AdminCommentsPage({
@@ -27,9 +27,9 @@ export default async function AdminCommentsPage({
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">댓글 관리</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Manage comments</h1>
         <Link href="/admin" className="text-sm text-muted hover:underline">
-          ← 글 관리
+          ← Manage posts
         </Link>
       </div>
 
@@ -50,7 +50,7 @@ export default async function AdminCommentsPage({
       </nav>
 
       {comments.length === 0 ? (
-        <p className="mt-8 text-muted">해당 상태의 댓글이 없습니다.</p>
+        <p className="mt-8 text-muted">No comments in this status.</p>
       ) : (
         <ul className="mt-8 flex flex-col divide-y divide-border">
           {comments.map((c) => (
@@ -82,7 +82,7 @@ export default async function AdminCommentsPage({
                     <input type="hidden" name="id" value={c.id} />
                     <input type="hidden" name="status" value="APPROVED" />
                     <button className="text-green-700 hover:underline dark:text-green-400">
-                      승인
+                      Approve
                     </button>
                   </form>
                 ) : null}
@@ -91,7 +91,7 @@ export default async function AdminCommentsPage({
                     <input type="hidden" name="id" value={c.id} />
                     <input type="hidden" name="status" value="SPAM" />
                     <button className="text-amber-700 hover:underline dark:text-amber-400">
-                      스팸
+                      Spam
                     </button>
                   </form>
                 ) : null}
@@ -100,13 +100,13 @@ export default async function AdminCommentsPage({
                     <input type="hidden" name="id" value={c.id} />
                     <input type="hidden" name="status" value="PENDING" />
                     <button className="text-muted hover:underline">
-                      대기로
+                      Set pending
                     </button>
                   </form>
                 ) : null}
                 <form action={deleteComment}>
                   <input type="hidden" name="id" value={c.id} />
-                  <button className="text-red-600 hover:underline">삭제</button>
+                  <button className="text-red-600 hover:underline">Delete</button>
                 </form>
               </div>
             </li>

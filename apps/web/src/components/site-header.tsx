@@ -10,10 +10,10 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-4 text-muted">
           <Link href="/" className="hover:text-foreground">
-            홈
+            Home
           </Link>
           <Link href="/series" className="hover:text-foreground">
-            시리즈
+            Series
           </Link>
           <HeaderMenu />
         </div>

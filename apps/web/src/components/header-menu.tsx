@@ -28,7 +28,7 @@ export function HeaderMenu() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label="메뉴"
+        aria-label="Menu"
         aria-expanded={open}
         className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:text-foreground"
       >
@@ -54,7 +54,7 @@ export function HeaderMenu() {
             onClick={() => setOpen(false)}
             className="block px-3 py-2 text-sm text-muted hover:bg-subtle hover:text-foreground"
           >
-            관리자
+            Admin
           </Link>
         </div>
       ) : null}

@@ -6,7 +6,7 @@ import { getAdminPost, getCategories, getSeriesList } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 import { BodyEditor } from '@/components/body-editor';
 
-export const metadata: Metadata = { title: '글 수정' };
+export const metadata: Metadata = { title: 'Edit post' };
 
 const field = 'rounded-md border border-border bg-background px-3 py-2';
 
@@ -29,15 +29,15 @@ export default async function EditPostPage({
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">글 수정</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Edit post</h1>
         <Link href="/admin" className="text-sm text-muted hover:underline">
-          ← 목록
+          ← Back
         </Link>
       </div>
 
       {error ? (
         <p className="mt-4 text-sm text-red-600">
-          저장에 실패했습니다. 입력값을 확인해 주세요.
+          Save failed. Please check your input.
         </p>
       ) : null}
 
@@ -45,14 +45,14 @@ export default async function EditPostPage({
         <input type="hidden" name="id" value={post.id} />
         <input
           name="title"
-          placeholder="제목"
+          placeholder="Title"
           required
           defaultValue={post.title}
           className={field}
         />
         <input
           name="excerpt"
-          placeholder="요약 (선택)"
+          placeholder="Excerpt (optional)"
           defaultValue={post.excerpt ?? ''}
           className={field}
         />
@@ -77,7 +77,7 @@ export default async function EditPostPage({
               defaultValue={post.series?.id ?? ''}
               className={`${field} flex-1`}
             >
-              <option value="">시리즈 없음</option>
+              <option value="">No series</option>
               {series.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.title}
@@ -88,7 +88,7 @@ export default async function EditPostPage({
               name="seriesOrder"
               type="number"
               min={0}
-              placeholder="순서"
+              placeholder="Order"
               defaultValue={post.seriesOrder ?? ''}
               className={`${field} w-24`}
             />
@@ -98,22 +98,22 @@ export default async function EditPostPage({
         <BodyEditor defaultValue={post.content} />
 
         <select name="status" defaultValue={post.status} className={field}>
-          <option value="DRAFT">초안</option>
-          <option value="PUBLISHED">발행</option>
+          <option value="DRAFT">Draft</option>
+          <option value="PUBLISHED">Published</option>
         </select>
 
         <button
           type="submit"
           className="rounded-md bg-strong px-3 py-2 text-strong-foreground hover:opacity-90"
         >
-          저장
+          Save
         </button>
       </form>
 
       <form action={deletePost} className="mt-4 border-t border-border pt-4">
         <input type="hidden" name="id" value={post.id} />
         <button className="text-sm text-red-600 hover:underline">
-          이 글 삭제
+          Delete this post
         </button>
       </form>
     </main>

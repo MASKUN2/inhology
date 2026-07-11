@@ -17,16 +17,16 @@ export function Comments({
 }) {
   return (
     <section id="comments" className="mt-16 border-t border-border pt-10">
-      <h2 className="text-lg font-semibold">댓글 {comments.length}</h2>
+      <h2 className="text-lg font-semibold">Comments {comments.length}</h2>
 
       {flash === 'ok' ? (
         <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-400">
-          댓글이 등록되었습니다. 검토 후 공개됩니다.
+          Comment submitted — it&apos;ll appear after review.
         </p>
       ) : null}
       {flash === 'error' ? (
         <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400">
-          등록에 실패했습니다. 입력값을 확인해 주세요.
+          Submission failed. Please check your input.
         </p>
       ) : null}
 
@@ -50,7 +50,7 @@ export function Comments({
           ))}
         </ul>
       ) : (
-        <p className="mt-6 text-sm text-muted">첫 댓글을 남겨보세요.</p>
+        <p className="mt-6 text-sm text-muted">Be the first to comment.</p>
       )}
 
       <form action={createComment} className="mt-10 flex flex-col gap-3">
@@ -59,7 +59,7 @@ export function Comments({
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
             name="authorName"
-            placeholder="이름"
+            placeholder="Name"
             required
             maxLength={50}
             className={`${field} sm:w-40`}
@@ -67,13 +67,13 @@ export function Comments({
           <input
             type="email"
             name="authorEmail"
-            placeholder="이메일 (선택, 비공개)"
+            placeholder="Email (optional, private)"
             className={`${field} flex-1`}
           />
         </div>
         <textarea
           name="content"
-          placeholder="댓글을 입력하세요"
+          placeholder="Write a comment"
           required
           maxLength={5000}
           rows={4}
@@ -83,7 +83,7 @@ export function Comments({
           type="submit"
           className="self-end rounded-md bg-strong px-4 py-2 text-sm text-strong-foreground hover:opacity-90"
         >
-          댓글 등록
+          Post comment
         </button>
       </form>
     </section>

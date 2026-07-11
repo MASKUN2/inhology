@@ -43,7 +43,7 @@ export function BodyEditor({
 
   async function uploadFile(file: File) {
     const token = `uploading-${++idRef.current}`;
-    const placeholder = `![업로드 중…](${token})`;
+    const placeholder = `![Uploading…](${token})`;
     insertAtCursor(`${placeholder}\n`);
     setBusy((n) => n + 1);
     setError(null);
@@ -55,11 +55,11 @@ export function BodyEditor({
         url?: string;
         error?: string;
       };
-      if (!res.ok || !data.url) throw new Error(data.error ?? '업로드에 실패했습니다.');
+      if (!res.ok || !data.url) throw new Error(data.error ?? 'Upload failed.');
       setValue((v) => v.replace(placeholder, `![](${data.url})`));
     } catch (err) {
       setValue((v) => v.replace(`${placeholder}\n`, '').replace(placeholder, ''));
-      setError(err instanceof Error ? err.message : '업로드에 실패했습니다.');
+      setError(err instanceof Error ? err.message : 'Upload failed.');
     } finally {
       setBusy((n) => n - 1);
     }
@@ -97,14 +97,14 @@ export function BodyEditor({
             onClick={() => setMode('edit')}
             className={`px-3 py-1 ${mode === 'edit' ? 'bg-subtle font-medium' : 'text-muted'}`}
           >
-            편집
+            Edit
           </button>
           <button
             type="button"
             onClick={() => setMode('preview')}
             className={`px-3 py-1 ${mode === 'preview' ? 'bg-subtle font-medium' : 'text-muted'}`}
           >
-            미리보기
+            Preview
           </button>
         </div>
         <button
@@ -112,9 +112,9 @@ export function BodyEditor({
           onClick={() => fileRef.current?.click()}
           className="text-muted hover:underline"
         >
-          이미지 추가
+          Add image
         </button>
-        {busy > 0 ? <span className="text-muted">⏳ 업로드 중… ({busy})</span> : null}
+        {busy > 0 ? <span className="text-muted">⏳ Uploading… ({busy})</span> : null}
         {error ? <span className="text-red-600">{error}</span> : null}
         <input
           ref={fileRef}
@@ -138,7 +138,7 @@ export function BodyEditor({
         onPaste={onPaste}
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
-        placeholder="본문 (Markdown) — 이미지는 붙여넣기·드래그·파일선택"
+        placeholder="Body (Markdown) — paste, drag, or pick images"
         required
         rows={rows}
         className={`${field} font-mono ${mode === 'preview' ? 'hidden' : ''}`}
@@ -148,7 +148,7 @@ export function BodyEditor({
           {value.trim() ? (
             <Markdown>{value}</Markdown>
           ) : (
-            <p className="text-muted">내용이 없습니다.</p>
+            <p className="text-muted">Nothing to preview.</p>
           )}
         </div>
       ) : null}

@@ -9,7 +9,7 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const slug = decodeURIComponent((await params).slug);
   const category = await getCategory(slug);
-  return { title: category ? `${category.name} 글` : '카테고리를 찾을 수 없습니다' };
+  return { title: category ? `${category.name}` : 'Category not found' };
 }
 
 export default async function CategoryPage({ params }: Params) {
@@ -25,11 +25,11 @@ export default async function CategoryPage({ params }: Params) {
         href="/"
         className="text-sm text-muted hover:underline underline-offset-4"
       >
-        ← 목록으로
+        ← Back to list
       </Link>
 
       <header className="mb-12 mt-8">
-        <p className="text-sm text-muted">카테고리</p>
+        <p className="text-sm text-muted">Category</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">
           {category.name}
         </h1>

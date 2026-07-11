@@ -6,7 +6,7 @@ import { getCategories, getSeriesList } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 import { BodyEditor } from '@/components/body-editor';
 
-export const metadata: Metadata = { title: '새 글 쓰기' };
+export const metadata: Metadata = { title: 'New post' };
 
 const field = 'rounded-md border border-border bg-background px-3 py-2';
 
@@ -25,30 +25,30 @@ export default async function NewPostPage({
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">새 글 쓰기</h1>
+        <h1 className="text-2xl font-bold tracking-tight">New post</h1>
         <div className="flex items-center gap-4 text-sm">
           <Link href="/admin" className="text-muted hover:underline">
-            ← 목록
+            ← Back
           </Link>
           <form action={logout}>
-            <button className="text-muted hover:underline">로그아웃</button>
+            <button className="text-muted hover:underline">Log out</button>
           </form>
         </div>
       </div>
 
       {error ? (
         <p className="mt-4 text-sm text-red-600">
-          저장에 실패했습니다. 입력값을 확인해 주세요.
+          Save failed. Please check your input.
         </p>
       ) : null}
 
       <form action={createPost} className="mt-8 flex flex-col gap-4">
-        <input name="title" placeholder="제목" required className={field} />
-        <input name="excerpt" placeholder="요약 (선택)" className={field} />
+        <input name="title" placeholder="Title" required className={field} />
+        <input name="excerpt" placeholder="Excerpt (optional)" className={field} />
 
         <select name="categoryId" required defaultValue="" className={field}>
           <option value="" disabled>
-            카테고리 선택
+            Select category
           </option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
@@ -64,7 +64,7 @@ export default async function NewPostPage({
               defaultValue=""
               className={`${field} flex-1`}
             >
-              <option value="">시리즈 없음</option>
+              <option value="">No series</option>
               {series.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.title}
@@ -75,7 +75,7 @@ export default async function NewPostPage({
               name="seriesOrder"
               type="number"
               min={0}
-              placeholder="순서"
+              placeholder="Order"
               className={`${field} w-24`}
             />
           </div>
@@ -84,15 +84,15 @@ export default async function NewPostPage({
         <BodyEditor />
 
         <select name="status" defaultValue="DRAFT" className={field}>
-          <option value="DRAFT">초안</option>
-          <option value="PUBLISHED">발행</option>
+          <option value="DRAFT">Draft</option>
+          <option value="PUBLISHED">Published</option>
         </select>
 
         <button
           type="submit"
           className="rounded-md bg-strong px-3 py-2 text-strong-foreground hover:opacity-90"
         >
-          저장
+          Save
         </button>
       </form>
     </main>

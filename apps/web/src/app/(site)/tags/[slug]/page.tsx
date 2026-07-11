@@ -9,7 +9,7 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const slug = decodeURIComponent((await params).slug);
   const tag = await getTag(slug);
-  return { title: tag ? `#${tag.name}` : '태그를 찾을 수 없습니다' };
+  return { title: tag ? `#${tag.name}` : 'Tag not found' };
 }
 
 export default async function TagPage({ params }: Params) {
@@ -25,11 +25,11 @@ export default async function TagPage({ params }: Params) {
         href="/"
         className="text-sm text-muted hover:underline underline-offset-4"
       >
-        ← 목록으로
+        ← Back to list
       </Link>
 
       <header className="mb-12 mt-8">
-        <p className="text-sm text-muted">태그</p>
+        <p className="text-sm text-muted">Tag</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">#{tag.name}</h1>
       </header>
 

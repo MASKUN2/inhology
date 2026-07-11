@@ -14,16 +14,16 @@ export async function POST(req: Request) {
   const form = await req.formData().catch(() => null);
   const file = form?.get('file');
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: '파일이 없습니다.' }, { status: 400 });
+    return NextResponse.json({ error: 'No file provided.' }, { status: 400 });
   }
 
   const buf = Buffer.from(await file.arrayBuffer());
   if (buf.length === 0) {
-    return NextResponse.json({ error: '빈 파일입니다.' }, { status: 400 });
+    return NextResponse.json({ error: 'Empty file.' }, { status: 400 });
   }
   if (buf.length > MAX_IMAGE_BYTES) {
     return NextResponse.json(
-      { error: `이미지는 최대 ${MAX_IMAGE_BYTES / 1024 / 1024}MB까지 가능합니다.` },
+      { error: `Images may be at most ${MAX_IMAGE_BYTES / 1024 / 1024}MB.` },
       { status: 413 },
     );
   }
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   const kind = sniffImage(buf);
   if (!kind) {
     return NextResponse.json(
-      { error: '지원하지 않는 형식입니다. (PNG·JPEG·WebP·GIF)' },
+      { error: 'Unsupported format. (PNG, JPEG, WebP, GIF)' },
       { status: 415 },
     );
   }
@@ -41,6 +41,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: `/images/${key}` });
   } catch (err) {
     console.error('image upload failed:', err);
-    return NextResponse.json({ error: '업로드에 실패했습니다.' }, { status: 502 });
+    return NextResponse.json({ error: 'Upload failed.' }, { status: 502 });
   }
 }

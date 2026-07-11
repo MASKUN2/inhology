@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     default: "inhology",
     template: "%s · inhology",
   },
-  description: "개발자이자 한 사람으로서의 기록 — inhology",
+  description: "Notes from a developer and a person — inhology",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="ko"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
