@@ -41,6 +41,12 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
   API carry an **internal shared token** (web↔api only, on the cluster's private
   network — the API is not publicly exposed). Both credentials are kept out of
   version control. (See `../../../homelab/sso.md`.)
+- **A valid SSO session is necessary but not sufficient.** The IdP additionally
+  authorises the caller *as the author*: access to the inhology application is
+  restricted at the IdP to members of the author group. A merely-registered SSO
+  account — e.g. one created through a future social-login source — is **denied
+  at the IdP** and never receives an inhology session, so it cannot reach the
+  admin area at all.
 - Reading published content and submitting a (pending) comment are the only
   actions available without authentication.
 

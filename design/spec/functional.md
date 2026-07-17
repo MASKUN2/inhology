@@ -10,6 +10,8 @@ Part of the [inhology specification](./README.md).
 - Delete a post.
 - View a list of **all** posts — drafts included — with their current state
   clearly distinguished.
+- **Jump straight from a published post's public page to its editor** while
+  signed in as the author — an author-only shortcut that readers never see.
 - **Insert images into the Markdown body** by pasting (e.g. a screenshot),
   dragging a file onto the editor, or choosing a file. The image is uploaded and
   a Markdown image reference is inserted automatically at the cursor. Images are

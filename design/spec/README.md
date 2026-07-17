@@ -21,9 +21,9 @@ The specification is split across this directory:
 | [`ui-design.md`](./ui-design.md) | §7 UI & Visual Design |
 
 Related design artifacts live alongside this directory: the machine-readable
-[`../glossary.csv`](../glossary.csv), the [`../domain-model/`](../domain-model/)
-ER diagrams, the [`../openapi.yaml`](../openapi.yaml) API contract, and the
-[`../ui-design/`](../ui-design/) HTML screen mockups.
+[`../glossary.csv`](../glossary.csv), the [`../domain/`](../domain/)
+ER diagrams, the [`../api/openapi.yaml`](../api/openapi.yaml) API contract, and the
+[`../wireframe/`](../wireframe/) HTML screen mockups.
 
 ---
 
@@ -79,7 +79,7 @@ multi-author need is explicitly out of scope for this version.
 - **Comment** — a reader's response attached to a published post. May reply to
   another comment (threaded). Always moderated.
 
-The domain model is diagrammed in [`../domain-model/`](../domain-model/).
+The domain model is diagrammed in [`../domain/`](../domain/).
 
 ---
 

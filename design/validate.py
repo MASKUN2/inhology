@@ -5,7 +5,7 @@ Validate the inhology design artifacts for internal consistency.
 The design/ folder is a layered description of the product. This script checks
 each layer against the one it depends on, in order:
 
-    glossary.csv  ->  domain-model/  ->  openapi.yaml + ui-design/
+    glossary.csv  ->  domain/  ->  api/openapi.yaml + wireframe/
 
 Ground truth for the domain is the Prisma schema (apps/api/prisma/schema.prisma);
 every layer is cross-checked against it and against the layers before it.
@@ -29,7 +29,7 @@ DESIGN = Path(__file__).resolve().parent
 ROOT = DESIGN.parent
 SCHEMA = ROOT / "apps" / "api" / "prisma" / "schema.prisma"
 
-# The five aggregate roots (see design/domain-model/). Also the models we expect
+# The five aggregate roots (see design/domain/). Also the models we expect
 # in the Prisma schema and the domain terms in the glossary's "Domain" category.
 AGGREGATES = ["Post", "Category", "Tag", "Series", "Comment"]
 
@@ -199,7 +199,7 @@ def check_glossary(r: Report):
 
 
 def check_domain_model(r: Report, prisma, gloss):
-    r.layer("2. Domain model  (design/domain-model/)  vs Prisma schema + glossary")
+    r.layer("2. Domain model  (design/domain/)  vs Prisma schema + glossary")
     models, enums = prisma
 
     # ground truth sanity: Prisma models == the five aggregates
@@ -211,23 +211,23 @@ def check_domain_model(r: Report, prisma, gloss):
     # one file per aggregate root + overview
     for name in ["README"] + AGGREGATES:
         fn = f"{name.lower()}.md" if name != "README" else "README.md"
-        r.check((DESIGN / "domain-model" / fn).exists(),
-                f"domain-model/{fn} exists",
-                f"domain-model/{fn} missing")
+        r.check((DESIGN / "domain" / fn).exists(),
+                f"domain/{fn} exists",
+                f"domain/{fn} missing")
 
-    readme = read(DESIGN / "domain-model" / "README.md") or ""
+    readme = read(DESIGN / "domain" / "README.md") or ""
     ents = mermaid_entities(readme)
     for name in AGGREGATES:
         r.check(name.upper() in ents,
                 f"ERD includes entity {name}",
                 f"ERD (README) missing entity {name}")
 
-    # enums declared in schema appear in the domain-model overview
+    # enums declared in schema appear in the domain overview
     for ename, evals in enums.items():
         missing = [v for v in evals if v not in readme]
         r.check(not missing,
                 f"enum {ename} values {sorted(evals)} documented",
-                f"enum {ename} missing values in domain-model: {missing}")
+                f"enum {ename} missing values in domain: {missing}")
 
     # every domain term in the glossary maps to an aggregate (and vice-versa)
     r.check(gloss["domain"] == set(AGGREGATES),
@@ -237,15 +237,15 @@ def check_domain_model(r: Report, prisma, gloss):
 
     # each per-aggregate file actually diagrams its own entity
     for name in AGGREGATES:
-        txt = read(DESIGN / "domain-model" / f"{name.lower()}.md") or ""
+        txt = read(DESIGN / "domain" / f"{name.lower()}.md") or ""
         r.check(name.upper() in mermaid_entities(txt),
                 f"{name.lower()}.md diagrams {name}",
                 f"{name.lower()}.md has no {name} entity block")
 
 
 def check_api_spec(r: Report, prisma, gloss):
-    r.layer("3. API spec  (design/openapi.yaml)  vs Prisma schema + domain model")
-    text = read(DESIGN / "openapi.yaml")
+    r.layer("3. API spec  (design/api/openapi.yaml)  vs Prisma schema + domain model")
+    text = read(DESIGN / "api" / "openapi.yaml")
     if text is None:
         r.fail("openapi.yaml not found")
         return
@@ -291,10 +291,13 @@ def check_api_spec(r: Report, prisma, gloss):
 
 
 def check_ui(r: Report):
-    r.layer("4. UI mockups  (design/ui-design/)  structure + linkage")
-    ui = DESIGN / "ui-design"
+    r.layer("4. Wireframes  (design/wireframe/)  structure + linkage")
+    ui = DESIGN / "wireframe"
     index = read(ui / "index.html")
     r.check(index is not None, "index.html exists", "index.html missing")
+    r.check((ui / "wireframe.css").exists(),
+            "shared wireframe.css exists",
+            "wireframe/wireframe.css missing (screens share it)")
 
     for name in SCREENS:
         f = ui / f"{name}.html"
@@ -305,17 +308,21 @@ def check_ui(r: Report):
         problems = []
         if 'href="index.html"' not in txt:
             problems.append("no link to index.html")
+        if "wireframe.css" not in txt:
+            problems.append("does not link the shared wireframe.css")
         if "<footer" in txt:
             problems.append("still uses <footer> for the note")
         if '<aside class="note"' not in txt:
             problems.append("no <aside class=note> annotation")
-        # self-contained: no external asset requests
+        # self-contained: no external asset requests (the relative wireframe.css is fine)
         if re.search(r'(src|href)\s*=\s*"https?:', txt) or "@import" in txt:
             problems.append("references an external asset")
         r.check(not problems, f"{name}.html ok",
                 f"{name}.html: {'; '.join(problems)}")
 
     if index is not None:
+        r.check("wireframe.css" in index, "index.html links wireframe.css",
+                "index.html does not link the shared wireframe.css")
         missing = [n for n in SCREENS if f'{n}.html' not in index]
         r.check(not missing, "index.html links to all 12 screens",
                 f"index.html missing links: {missing}")
@@ -325,7 +332,7 @@ def check_ui(r: Report):
 def main():
     r = Report()
     print("Validating design/ artifacts "
-          "(glossary → domain-model → openapi + ui-design)")
+          "(glossary → domain → api + wireframe)")
 
     schema_text = read(SCHEMA)
     if schema_text is None:

@@ -6,7 +6,7 @@ The visual language is part of the product, so it lives here. This section is
 deliberately at the *intent* altitude — it defines tokens, structure, and shared
 patterns, not class names or markup. When a screen needs a new pattern, add it
 here first so the site stays consistent. Concrete HTML mockups of every screen
-live in [`../ui-design/`](../ui-design/).
+live in [`../wireframe/`](../wireframe/).
 
 ## 7.1 Design principles
 - **Reading-first, content over chrome.** The article is the interface; UI
@@ -73,6 +73,9 @@ These are the recurring building blocks; reuse them rather than inventing new on
 - **Edit / preview toggle** — the body editor switches between raw Markdown and a
   rendered preview, using the same renderer as the public post page.
 - **Back link** — a quiet "← 목록으로" affordance returning to the list.
+- **Author shortcut** — when the author is signed in, author-only affordances
+  (e.g. an *Edit →* link on a published post's public page) appear inline and
+  quiet, in the muted register; they are absent entirely for readers ([§5.5](./policies.md#55-authorisation)).
 - **Empty state** — a single muted sentence, never a blank screen (e.g. a post
   list with nothing to show still says so).
 - **Flash message** — a coloured, dismissible-feeling banner confirming an action

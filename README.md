@@ -5,7 +5,7 @@ The name is a play on *inho* + *anthology*: a personal selection of writing, cod
 
 ## Documentation
 
-- **[design/](./design/)** — the design surface: product spec, glossary, domain model, API contract, and UI mockups.
+- **[design/](./design/)** — the design surface: product spec, glossary, domain model, API contract, and UI wireframes. **Edit this first when changing a feature** — see [AGENTS.md](./AGENTS.md).
   - **[design/spec/](./design/spec/)** — what inhology *is*: purpose, requirements, and policies (no implementation detail).
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** — how to deploy it to a home-server VM.
 - This README — how it's built and how to run it locally.

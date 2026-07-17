@@ -38,8 +38,8 @@ from validate import read, Report, DESIGN, ROOT  # noqa: E402
 
 API_SRC = ROOT / "apps" / "api" / "src"
 WEB_APP = ROOT / "apps" / "web" / "src" / "app"
-OPENAPI = DESIGN / "openapi.yaml"
-UI_DIR = DESIGN / "ui-design"
+OPENAPI = DESIGN / "api" / "openapi.yaml"
+UI_DIR = DESIGN / "wireframe"
 
 HTTP_METHODS = ("Get", "Post", "Patch", "Delete", "Put")
 
