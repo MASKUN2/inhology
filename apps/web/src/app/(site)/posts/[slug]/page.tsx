@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPostBySlug } from '@/lib/api';
+import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
 import { Comments } from '@/components/comments';
 import { Markdown } from '@/components/markdown';
@@ -28,15 +29,26 @@ export default async function PostPage({ params, searchParams }: Params) {
   if (!post || post.status !== 'PUBLISHED') notFound();
   const flash =
     comment === 'ok' ? 'ok' : comment === 'error' ? 'error' : undefined;
+  const authed = await isAuthed();
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <Link
-        href="/"
-        className="text-sm text-muted hover:underline underline-offset-4"
-      >
-        ← Back to list
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link
+          href="/"
+          className="text-sm text-muted hover:underline underline-offset-4"
+        >
+          ← Back to list
+        </Link>
+        {authed ? (
+          <Link
+            href={`/admin/posts/${post.id}/edit`}
+            className="text-sm text-muted hover:underline underline-offset-4"
+          >
+            Edit →
+          </Link>
+        ) : null}
+      </div>
 
       <article className="mt-8">
         <header className="mb-8">
