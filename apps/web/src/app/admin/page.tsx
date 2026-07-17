@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { deletePost, logout } from './actions';
+import { logout } from './actions';
 import { getAllPosts } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
+import { DeletePostButton } from '@/components/delete-post-button';
 
 export const metadata: Metadata = { title: 'Manage posts' };
 
@@ -81,10 +82,7 @@ export default async function AdminPage() {
                 >
                   Edit
                 </Link>
-                <form action={deletePost}>
-                  <input type="hidden" name="id" value={post.id} />
-                  <button className="text-red-600 hover:underline">Delete</button>
-                </form>
+                <DeletePostButton id={post.id} />
               </div>
             </li>
           ))}
