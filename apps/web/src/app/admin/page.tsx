@@ -70,12 +70,15 @@ export default async function AdminPage() {
               </div>
 
               <div className="flex shrink-0 items-center gap-3 text-sm">
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="text-muted hover:underline"
-                >
-                  View
-                </Link>
+                {/* A draft has no public page (it 404s), so only published posts get View. */}
+                {post.status === 'PUBLISHED' ? (
+                  <Link
+                    href={`/posts/${post.slug}`}
+                    className="text-muted hover:underline"
+                  >
+                    View
+                  </Link>
+                ) : null}
                 <Link
                   href={`/admin/posts/${post.id}/edit`}
                   className="text-muted hover:underline"
