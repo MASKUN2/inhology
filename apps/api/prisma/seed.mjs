@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 // existing rows in sync with the seed definition (backfills missing fields).
 async function main() {
   const categoryDefs = [
-    { slug: 'dev', name: '개발', description: '개발과 기술 이야기' },
-    { slug: 'life', name: '일상', description: '하루하루의 기록' },
-    { slug: 'essay', name: '에세이', description: '생각과 단상' },
+    { slug: 'dev', name: 'Development', description: 'Development and tech' },
+    { slug: 'life', name: 'Daily', description: 'Day-to-day notes' },
+    { slug: 'essay', name: 'Essay', description: 'Thoughts and reflections' },
   ];
   const categories = {};
   for (const c of categoryDefs) {
