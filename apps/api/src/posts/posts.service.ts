@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostStatus, Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
 import { PrismaService } from '../prisma/prisma.service';
-import { readablePosts } from './post-visibility';
+import { LISTED_POSTS, lockPrivate } from './post-visibility';
 import { TagsService } from '../tags/tags.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { QueryPostsDto } from './dto/query-posts.dto';
@@ -63,26 +63,28 @@ export class PostsService {
     return this.prisma.post.create({ data, include: { tags: TAGS_BY_NAME } });
   }
 
-  findAll(query: QueryPostsDto, isAdmin = false) {
+  async findAll(query: QueryPostsDto, isAdmin = false) {
     const where: Prisma.PostWhereInput = {
-      // `visible=true` is the site's view: what this caller may read. Otherwise
-      // non-admins only ever see published posts — any client-supplied status
-      // filter is ignored so drafts and private posts can't leak — and the admin
-      // gets every status (the dashboard) or the one asked for. Soft-deleted
-      // posts are hidden from everyone, admin included.
+      // `visible=true` is the site's view: published and private posts, never
+      // drafts. Otherwise a non-admin only gets published posts (any
+      // client-supplied status filter is ignored), and the admin gets every
+      // status (the dashboard) or the one asked for. Soft-deleted posts are
+      // hidden from everyone, admin included.
       ...(query.visible === 'true'
-        ? readablePosts(isAdmin)
+        ? LISTED_POSTS
         : {
             deletedAt: null,
             status: isAdmin ? query.status : PostStatus.PUBLISHED,
           }),
       ...(query.tag && { tags: { some: { slug: query.tag } } }),
     };
-    return this.prisma.post.findMany({
+    const posts = await this.prisma.post.findMany({
       where,
       include: { tags: TAGS_BY_NAME },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
     });
+    // A non-admin gets a private post's header only.
+    return posts.map((post) => lockPrivate(post, isAdmin));
   }
 
   async findOne(idOrSlug: string, isAdmin = false) {
@@ -104,11 +106,12 @@ export class PostsService {
         },
       },
     });
-    // Hide a draft's or private post's existence from non-admins (404, not 403).
-    if (!post || (!isAdmin && post.status !== PostStatus.PUBLISHED)) {
+    // Hide a draft's existence from non-admins (404, not 403). A private post is
+    // returned to them locked: header only, no body, excerpt or comments.
+    if (!post || (!isAdmin && post.status === PostStatus.DRAFT)) {
       throw new NotFoundException(`Post not found: ${idOrSlug}`);
     }
-    return post;
+    return lockPrivate(post, isAdmin);
   }
 
   async update(id: string, dto: UpdatePostDto) {

@@ -33,7 +33,7 @@ erDiagram
 | `title` | string | — | Required. |
 | `excerpt` | string | ✓ | Short summary for list views. |
 | `content` | string | — | Markdown; images embedded inline by reference. |
-| `status` | `PostStatus` | — | `DRAFT` (default), `PUBLISHED`, or `PRIVATE` (finished, author-only). |
+| `status` | `PostStatus` | — | `DRAFT` (default), `PUBLISHED`, or `PRIVATE` (finished; header public, body author-only). |
 | `publishedAt` | datetime | ✓ | Stamped on first publish unless already set; **author-editable** afterwards. Never cleared by an edit. |
 | `readingTime` | int | ✓ | Minutes (~200 wpm, min 1); computed on save. |
 | `viewCount` | int | — | Default 0. |
@@ -53,10 +53,11 @@ erDiagram
   the title on publish, and made **unique** by appending a numeric suffix on
   collision (never rejected). It may change when the title changes
   ([§5.2](../spec/policies.md#52-identifiers)).
-- **A `PRIVATE` post is readable by the admin only.** Anonymous reads treat it as
-  absent: `GET /posts/{slug}` is 404, and it is excluded from lists, tag counts
-  and collection counts. Admin reads that ask for what is *visible* get
-  `PUBLISHED` and `PRIVATE` together (never drafts)
+- **A `PRIVATE` post is listed for everyone but readable by the admin only.** It
+  counts and appears wherever a published post does (lists, tag counts,
+  collections, `GET /posts/{slug}`). To an anonymous caller it is returned
+  **locked**: `content` is an empty string, `excerpt` is null and `comments` is
+  empty; the rest of the header is intact. The admin gets it whole
   ([§5.1](../spec/policies.md#51-content-visibility)).
 - `publishedAt` is stamped the first time a post becomes `PUBLISHED` **or**
   `PRIVATE`, and the slug exists in both states.

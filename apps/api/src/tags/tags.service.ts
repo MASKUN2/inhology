@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
-import { readablePosts } from '../posts/post-visibility';
+import { LISTED_POSTS } from '../posts/post-visibility';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
@@ -52,24 +52,23 @@ export class TagsService {
     }
   }
 
-  // Counts cover only the posts the caller may read (published; plus private for
-  // the admin), so a draft or private post never shows up in a public number.
-  // Ordered by that count, highest first, then by name.
-  async findAll(isAdmin = false) {
+  // Counts cover the posts shown on the site (published and private), never
+  // drafts. Ordered by that count, highest first, then by name.
+  async findAll() {
     const tags = await this.prisma.tag.findMany({
       orderBy: { name: 'asc' },
       include: {
-        _count: { select: { posts: { where: readablePosts(isAdmin) } } },
+        _count: { select: { posts: { where: LISTED_POSTS } } },
       },
     });
     return tags.sort((a, b) => b._count.posts - a._count.posts);
   }
 
-  async findOne(idOrSlug: string, isAdmin = false) {
+  async findOne(idOrSlug: string) {
     const tag = await this.prisma.tag.findFirst({
       where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
       include: {
-        _count: { select: { posts: { where: readablePosts(isAdmin) } } },
+        _count: { select: { posts: { where: LISTED_POSTS } } },
       },
     });
     if (!tag) throw new NotFoundException(`Tag not found: ${idOrSlug}`);

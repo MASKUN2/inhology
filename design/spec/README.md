@@ -109,7 +109,7 @@ The canonical, machine-readable glossary lives in
 |---|---|
 | **Draft** | A post that has been saved but not published; private to the author. |
 | **Published** | A post visible to readers, with a publication timestamp. |
-| **Private** | A finished post only the signed-in author can read; invisible to readers everywhere. |
+| **Private** | A finished post whose body only the signed-in author can read; readers see its header only. |
 | **Slug** | The URL-safe identifier for a post, a tag, or a collection. |
 | **Collection rule** | One condition of a collection: the post must carry a given tag. |
 | **Pending** | A submitted comment awaiting the author's moderation. |

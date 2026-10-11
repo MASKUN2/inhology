@@ -5,18 +5,19 @@ Part of the [inhology specification](./README.md).
 These are the non-negotiable rules. They hold regardless of how the system is built.
 
 ## 5.1 Content visibility
-- **Drafts are private.** A post that is not published must never be readable,
+- **Drafts are hidden.** A draft must never be readable,
   listed, or discoverable through any public surface — not on lists, not by
   direct slug, not via tag pages, tag counts, collection pages or collection
   counts. Draft protection is a security
   requirement, not a convenience.
 - Only the author, authenticated, may see drafts.
-- **Private posts are the author's alone.** A private post is readable only by
-  the authenticated author. To everyone else it must be indistinguishable from
-  a post that does not exist: its page is a 404, and it is left out of every
-  list and **every count** (tags, collections). A tag or collection whose only
-  posts are private is not shown to readers. This is the same security
-  requirement as draft protection.
+- **A private post's body is the author's alone.** Readers may see a private
+  post's **header only** — title, publication date, reading time and tags — in
+  lists, in tag and collection counts, and on its page. Its **body, excerpt and
+  comments are never sent to a reader**: the server leaves them out, it is not
+  merely hidden by the page. Only the authenticated author receives them.
+  Protecting a private body is the same security requirement as draft
+  protection.
 - Public listings are ordered newest-first by publication date.
 - The **publication date is author-editable** and is a label only — it never
   affects visibility. A published post with a future date is still public, and

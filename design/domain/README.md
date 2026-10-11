@@ -75,7 +75,7 @@ erDiagram
 
 ## Enums
 
-- **`PostStatus`**: `DRAFT`, `PUBLISHED`, `PRIVATE` (default `DRAFT`). `PRIVATE` is a finished post only the admin can read.
+- **`PostStatus`**: `DRAFT`, `PUBLISHED`, `PRIVATE` (default `DRAFT`). `PRIVATE` is a finished post whose body only the admin can read; its header is public.
 - **`CommentStatus`**: `PENDING`, `APPROVED`, `SPAM` (default `PENDING`).
 
 ## Legend

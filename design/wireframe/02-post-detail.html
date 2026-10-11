@@ -21,7 +21,7 @@
     <ul>
       <li>Reads a single published post.</li>
       <li>Back link, meta row (publish date · reading time), title, the post's tags as badges, and the Markdown body, then the comments area.</li>
-      <li>A private post opens only for the signed-in author, with a <em>Private</em> badge in the meta row and no comment form; for anyone else this address is a 404 (§5.1).</li>
+      <li>A private post shows everyone its header with a <em>Private</em> badge. The signed-in author gets the body below it; anyone else gets the line "This post is private." instead — no body, no comments (§5.1, §7.5 Private notice).</li>
       <li>Only approved comments are shown; replies are indented (§5.4).</li>
       <li>The form takes name (required), email (optional, private), and body (required); on submit it's accepted as pending and confirmed by the top flash.</li>
       <li>A draft or unknown slug returns 404.</li>

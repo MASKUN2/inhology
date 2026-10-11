@@ -7,7 +7,7 @@ export interface Tag {
   id: string;
   slug: string;
   name: string;
-  /** Published posts carrying the tag; present on tag endpoints. */
+  /** Listed (published or private) posts carrying the tag; present on tag endpoints. */
   _count?: { posts: number };
 }
 
@@ -18,7 +18,7 @@ export interface Collection {
   title: string;
   description: string | null;
   tags: Tag[];
-  /** Published posts currently satisfying the rules. */
+  /** Listed (published or private) posts currently satisfying the rules. */
   postCount: number;
   /** Present on the detail endpoint only. */
   posts?: Post[];
@@ -71,15 +71,15 @@ function adminHeaders(): Record<string, string> {
 
 /**
  * Headers for the public site's reads. A signed-in author's requests carry the
- * admin token, so the API also returns their private posts (and counts them);
- * a reader's requests carry nothing and see published posts only.
+ * admin token, so the API returns private posts in full; a reader's requests
+ * carry nothing and get a private post's header only (no body or excerpt).
  */
 async function siteHeaders(): Promise<Record<string, string>> {
   return (await isAuthed()) ? adminHeaders() : {};
 }
 
 async function getPosts(params: Record<string, string>): Promise<Post[]> {
-  // visible=true: what this viewer may read (published; plus private for the author).
+  // visible=true: the posts shown on the site (published and private, no drafts).
   const qs = new URLSearchParams({ visible: 'true', ...params });
   const res = await fetch(`${API_URL}/posts?${qs}`, {
     cache: 'no-store',
@@ -130,20 +130,14 @@ export async function getComments(status?: string): Promise<AdminComment[]> {
 
 /** Every tag with its published-post count, highest count first. */
 export async function getTags(): Promise<Tag[]> {
-  const res = await fetch(`${API_URL}/tags`, {
-    cache: 'no-store',
-    headers: await siteHeaders(),
-  });
+  const res = await fetch(`${API_URL}/tags`, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to load tags (${res.status})`);
   return res.json();
 }
 
 /** Every collection, in the author-defined order, with its rules and post count. */
 export async function getCollections(): Promise<Collection[]> {
-  const res = await fetch(`${API_URL}/collections`, {
-    cache: 'no-store',
-    headers: await siteHeaders(),
-  });
+  const res = await fetch(`${API_URL}/collections`, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to load collections (${res.status})`);
   return res.json();
 }
@@ -162,14 +156,13 @@ export async function getCollection(slug: string): Promise<Collection | null> {
 export async function getTag(slug: string): Promise<Tag | null> {
   const res = await fetch(`${API_URL}/tags/${encodeURIComponent(slug)}`, {
     cache: 'no-store',
-    headers: await siteHeaders(),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to load tag (${res.status})`);
   return res.json();
 }
 
-/** A post by slug as this viewer may read it: a private post only for the author. */
+/** A post by slug as this viewer may read it: a private post comes without its body unless the author is signed in. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const res = await fetch(`${API_URL}/posts/${encodeURIComponent(slug)}`, {
     cache: 'no-store',

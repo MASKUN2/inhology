@@ -90,9 +90,9 @@ paths:
           in: query
           required: false
           description: >
-            `true` asks for the posts this caller may read on the site: PUBLISHED
-            for anonymous callers, PUBLISHED and PRIVATE for the admin (never
-            drafts). Takes precedence over `status`.
+            `true` asks for the posts shown on the site: PUBLISHED and PRIVATE,
+            never drafts. For anonymous callers each PRIVATE post comes locked
+            (empty `content`, null `excerpt`). Takes precedence over `status`.
           schema: { type: string, enum: ['true', 'false'] }
         - name: tag
           in: query
@@ -146,8 +146,9 @@ paths:
       operationId: getPost
       description: >
         Returns the post with its `tags` and its APPROVED
-        `comments` (projected to public fields only). A DRAFT or PRIVATE post is 404
-        for anonymous callers; an admin (Bearer) may read both.
+        `comments` (projected to public fields only). For anonymous callers a DRAFT
+        is 404 and a PRIVATE post comes locked — header only, with empty `content`,
+        null `excerpt` and no `comments`. An admin (Bearer) reads both in full.
       security:
         - {}
         - bearerAuth: []
@@ -296,13 +297,10 @@ paths:
       tags: [tags]
       summary: List tags
       operationId: listTags
-      security:
-        - {}
-        - bearerAuth: []
       description: >
-        Every tag with `_count.posts` — the number of non-deleted posts carrying it
-        that the caller may read (PUBLISHED; plus PRIVATE for the admin) — ordered
-        by that count descending, then by name. Tags with a
+        Every tag with `_count.posts` — the number of non-deleted PUBLISHED or
+        PRIVATE posts carrying it (never drafts) — ordered by that count
+        descending, then by name. Tags with a
         count of 0 are included (the editor suggests them); readers' surfaces skip
         them.
       responses:
@@ -345,9 +343,6 @@ paths:
       tags: [tags]
       summary: Get one tag
       operationId: getTag
-      security:
-        - {}
-        - bearerAuth: []
       responses:
         '200':
           description: The tag (with `_count.posts`, counted as in the list)
@@ -393,14 +388,10 @@ paths:
       tags: [collections]
       summary: List collections
       operationId: listCollections
-      security:
-        - {}
-        - bearerAuth: []
       description: >
         Every collection in the author-defined order (`position`), each with its rule `tags` and
-        `postCount` — the number of non-deleted posts the caller may read
-        (PUBLISHED; plus PRIVATE for the admin) that carry every rule tag (all
-        such posts when there are no rules).
+        `postCount` — the number of non-deleted PUBLISHED or PRIVATE posts that
+        carry every rule tag (all such posts when there are no rules).
       responses:
         '200':
           description: All collections
@@ -474,8 +465,9 @@ paths:
         - bearerAuth: []
       description: >
         The collection with its rule `tags`, `postCount`, and its `posts`: the
-        posts the caller may read (PUBLISHED; plus PRIVATE for the admin) that
-        satisfy every rule, newest first, each with `tags`.
+        PUBLISHED and PRIVATE posts that satisfy every rule, newest first, each
+        with `tags`. For anonymous callers each PRIVATE post comes locked (empty
+        `content`, null `excerpt`).
       responses:
         '200':
           description: The collection
@@ -630,7 +622,9 @@ components:
         title: { type: string }
         excerpt:
           type: [string, 'null']
-        content: { type: string, description: Markdown body }
+        content:
+          type: string
+          description: Markdown body. Empty for a PRIVATE post read by an anonymous caller.
         status: { $ref: '#/components/schemas/PostStatus' }
         publishedAt:
           type: [string, 'null']

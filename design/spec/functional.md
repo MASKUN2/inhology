@@ -9,9 +9,9 @@ Part of the [inhology specification](./README.md).
   **URL slug is not
   entered by the author** — it is generated automatically (see below).
 - Save a post as a **draft**, **publish** it, or make it **private**. A private
-  post is a finished post kept to the author: it has its page, date and tags
-  like a published one, but only the signed-in author can open it or see it in
-  lists ([§5.1](./policies.md#51-content-visibility)).
+  post is a finished post whose **body is kept to the author**: readers see its
+  header — title, date, reading time, tags — in lists and on its page, but not
+  its body, excerpt or comments ([§5.1](./policies.md#51-content-visibility)).
 - **The URL slug is service-managed.** A draft has **no slug**; when a post is
   **published or made private** the
   slug is generated from the title, and any collision is resolved by appending a
@@ -58,9 +58,10 @@ Part of the [inhology specification](./README.md).
 - Read a single published post by its slug.
 - Navigate from a post to any of its tags.
 - Reading time is shown when available.
-- **The signed-in author sees private posts too**, wherever a reader sees
-  published ones — collection pages, tag pages, counts, and the post page —
-  each marked with a **Private** badge. A reader sees none of it.
+- **Private posts are listed for everyone, opened by the author only.** In any
+  list a private post shows its header with a **Private** badge. Its page shows
+  a reader the same header and a notice that the post is private; the signed-in
+  author gets the full post.
 
 ## 4.3 Tags
 - The home page and every tag page carry a **tag bar**: all tags that have at least one

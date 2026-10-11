@@ -32,8 +32,8 @@ export class CollectionsController {
   }
 
   @Get()
-  findAll(@Headers('authorization') auth?: string) {
-    return this.collections.findAll(isAdminToken(auth, this.config));
+  findAll() {
+    return this.collections.findAll();
   }
 
   @Get(':idOrSlug')

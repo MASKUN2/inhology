@@ -28,8 +28,8 @@ export default async function PostPage({ params, searchParams }: Params) {
   ]);
   const slug = decodeURIComponent(rawSlug);
   const post = await getPostBySlug(slug);
-  // The API only returns a private post to the signed-in author; a draft has no
-  // page for anyone.
+  // A draft has no page for anyone. A private post has one for everyone, but the
+  // API sends its body to the signed-in author only.
   if (!post || post.status === 'DRAFT') notFound();
   const flash =
     comment === 'ok' ? 'ok' : comment === 'error' ? 'error' : undefined;
@@ -75,7 +75,11 @@ export default async function PostPage({ params, searchParams }: Params) {
           ) : null}
         </header>
 
-        <Markdown>{post.content}</Markdown>
+        {post.status === 'PRIVATE' && !authed ? (
+          <p className="text-muted">This post is private.</p>
+        ) : (
+          <Markdown>{post.content}</Markdown>
+        )}
       </article>
 
       {/* Comments are for published posts only. */}
