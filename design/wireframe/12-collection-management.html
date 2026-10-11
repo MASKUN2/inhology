@@ -14,6 +14,7 @@
     <ul>
       <li>The author creates, edits, and deletes collections (§4.4).</li>
       <li>A create form at the top: title (required) · description (optional) · rules as a tag input (comma-separated, existing tags beneath as toggles) · "Add collection".</li>
+      <li>An <strong>Order</strong> list of the collection titles: drag a row by its handle, or use the up/down buttons, to change the order shown on the home page. It saves on drop (§4.4, §7.5 Collection order list).</li>
       <li>Below, every collection is its own editable form with the same three fields prefilled, a link to its public page with <code>N posts</code>, and Save · Delete.</li>
       <li>Rules: a post must carry every rule tag; leaving rules empty makes the collection show every post (§5.3).</li>
       <li>When there are none: "No collections yet."</li>
@@ -34,6 +35,13 @@
     </div>
     <button type="button">Add collection</button>
   </form>
+
+  <section aria-label="Order" style="margin-top:2rem">
+    <p class="eyebrow">Order · drag to reorder</p>
+    <div class="item"><div>⠿ Work Recap</div><div class="ops"><button type="button" aria-label="Move up" disabled>↑</button><button type="button" aria-label="Move down">↓</button></div></div>
+    <div class="item"><div>⠿ What I Read</div><div class="ops"><button type="button" aria-label="Move up">↑</button><button type="button" aria-label="Move down">↓</button></div></div>
+    <div class="item"><div>⠿ All</div><div class="ops"><button type="button" aria-label="Move up">↑</button><button type="button" aria-label="Move down" disabled>↓</button></div></div>
+  </section>
 
   <form class="form">
     <div><a href="03-collection-detail.html">Work Recap</a> <span class="count">2 posts</span></div>

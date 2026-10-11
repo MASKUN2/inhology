@@ -12,6 +12,7 @@ import {
 import { AdminGuard } from '../auth/admin.guard';
 import { CollectionsService } from './collections.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
+import { ReorderCollectionsDto } from './dto/reorder-collections.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 
 @Controller('collections')
@@ -32,6 +33,13 @@ export class CollectionsController {
   @Get(':idOrSlug')
   findOne(@Param('idOrSlug') idOrSlug: string) {
     return this.collections.findOne(idOrSlug);
+  }
+
+  // Declared before ':id' so "order" is not taken for a collection id.
+  @Patch('order')
+  @UseGuards(AdminGuard)
+  reorder(@Body() dto: ReorderCollectionsDto) {
+    return this.collections.reorder(dto.ids);
   }
 
   @Patch(':id')

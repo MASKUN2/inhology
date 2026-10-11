@@ -217,6 +217,29 @@ export async function saveCollection(formData: FormData) {
   redirect(res.ok ? '/admin/collections' : '/admin/collections?error=1');
 }
 
+/**
+ * Save the collections' order. Called from the drag-and-drop list (not a form
+ * submit), so it returns a result instead of redirecting.
+ */
+export async function reorderCollections(ids: string[]): Promise<boolean> {
+  const token = await adminToken();
+
+  try {
+    const res = await fetch(`${API_URL}/collections/order`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ids }),
+      cache: 'no-store',
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function deleteCollection(formData: FormData) {
   const token = await adminToken();
 

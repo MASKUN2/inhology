@@ -10,6 +10,12 @@ import { TagsService } from '../tags/tags.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 
+// The author-defined order; creation time breaks a tie.
+const IN_ORDER: Prisma.CollectionOrderByWithRelationInput[] = [
+  { position: 'asc' },
+  { createdAt: 'asc' },
+];
+
 // A collection's rule tags always come back in name order.
 const RULES = { tags: { orderBy: { name: 'asc' } } } as const;
 
@@ -41,11 +47,16 @@ export class CollectionsService {
 
   async create(dto: CreateCollectionDto) {
     try {
+      // A new collection goes last.
+      const last = await this.prisma.collection.aggregate({
+        _max: { position: true },
+      });
       const created = await this.prisma.collection.create({
         data: {
           title: dto.title,
           slug: slugify(dto.title) || 'collection',
           description: dto.description,
+          position: (last._max.position ?? -1) + 1,
           ...(dto.rules?.length && {
             tags: { connect: await this.tags.resolve(dto.rules) },
           }),
@@ -60,10 +71,36 @@ export class CollectionsService {
 
   async findAll() {
     const collections = await this.prisma.collection.findMany({
-      orderBy: { createdAt: 'asc' },
+      orderBy: IN_ORDER,
       include: RULES,
     });
     return Promise.all(collections.map((c) => this.withCount(c)));
+  }
+
+  // Put the collections in the given order. Any collection left out of `ids`
+  // keeps its relative order after the listed ones; every position is rewritten
+  // in one transaction so the order is never half-applied.
+  async reorder(ids: string[]) {
+    const current = await this.prisma.collection.findMany({
+      orderBy: IN_ORDER,
+      select: { id: true },
+    });
+    const known = new Set(current.map((c) => c.id));
+    const unknown = ids.find((id) => !known.has(id));
+    if (unknown) {
+      throw new NotFoundException(`Collection not found: ${unknown}`);
+    }
+    const listed = new Set(ids);
+    const order = [
+      ...ids,
+      ...current.map((c) => c.id).filter((id) => !listed.has(id)),
+    ];
+    await this.prisma.$transaction(
+      order.map((id, position) =>
+        this.prisma.collection.update({ where: { id }, data: { position } }),
+      ),
+    );
+    return this.findAll();
   }
 
   /** A collection with the published posts that satisfy its rules, newest first. */

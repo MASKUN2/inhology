@@ -120,7 +120,7 @@ export async function getTags(): Promise<Tag[]> {
   return res.json();
 }
 
-/** Every collection, in creation order, with its rules and post count. */
+/** Every collection, in the author-defined order, with its rules and post count. */
 export async function getCollections(): Promise<Collection[]> {
   const res = await fetch(`${API_URL}/collections`, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to load collections (${res.status})`);

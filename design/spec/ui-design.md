@@ -66,8 +66,13 @@ These are the recurring building blocks; reuse them rather than inventing new on
   ordered by count descending. On a tag page the selected tag's badge is
   inverted (`strong` surface).
 - **Collection list** — the home page's main content, above the tag bar: one row per
-  collection with its title (linking to the collection page), post count, and
-  description. Hidden when there are no collections.
+  collection, in the author-defined order, with its title (linking to the
+  collection page), post count, and description. Hidden when there are no collections.
+- **Collection order list** — in collection management, a compact list of the
+  collection titles in their current order. Each row has a drag handle and can
+  be dragged to a new position; *move up* / *move down* buttons do the same
+  without a pointer. The new order is saved on drop, with no separate save
+  step, and a quiet line reports *Saved* or a failure.
 - **Collection page** — eyebrow *Collection*, title, description, then its rules
   as tag badges (*All posts* when it has none), then the usual post list.
 - **Tag input** — in the post editor and the collection form, one text field of comma-separated tag

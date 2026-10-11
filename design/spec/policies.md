@@ -33,6 +33,8 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 - A post has **zero or more tags**; none is required. Tags are the only grouping
   — there is no category and no series, and posts under a tag are ordered by
   publication date, not by an author-set position.
+- Collections have one **author-defined order**, shared by every surface that
+  lists them. Reordering changes nothing but that order.
 - A **collection** is a saved filter, not a container: it lists the published
   posts carrying **every** one of its rule tags, and **all** published posts when
   it has no rules. Deleting a collection deletes no post and no tag; deleting a

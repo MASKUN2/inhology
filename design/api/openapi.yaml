@@ -379,7 +379,7 @@ paths:
       summary: List collections
       operationId: listCollections
       description: >
-        Every collection in creation order, each with its rule `tags` and
+        Every collection in the author-defined order (`position`), each with its rule `tags` and
         `postCount` — the number of PUBLISHED, non-deleted posts carrying every
         rule tag (all published posts when there are no rules).
       responses:
@@ -410,6 +410,34 @@ paths:
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '409': { $ref: '#/components/responses/Conflict' }
+
+  /collections/order:
+    patch:
+      tags: [collections]
+      summary: Reorder collections
+      operationId: reorderCollections
+      description: >
+        Sets the author-defined order. `ids` lists collection ids in the wanted
+        order; any collection left out keeps its relative order after the listed
+        ones. Returns all collections in the new order.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReorderCollections' }
+      responses:
+        '200':
+          description: All collections, in the new order
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Collection' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
 
   /collections/{id}:
     parameters:
@@ -538,13 +566,16 @@ components:
     Collection:
       type: object
       description: A titled view over the posts. `tags` are its rules.
-      required: [id, slug, title, tags, postCount, createdAt, updatedAt]
+      required: [id, slug, title, position, tags, postCount, createdAt, updatedAt]
       properties:
         id: { type: string }
         slug: { type: string }
         title: { type: string }
         description:
           type: [string, 'null']
+        position:
+          type: integer
+          description: Place in the author-defined order (0-based).
         tags:
           type: array
           description: The rule tags; a post must carry every one. Empty means every post.
@@ -721,6 +752,15 @@ components:
           type: array
           items: { type: string, minLength: 1 }
           description: Replaces the whole rule set; omit to keep it.
+    ReorderCollections:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          uniqueItems: true
+          items: { type: string }
+          description: Collection ids in the wanted order.
     CreateTag:
       type: object
       required: [name]

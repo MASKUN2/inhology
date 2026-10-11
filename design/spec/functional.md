@@ -79,6 +79,10 @@ Part of the [inhology specification](./README.md).
   losing tags ([§5.3](./policies.md#53-relationships--integrity)).
 - Author can create, edit (title, description, rules), and delete collections.
   Rule tags are typed by name, like a post's tags.
+- Collections appear in an **author-defined order**. A new collection goes last;
+  the author **reorders them by drag and drop** in the admin (with move up / move
+  down controls as the non-pointer alternative), and the home page follows that
+  order at once ([§7.5](./ui-design.md#75-shared-ui-patterns)).
 - Former series addresses redirect to the collection of the same name.
 
 ## 4.5 Comments (Reader)

@@ -12,6 +12,7 @@ erDiagram
         string   slug UK
         string   title
         string   description "nullable"
+        int      position "author-defined order, 0-based"
         datetime createdAt
         datetime updatedAt
     }
@@ -25,6 +26,7 @@ erDiagram
 | `slug` | string | — | **Unique**, URL-safe; derived from the title. |
 | `title` | string | — | Required. |
 | `description` | string | ✓ | Shown on the home list and the collection page. |
+| `position` | int | — | Place in the author-defined order (0-based, default 0). |
 | `createdAt` / `updatedAt` | datetime | — | Timestamps. |
 
 ## Relations
@@ -43,5 +45,8 @@ erDiagram
 - Rule tags are given by name and matched or created exactly like a post's tags.
 - Slug is **unique**, derived from the title, and follows a title change; a clash
   is rejected ([§5.2](../spec/policies.md#52-identifiers)).
+- Collections are always listed by `position` ascending (creation time breaks a
+  tie). A new collection takes the last position; reordering rewrites the
+  positions of all collections in one transaction.
 - Deleting a collection deletes only its rules. Deleting a tag removes the rules
   that named it (the collection then matches more posts).

@@ -47,6 +47,7 @@ erDiagram
         string   slug UK
         string   title
         string   description "nullable"
+        int      position "author-defined order"
         datetime createdAt
         datetime updatedAt
     }

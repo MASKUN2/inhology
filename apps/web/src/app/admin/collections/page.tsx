@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { deleteCollection, saveCollection } from '../actions';
 import { getCollections, getTags } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
+import { CollectionOrder } from '@/components/collection-order';
 import { TagInput } from '@/components/tag-input';
 
 export const metadata: Metadata = { title: 'Manage collections' };
@@ -64,6 +65,10 @@ export default async function AdminCollectionsPage({
           Add collection
         </button>
       </form>
+
+      <CollectionOrder
+        collections={collections.map((c) => ({ id: c.id, title: c.title }))}
+      />
 
       {collections.length === 0 ? (
         <p className="mt-10 text-muted">No collections yet.</p>
