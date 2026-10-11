@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>#MinIO · inhology</title>
+<title>Development · inhology</title>
 <link rel="stylesheet" href="wireframe.css">
 </head>
 <body>
 <header class="header">
   <div class="nav">
     <a class="brand" href="01-home.html">inhology</a>
-    <div class="nav-right"><a href="01-home.html">Home</a><a href="05-series-index.html">Series</a></div>
+    <div class="nav-right"><a href="01-home.html">Home</a></div>
   </div>
 </header>
 
@@ -20,21 +20,32 @@
     <h3>This screen — Tag archive (<code>/tags/{slug}</code>)</h3>
     <ul>
       <li>Shows only published posts carrying one tag (§4.3).</li>
-      <li>The title is rendered as <code>#tagname</code>.</li>
-      <li>Otherwise identical in layout to the category archive.</li>
+      <li>Reached by selecting a badge in the tag bar or on a post. The title is the tag's name with its post count.</li>
+      <li>The tag bar stays, with the selected tag inverted and an <em>All</em> badge back to the full list (§7.5 Tag bar).</li>
+      <li>Old <code>/categories/{slug}</code> addresses redirect here.</li>
     </ul>
   </aside>
 
   <a class="back" href="01-home.html">← Back to list</a>
   <p class="eyebrow">Tag</p>
-  <h1>#MinIO</h1>
+  <h1>Development</h1>
+  <p class="eyebrow">12 posts</p>
+
+  <nav class="tagbar" aria-label="Tags">
+    <a class="badge" href="01-home.html">All</a>
+    <a class="badge active" href="04-tag-archive.html">Development <span class="count">12</span></a>
+    <a class="badge" href="04-tag-archive.html">Essay <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
+    <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
+    <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>
+  </nav>
 
   <div class="list">
     <article class="card">
-      <div class="meta"><a class="chip" href="03-category-archive.html">Development</a><a class="series-label" href="06-series-detail.html">홈랩 구축기</a><time datetime="2026-07-04">2026-07-04</time><span>· 6 min</span></div>
+      <div class="meta"><time datetime="2026-07-04">2026-07-04</time><span>· 6 min</span></div>
       <h2><a href="02-post-detail.html">본문 이미지 업로드를 MinIO로 옮긴 이야기</a></h2>
       <p class="excerpt">사이트 도메인 뒤로 객체 저장소를 숨기고, 이미지를 스트리밍으로 서빙하기.</p>
-      <div class="tags"><a href="04-tag-archive.html">#MinIO</a> <a href="04-tag-archive.html">#Next.js</a></div>
+      <div class="tags"><a class="badge" href="04-tag-archive.html">Development</a> <a class="badge" href="04-tag-archive.html">Work Recap</a> <a class="badge" href="04-tag-archive.html">MinIO</a></div>
     </article>
   </div>
 </main>

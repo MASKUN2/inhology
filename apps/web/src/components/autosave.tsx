@@ -16,9 +16,7 @@ const INTERVAL_MS = 60_000;
 const TRACKED = [
   'title',
   'excerpt',
-  'categoryId',
-  'seriesId',
-  'seriesOrder',
+  'tags',
   'content',
   'publishedDate',
 ];

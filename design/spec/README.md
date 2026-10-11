@@ -69,13 +69,13 @@ multi-author need is explicitly out of scope for this version.
 - **Post** — the central unit of content. A Markdown article with a title, a
   URL slug, optional summary, and a publication state. The aggregate everything
   else hangs off of.
-- **Category** — a broad, mutually-exclusive bucket (e.g. *Development / Daily / Essay*).
-  Every post belongs to **exactly one**.
-- **Tag** — a cross-cutting topic label. A post may have **many**; a tag spans
-  many posts.
-- **Series** — an ordered collection of posts telling a longer story across
-  multiple parts. A post belongs to **at most one** series and has a position
-  within it. Optional.
+- **Tag** — the only way posts are grouped: a topic or collection label (e.g.
+  *Development*, *Work Recap*). A post carries **zero or more** tags; a tag spans
+  many posts. There are no categories and no series.
+- **Collection** — a titled, described view over the posts, defined by **tag
+  rules**. It holds no posts itself: it lists every published post that carries
+  **all** of its rule tags, and with **no rules it lists every post**. The home
+  page lists the collections.
 - **Comment** — a reader's response attached to a published post. May reply to
   another comment (threaded). Always moderated.
 
@@ -94,7 +94,7 @@ The domain model is diagrammed in [`../domain/`](../domain/).
   images. Inline image *upload* is supported (see [§4.1](./functional.md#41-posts-author),
   [§5.7](./policies.md#57-images)), but images are fire-and-forget — inserted
   once, not curated in a browsable collection.
-- **Cover images** for posts or series. Images live inline in the body only.
+- **Cover images** for posts. Images live inline in the body only.
 - Scheduled publishing.
 - RSS/Atom feeds *(candidate for a future version)*.
 
@@ -109,8 +109,8 @@ The canonical, machine-readable glossary lives in
 |---|---|
 | **Draft** | A post that has been saved but not published; private to the author. |
 | **Published** | A post visible to readers, with a publication timestamp. |
-| **Slug** | The URL-safe identifier for a post, category, tag, or series. |
+| **Slug** | The URL-safe identifier for a post, a tag, or a collection. |
+| **Collection rule** | One condition of a collection: the post must carry a given tag. |
 | **Pending** | A submitted comment awaiting the author's moderation. |
-| **Series order** | A post's integer position within its series. |
 | **Author** | The single privileged user (Inho). |
 | **Reader** | Any anonymous public visitor. |

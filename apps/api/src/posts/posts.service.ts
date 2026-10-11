@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostStatus, Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
 import { PrismaService } from '../prisma/prisma.service';
+import { TagsService } from '../tags/tags.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { QueryPostsDto } from './dto/query-posts.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -12,9 +13,15 @@ function readingTimeMinutes(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+// A post's tags always come back in name order.
+const TAGS_BY_NAME = { orderBy: { name: 'asc' } } as const;
+
 @Injectable()
 export class PostsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tags: TagsService,
+  ) {}
 
   // Build a unique slug from `base`: slugify it, then append -2, -3, … until it no
   // longer collides with another post (excludeId lets a post keep its own slug).
@@ -49,19 +56,11 @@ export class PostsService {
       status,
       readingTime: readingTimeMinutes(dto.content),
       publishedAt: status === PostStatus.PUBLISHED ? new Date() : null,
-      category: { connect: { id: dto.categoryId } },
-      ...(dto.seriesId && {
-        series: { connect: { id: dto.seriesId } },
-        seriesOrder: dto.seriesOrder,
-      }),
-      ...(dto.tagIds?.length && {
-        tags: { connect: dto.tagIds.map((id) => ({ id })) },
+      ...(dto.tags?.length && {
+        tags: { connect: await this.tags.resolve(dto.tags) },
       }),
     };
-    return this.prisma.post.create({
-      data,
-      include: { category: true, tags: true, series: true },
-    });
+    return this.prisma.post.create({ data, include: { tags: TAGS_BY_NAME } });
   }
 
   findAll(query: QueryPostsDto, isAdmin = false) {
@@ -70,13 +69,11 @@ export class PostsService {
       // Non-admins only ever see published posts; any client-supplied
       // status filter is ignored so drafts can't leak.
       status: isAdmin ? query.status : PostStatus.PUBLISHED,
-      ...(query.categoryId && { categoryId: query.categoryId }),
-      ...(query.category && { category: { slug: query.category } }),
       ...(query.tag && { tags: { some: { slug: query.tag } } }),
     };
     return this.prisma.post.findMany({
       where,
-      include: { category: true, tags: true, series: true },
+      include: { tags: TAGS_BY_NAME },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
     });
   }
@@ -85,9 +82,7 @@ export class PostsService {
     const post = await this.prisma.post.findFirst({
       where: { deletedAt: null, OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
       include: {
-        category: true,
-        tags: true,
-        series: true,
+        tags: TAGS_BY_NAME,
         comments: {
           where: { status: 'APPROVED' },
           orderBy: { createdAt: 'asc' },
@@ -122,17 +117,8 @@ export class PostsService {
         readingTime: readingTimeMinutes(dto.content),
       }),
       ...(dto.excerpt !== undefined && { excerpt: dto.excerpt }),
-      ...(dto.seriesOrder !== undefined && { seriesOrder: dto.seriesOrder }),
-      ...(dto.categoryId !== undefined && {
-        category: { connect: { id: dto.categoryId } },
-      }),
-      ...(dto.tagIds !== undefined && {
-        tags: { set: dto.tagIds.map((tagId) => ({ id: tagId })) },
-      }),
-      ...(dto.seriesId !== undefined && {
-        series: dto.seriesId
-          ? { connect: { id: dto.seriesId } }
-          : { disconnect: true },
+      ...(dto.tags !== undefined && {
+        tags: { set: await this.tags.resolve(dto.tags) },
       }),
     };
 
@@ -163,7 +149,7 @@ export class PostsService {
     return this.prisma.post.update({
       where: { id },
       data,
-      include: { category: true, tags: true, series: true },
+      include: { tags: TAGS_BY_NAME },
     });
   }
 

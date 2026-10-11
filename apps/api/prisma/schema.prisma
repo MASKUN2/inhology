@@ -31,36 +31,14 @@ model Post {
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime? // soft-delete marker; null = live. Excluded from all reads.
 
-  // a post belongs to exactly one category (개발 / 일상 / 에세이 …)
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  // a post may belong to a series (optional)
-  seriesId    String?
-  series      Series? @relation(fields: [seriesId], references: [id])
-  seriesOrder Int? // position within the series
-
-  // cross-cutting topics (many-to-many)
+  // tags are the only grouping (many-to-many, zero or more per post)
   tags     Tag[]     @relation("PostTags")
   comments Comment[]
 
   @@index([status, publishedAt]) // listing published posts, newest first
-  @@index([categoryId])
-  @@index([seriesId])
 }
 
-// ─── Taxonomy ────────────────────────────────────────────────────────────────
-
-model Category {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  posts Post[]
-}
+// ─── Tags ────────────────────────────────────────────────────────────────────
 
 model Tag {
   id        String   @id @default(cuid())
@@ -68,10 +46,13 @@ model Tag {
   name      String
   createdAt DateTime @default(now())
 
-  posts Post[] @relation("PostTags")
+  posts       Post[]       @relation("PostTags")
+  collections Collection[] @relation("CollectionTags") // collections whose rules name this tag
 }
 
-model Series {
+// ─── Collections (titled views over the posts, defined by tag rules) ─────────
+
+model Collection {
   id          String   @id @default(cuid())
   slug        String   @unique
   title       String
@@ -79,7 +60,8 @@ model Series {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  posts Post[]
+  // the rules: a post must carry every one of these tags; none = every post
+  tags Tag[] @relation("CollectionTags")
 }
 
 // ─── Comments (reader engagement, moderated) ─────────────────────────────────

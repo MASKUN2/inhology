@@ -38,7 +38,7 @@ inhology/
 ```bash
 colima start && docker compose up -d   # start Postgres (see Commands below)
 pnpm install                              # install all workspace deps
-pnpm --filter @inhology/api db:seed        # seed categories/tags/sample post
+pnpm --filter @inhology/api db:seed        # seed default tags
 pnpm dev                                   # run web + api together
 ```
 

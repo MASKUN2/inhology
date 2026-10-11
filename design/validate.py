@@ -29,15 +29,14 @@ DESIGN = Path(__file__).resolve().parent
 ROOT = DESIGN.parent
 SCHEMA = ROOT / "apps" / "api" / "prisma" / "schema.prisma"
 
-# The five aggregate roots (see design/domain/). Also the models we expect
+# The four aggregate roots (see design/domain/). Also the models we expect
 # in the Prisma schema and the domain terms in the glossary's "Domain" category.
-AGGREGATES = ["Post", "Category", "Tag", "Series", "Comment"]
+AGGREGATES = ["Post", "Tag", "Collection", "Comment"]
 
 SCREENS = [
-    "01-home", "02-post-detail", "03-category-archive", "04-tag-archive",
-    "05-series-index", "06-series-detail", "07-admin-login",
-    "08-post-dashboard", "09-new-post", "10-edit-post",
-    "11-comment-moderation", "12-series-management",
+    "01-home", "02-post-detail", "03-collection-detail", "04-tag-archive",
+    "07-admin-login", "08-post-dashboard", "09-new-post", "10-edit-post",
+    "11-comment-moderation", "12-collection-management",
 ]
 
 QUIET = "-q" in sys.argv or "--quiet" in sys.argv
@@ -202,7 +201,7 @@ def check_domain_model(r: Report, prisma, gloss):
     r.layer("2. Domain model  (design/domain/)  vs Prisma schema + glossary")
     models, enums = prisma
 
-    # ground truth sanity: Prisma models == the five aggregates
+    # ground truth sanity: Prisma models == the aggregates
     r.check(set(models) == set(AGGREGATES),
             f"Prisma models match the {len(AGGREGATES)} aggregate roots",
             f"Prisma models {sorted(models)} != aggregates {sorted(AGGREGATES)}",
@@ -257,7 +256,7 @@ def check_api_spec(r: Report, prisma, gloss):
             f"expected OpenAPI 3.1, got {api['version']}")
 
     # each resource has a base path
-    for res in ("posts", "series", "comments", "categories", "tags"):
+    for res in ("posts", "comments", "tags", "collections"):
         r.check(f"/{res}" in api["paths"],
                 f"path /{res} present",
                 f"path /{res} missing")
@@ -324,7 +323,7 @@ def check_ui(r: Report):
         r.check("wireframe.css" in index, "index.html links wireframe.css",
                 "index.html does not link the shared wireframe.css")
         missing = [n for n in SCREENS if f'{n}.html' not in index]
-        r.check(not missing, "index.html links to all 12 screens",
+        r.check(not missing, f"index.html links to all {len(SCREENS)} screens",
                 f"index.html missing links: {missing}")
 
 

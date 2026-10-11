@@ -21,8 +21,8 @@ export default async function AdminPage() {
           <Link href="/" className="text-muted hover:underline">
             View site
           </Link>
-          <Link href="/admin/series" className="text-muted hover:underline">
-            Series
+          <Link href="/admin/collections" className="text-muted hover:underline">
+            Collections
           </Link>
           <Link href="/admin/comments" className="text-muted hover:underline">
             Comments
@@ -59,11 +59,15 @@ export default async function AdminPage() {
                       Draft
                     </span>
                   )}
-                  <span className="text-muted">{post.category.name}</span>
                   {post.publishedAt ? (
                     <time className="text-muted">
                       {formatDate(post.publishedAt)}
                     </time>
+                  ) : null}
+                  {post.tags.length > 0 ? (
+                    <span className="truncate text-muted">
+                      {post.tags.map((tag) => tag.name).join(' · ')}
+                    </span>
                   ) : null}
                 </div>
                 <p className="mt-1 truncate font-medium">{post.title}</p>

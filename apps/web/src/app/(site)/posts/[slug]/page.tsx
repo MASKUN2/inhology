@@ -6,6 +6,7 @@ import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
 import { Comments } from '@/components/comments';
 import { Markdown } from '@/components/markdown';
+import { TagBadge } from '@/components/tag-badge';
 
 type Params = {
   params: Promise<{ slug: string }>;
@@ -53,12 +54,6 @@ export default async function PostPage({ params, searchParams }: Params) {
       <article className="mt-8">
         <header className="mb-8">
           <div className="flex items-center gap-2 text-xs text-muted">
-            <Link
-              href={`/categories/${post.category.slug}`}
-              className="rounded-full bg-subtle px-2 py-0.5 hover:opacity-80"
-            >
-              {post.category.name}
-            </Link>
             <time dateTime={post.publishedAt ?? undefined}>
               {formatDate(post.publishedAt)}
             </time>
@@ -68,32 +63,13 @@ export default async function PostPage({ params, searchParams }: Params) {
             {post.title}
           </h1>
           {post.tags.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
+            <div className="mt-3 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
-                <Link
-                  key={tag.id}
-                  href={`/tags/${tag.slug}`}
-                  className="hover:text-foreground"
-                >
-                  #{tag.name}
-                </Link>
+                <TagBadge key={tag.id} tag={tag} />
               ))}
             </div>
           ) : null}
         </header>
-
-        {post.series ? (
-          <Link
-            href={`/series/${post.series.slug}`}
-            className="mb-8 block rounded-md border border-border bg-subtle px-4 py-3 text-sm hover:opacity-80"
-          >
-            <span className="text-muted">Series</span>{' '}
-            <span className="font-medium">{post.series.title}</span>
-            {post.seriesOrder ? (
-              <span className="text-muted"> · Part {post.seriesOrder}</span>
-            ) : null}
-          </Link>
-        ) : null}
 
         <Markdown>{post.content}</Markdown>
       </article>

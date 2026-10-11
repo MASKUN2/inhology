@@ -7,15 +7,6 @@ export class QueryPostsDto {
   @IsEnum(PostStatus)
   status?: PostStatus;
 
-  @IsOptional()
-  @IsString()
-  categoryId?: string;
-
-  /** Filter by category slug. */
-  @IsOptional()
-  @IsString()
-  category?: string;
-
   /** Filter by tag slug. */
   @IsOptional()
   @IsString()

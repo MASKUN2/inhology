@@ -3,8 +3,10 @@
 Part of the [inhology specification](./README.md).
 
 ## 4.1 Posts (Author)
-- Create a post with: title, Markdown body, category (required), optional
-  summary, optional tags, optional series + position. The **URL slug is not
+- Create a post with: title, Markdown body, optional summary, and **zero or more
+  tags**. Tags are typed by name in the editor; a name that does not exist yet
+  becomes a new tag on save, and existing tags are offered as suggestions. The
+  **URL slug is not
   entered by the author** — it is generated automatically (see below).
 - Save a post as a **draft** or **publish** it.
 - **The URL slug is service-managed.** A draft has **no slug**; on **publish** the
@@ -46,24 +48,34 @@ Part of the [inhology specification](./README.md).
 
 ## 4.2 Posts (Reader)
 - Browse a list of published posts, newest first.
-- In any post list, a post that belongs to a series **shows the series name**,
-  linking to that series' page ([§7.5](./ui-design.md#75-shared-ui-patterns)).
 - Read a single published post by its slug.
-- Navigate to a post's category, its tags, and its series.
+- Navigate from a post to any of its tags.
 - Reading time is shown when available.
 
-## 4.3 Taxonomy
-- Browse all posts within a category.
-- Browse all posts carrying a tag.
-- Category and tag pages list only published posts.
+## 4.3 Tags
+- Every post list opens with a **tag bar**: all tags that have at least one
+  published post, each as a badge with its **post count**, ordered by count,
+  **highest first** (ties by name).
+- Selecting a tag shows the published posts carrying it, newest first; the tag
+  bar stays in place with the selected tag highlighted, plus a way back to all
+  posts.
+- Tag counts and tag pages consider **published posts only**.
+- Former category addresses redirect to the matching tag page.
 
-## 4.4 Series
-- Author can create, edit, and delete a series (title, slug, optional
-  description).
-- Author can assign a post to a series and set its order.
-- Readers can browse a series index and a single series page that lists its
-  posts **in author-defined order**.
-- A post page links to its series when it belongs to one.
+## 4.4 Collections
+- The **home page lists the collections** — each with its title, description, and
+  the number of posts it currently shows — above the tag bar and the post list.
+- Selecting a collection opens its page: title, description, its rules, and the
+  **list of published posts that satisfy them**, newest first.
+- A collection has a **title**, an optional **description**, and **zero or more
+  tag rules**. Each rule names a tag the post must carry. With several rules a
+  post must satisfy **all** of them; with **no rules the collection shows every
+  post**.
+- A collection never stores posts: a post enters or leaves it only by gaining or
+  losing tags ([§5.3](./policies.md#53-relationships--integrity)).
+- Author can create, edit (title, description, rules), and delete collections.
+  Rule tags are typed by name, like a post's tags.
+- Former series addresses redirect to the collection of the same name.
 
 ## 4.5 Comments (Reader)
 - Submit a comment on a published post with: name (required), comment body

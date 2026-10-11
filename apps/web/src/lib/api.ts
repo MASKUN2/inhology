@@ -1,25 +1,24 @@
 // Server-side base URL for the Nest API. Override with API_URL in .env.local.
 const API_URL = process.env.API_URL ?? 'http://localhost:4000';
 
-export interface Category {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string | null;
-}
-
 export interface Tag {
   id: string;
   slug: string;
   name: string;
+  /** Published posts carrying the tag; present on tag endpoints. */
+  _count?: { posts: number };
 }
 
-export interface Series {
+/** A titled view over the posts. `tags` are its rules: a post must carry every one. */
+export interface Collection {
   id: string;
   slug: string;
   title: string;
-  description?: string | null;
-  _count?: { posts: number };
+  description: string | null;
+  tags: Tag[];
+  /** Published posts currently satisfying the rules. */
+  postCount: number;
+  /** Present on the detail endpoint only. */
   posts?: Post[];
 }
 
@@ -57,11 +56,8 @@ export interface Post {
   viewCount: number;
   createdAt: string;
   updatedAt: string;
-  category: Category;
   tags: Tag[];
   comments?: PostComment[];
-  series?: Series | null;
-  seriesOrder?: number | null;
 }
 
 async function getPosts(params: Record<string, string>): Promise<Post[]> {
@@ -73,10 +69,6 @@ async function getPosts(params: Record<string, string>): Promise<Post[]> {
 
 export function getPublishedPosts(): Promise<Post[]> {
   return getPosts({});
-}
-
-export function getPostsByCategory(slug: string): Promise<Post[]> {
-  return getPosts({ category: slug });
 }
 
 export function getPostsByTag(slug: string): Promise<Post[]> {
@@ -125,33 +117,28 @@ export async function getComments(status?: string): Promise<AdminComment[]> {
   return res.json();
 }
 
-export async function getCategories(): Promise<Category[]> {
-  const res = await fetch(`${API_URL}/categories`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to load categories (${res.status})`);
+/** Every tag with its published-post count, highest count first. */
+export async function getTags(): Promise<Tag[]> {
+  const res = await fetch(`${API_URL}/tags`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load tags (${res.status})`);
   return res.json();
 }
 
-export async function getCategory(slug: string): Promise<Category | null> {
-  const res = await fetch(`${API_URL}/categories/${encodeURIComponent(slug)}`, {
-    cache: 'no-store',
-  });
+/** Every collection, in creation order, with its rules and post count. */
+export async function getCollections(): Promise<Collection[]> {
+  const res = await fetch(`${API_URL}/collections`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load collections (${res.status})`);
+  return res.json();
+}
+
+/** One collection with the published posts that satisfy its rules. */
+export async function getCollection(slug: string): Promise<Collection | null> {
+  const res = await fetch(
+    `${API_URL}/collections/${encodeURIComponent(slug)}`,
+    { cache: 'no-store' },
+  );
   if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`Failed to load category (${res.status})`);
-  return res.json();
-}
-
-export async function getSeriesList(): Promise<Series[]> {
-  const res = await fetch(`${API_URL}/series`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to load series (${res.status})`);
-  return res.json();
-}
-
-export async function getSeries(slug: string): Promise<Series | null> {
-  const res = await fetch(`${API_URL}/series/${encodeURIComponent(slug)}`, {
-    cache: 'no-store',
-  });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`Failed to load series (${res.status})`);
+  if (!res.ok) throw new Error(`Failed to load collection (${res.status})`);
   return res.json();
 }
 

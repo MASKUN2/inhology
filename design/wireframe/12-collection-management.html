@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manage collections · inhology</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<main class="wrap">
+  <aside class="note">
+    <a href="index.html">← UI screens</a>
+    <h3>This screen — Collection management (<code>/admin/collections</code>)</h3>
+    <ul>
+      <li>The author creates, edits, and deletes collections (§4.4).</li>
+      <li>A create form at the top: title (required) · description (optional) · rules as a tag input (comma-separated, existing tags beneath as toggles) · "Add collection".</li>
+      <li>Below, every collection is its own editable form with the same three fields prefilled, a link to its public page with <code>N posts</code>, and Save · Delete.</li>
+      <li>Rules: a post must carry every rule tag; leaving rules empty makes the collection show every post (§5.3).</li>
+      <li>When there are none: "No collections yet."</li>
+    </ul>
+  </aside>
+
+  <div class="toolbar">
+    <h1>Manage collections</h1>
+    <div class="actions"><a href="08-post-dashboard.html">← Manage posts</a></div>
+  </div>
+
+  <form class="form">
+    <input placeholder="Collection title" required>
+    <input placeholder="Description (optional)">
+    <div>
+      <input placeholder="Rules: tags a post must have (comma-separated)">
+      <div class="tags"><a class="badge" href="#">Development</a> <a class="badge" href="#">Essay</a> <a class="badge" href="#">What I Read</a> <a class="badge" href="#">Work Recap</a> <a class="badge" href="#">Daily</a></div>
+    </div>
+    <button type="button">Add collection</button>
+  </form>
+
+  <form class="form">
+    <div><a href="03-collection-detail.html">Work Recap</a> <span class="count">2 posts</span></div>
+    <input value="Work Recap" required>
+    <input value="What I built at work, period by period.">
+    <div>
+      <input value="Work Recap, Development">
+      <div class="tags"><a class="badge active" href="#">Development</a> <a class="badge" href="#">Essay</a> <a class="badge" href="#">What I Read</a> <a class="badge active" href="#">Work Recap</a> <a class="badge" href="#">Daily</a></div>
+    </div>
+    <div class="row"><button class="btn" type="button">Save</button><button type="button">Delete</button></div>
+  </form>
+
+  <p class="help">A collection stores no posts. It shows every published post that carries all of its rule tags; with no rules it shows every post. Deleting a collection deletes no post and no tag.</p>
+</main>
+</body>
+</html>

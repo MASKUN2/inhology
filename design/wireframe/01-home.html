@@ -12,7 +12,6 @@
     <a class="brand" href="01-home.html">inhology</a>
     <div class="nav-right">
       <a href="01-home.html">Home</a>
-      <a href="05-series-index.html">Series</a>
       <button aria-label="Menu" onclick="document.getElementById('m').classList.toggle('open')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -27,8 +26,10 @@
     <h3>This screen — Home / post list (<code>/</code>)</h3>
     <ul>
       <li>The entry screen: published posts, newest first.</li>
-      <li>Made of the site header (wordmark · Home · Series · Admin menu) and the body's site title/subtitle plus the post card list.</li>
-      <li>Each card carries a meta row (category · series · publish date · reading time <code>N min</code>), title, excerpt, and tags. The series label appears only on posts in a series and links to the series page (§7.5 Series label).</li>
+      <li>Made of the site header (wordmark · Home · Admin menu) and the body's site title/subtitle, the collection list, the tag bar, and the post card list.</li>
+      <li>The collection list shows every collection: title (opens the collection page), the number of posts it currently shows, and its description. It is hidden when there are none (§4.4, §7.5 Collection list).</li>
+      <li>The tag bar lists every tag that has published posts as a badge with its post count, highest count first; a badge opens that tag's page (§4.3, §7.5 Tag bar).</li>
+      <li>Each card carries a meta row (publish date · reading time <code>N min</code>), title, excerpt, and all of the post's tags as badges. There is no category and no series (§5.3).</li>
       <li>Drafts are never shown (§5.1).</li>
       <li>When there are none: "No posts published yet."</li>
     </ul>
@@ -39,26 +40,46 @@
     <p class="subtitle">Notes from a developer and a person.</p>
   </header>
 
+  <section class="collections" aria-label="Collections">
+    <div class="item">
+      <div><a href="03-collection-detail.html">Work Recap</a><span class="count">2 posts</span></div>
+      <p>What I built at work, period by period.</p>
+    </div>
+    <div class="item">
+      <div><a href="03-collection-detail.html">What I Read</a><span class="count">5 posts</span></div>
+      <p>Notes from the books and reference documentation I read.</p>
+    </div>
+    <div class="item">
+      <div><a href="03-collection-detail.html">Everything</a><span class="count">27 posts</span></div>
+      <p>A collection with no rules lists every post.</p>
+    </div>
+  </section>
+
+  <nav class="tagbar" aria-label="Tags">
+    <a class="badge" href="04-tag-archive.html">Development <span class="count">12</span></a>
+    <a class="badge" href="04-tag-archive.html">Essay <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
+    <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
+    <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>
+  </nav>
+
   <div class="list">
     <article class="card">
       <div class="meta">
-        <a class="chip" href="03-category-archive.html">Development</a>
-        <a class="series-label" href="06-series-detail.html">홈랩 구축기</a>
         <time datetime="2026-07-04">2026-07-04</time><span>· 6 min</span>
       </div>
       <h2><a href="02-post-detail.html">본문 이미지 업로드를 MinIO로 옮긴 이야기</a></h2>
       <p class="excerpt">커버 이미지를 걷어내고, 본문에 붙여넣기·드래그로 이미지를 올리는 흐름을 MinIO 위에 다시 세웠습니다.</p>
-      <div class="tags"><a href="04-tag-archive.html">#MinIO</a> <a href="04-tag-archive.html">#Next.js</a></div>
+      <div class="tags"><a class="badge" href="04-tag-archive.html">Development</a> <a class="badge" href="04-tag-archive.html">Work Recap</a> <a class="badge" href="04-tag-archive.html">MinIO</a></div>
     </article>
 
     <article class="card">
       <div class="meta">
-        <a class="chip" href="03-category-archive.html">Daily</a>
         <time datetime="2026-06-21">2026-06-21</time><span>· 3 min</span>
       </div>
       <h2><a href="02-post-detail.html">홈서버를 k3s로 다시 세웠다</a></h2>
       <p class="excerpt">단일 VM에서 2노드 k3s로. 집에서 굴리는 클러스터의 소박한 즐거움에 대하여.</p>
-      <div class="tags"><a href="04-tag-archive.html">#homelab</a> <a href="04-tag-archive.html">#k3s</a></div>
+      <div class="tags"><a class="badge" href="04-tag-archive.html">Daily</a> <a class="badge" href="04-tag-archive.html">homelab</a></div>
     </article>
   </div>
 </main>

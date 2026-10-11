@@ -16,7 +16,7 @@
       <li>Same layout as "New post" but with values filled in.</li>
       <li>Autosave applies to drafts and published posts alike; it never changes publication state. For a published post (like this one) an autosaved edit goes live immediately, so the indicator reads "saved & live at HH:MM" (§4.1, §7.5).</li>
       <li>A "Delete this post" button sits below, separated by a top border; deleting opens a confirm dialog first (§7.5 Confirm dialog).</li>
-      <li>The publication date sits beside the status as a date picker (<code>YYYY-MM-DD</code>), prefilled with the post's current date. Changing it re-dates the post and moves it in the newest-first lists; it is a label, not a schedule. Blank (a never-published draft) means "stamp it when published" (§4.1, §5.1, §7.6).</li>
+      <li>The publication date sits beside the status as a plain ISO text field (<code>YYYY-MM-DD</code>, not a locale date picker), prefilled with the post's current date. Changing it re-dates the post and moves it in the newest-first lists; it is a label, not a schedule. Blank (a never-published draft) means "stamp it when published" (§4.1, §5.1, §7.6).</li>
       <li>No slug field — the slug is service-managed. Editing a published post's title regenerates its slug (and public URL); reverting to draft clears it (§5.2).</li>
       <li>On save, a published post redirects to its public page; a Hangul slug must be <code>encodeURIComponent</code>-encoded in the redirect to avoid a header error (the earlier 500 cause).</li>
     </ul>
@@ -31,11 +31,9 @@
     <input value="본문 이미지 업로드를 MinIO로 옮긴 이야기">
     <input value="사이트 도메인 뒤로 객체 저장소를 숨기고, 이미지를 스트리밍으로 서빙하기.">
 
-    <select><option selected>Development</option><option>Daily</option><option>Essay</option></select>
-
-    <div class="row">
-      <select><option value="">No series</option><option selected>홈랩 구축기</option></select>
-      <input class="w24" type="number" min="0" value="2">
+    <div>
+      <input placeholder="Tags (comma-separated)" value="Development, Work Recap">
+      <div class="tags"><a class="badge active" href="#">Development</a> <a class="badge" href="#">Essay</a> <a class="badge" href="#">What I Read</a> <a class="badge active" href="#">Work Recap</a> <a class="badge" href="#">Daily</a></div>
     </div>
 
     <div class="editor">
@@ -55,7 +53,7 @@
 
     <div class="row">
       <select><option>Draft</option><option selected>Published</option></select>
-      <input class="w40" type="date" value="2026-07-11" aria-label="Publication date" title="Publication date">
+      <input class="w40" type="text" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" value="2026-07-11" aria-label="Publication date" title="Publication date (YYYY-MM-DD)">
     </div>
     <button class="btn" type="button">Save</button>
   </form>

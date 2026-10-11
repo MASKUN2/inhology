@@ -12,9 +12,6 @@ export function SiteHeader() {
           <Link href="/" className="hover:text-foreground">
             Home
           </Link>
-          <Link href="/series" className="hover:text-foreground">
-            Series
-          </Link>
           <HeaderMenu />
         </div>
       </nav>

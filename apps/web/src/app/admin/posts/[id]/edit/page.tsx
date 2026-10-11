@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { savePost } from '../../../actions';
-import { getAdminPost, getCategories, getSeriesList } from '@/lib/api';
+import { getAdminPost, getTags } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import { isAuthed } from '@/lib/auth';
 import { BodyEditor } from '@/components/body-editor';
 import { DeletePostButton } from '@/components/delete-post-button';
 import { Autosave } from '@/components/autosave';
+import { TagInput } from '@/components/tag-input';
 
 export const metadata: Metadata = { title: 'Edit post' };
 
@@ -22,11 +23,7 @@ export default async function EditPostPage({
 }) {
   if (!(await isAuthed())) redirect('/admin/login');
   const [{ id }, { error }] = await Promise.all([params, searchParams]);
-  const [post, categories, series] = await Promise.all([
-    getAdminPost(id),
-    getCategories(),
-    getSeriesList(),
-  ]);
+  const [post, tags] = await Promise.all([getAdminPost(id), getTags()]);
   if (!post) notFound();
 
   return (
@@ -60,43 +57,10 @@ export default async function EditPostPage({
           className={field}
         />
 
-        <select
-          name="categoryId"
-          required
-          defaultValue={post.category.id}
-          className={field}
-        >
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-
-        {series.length > 0 ? (
-          <div className="flex gap-3">
-            <select
-              name="seriesId"
-              defaultValue={post.series?.id ?? ''}
-              className={`${field} flex-1`}
-            >
-              <option value="">No series</option>
-              {series.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-            <input
-              name="seriesOrder"
-              type="number"
-              min={0}
-              placeholder="Order"
-              defaultValue={post.seriesOrder ?? ''}
-              className={`${field} w-24`}
-            />
-          </div>
-        ) : null}
+        <TagInput
+          defaultValue={post.tags.map((tag) => tag.name)}
+          suggestions={tags.map((tag) => tag.name)}
+        />
 
         <BodyEditor defaultValue={post.content} />
 
@@ -111,9 +75,12 @@ export default async function EditPostPage({
           </select>
           <input
             name="publishedDate"
-            type="date"
+            type="text"
+            inputMode="numeric"
+            pattern="\d{4}-\d{2}-\d{2}"
+            placeholder="YYYY-MM-DD"
             aria-label="Publication date"
-            title="Publication date"
+            title="Publication date (YYYY-MM-DD)"
             defaultValue={formatDate(post.publishedAt)}
             className={`${field} w-40`}
           />

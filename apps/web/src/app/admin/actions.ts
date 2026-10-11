@@ -22,6 +22,14 @@ function publishedAtOf(formData: FormData): string | undefined {
   );
 }
 
+/** A comma-separated tag field (`tags` on a post, `rules` on a collection) as a list of names. */
+function tagsOf(formData: FormData, field = 'tags'): string[] {
+  return String(formData.get(field) ?? '')
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
 async function adminToken(): Promise<string> {
   if (!(await isAuthed())) redirect('/admin/login');
   return process.env.ADMIN_TOKEN ?? '';
@@ -46,21 +54,16 @@ export async function savePost(formData: FormData) {
   const token = await adminToken();
 
   const id = String(formData.get('id') ?? '').trim();
-  const seriesId = String(formData.get('seriesId') ?? '').trim();
-  const seriesOrder = String(formData.get('seriesOrder') ?? '').trim();
   const payload: Record<string, unknown> = {
     title: String(formData.get('title') ?? ''),
     content: String(formData.get('content') ?? ''),
     excerpt: String(formData.get('excerpt') ?? '').trim() || undefined,
-    categoryId: String(formData.get('categoryId') ?? ''),
+    tags: tagsOf(formData),
     status: String(formData.get('status') ?? 'DRAFT'),
   };
 
   let res: Response;
   if (id) {
-    // null detaches the post from any series; @IsOptional() permits null.
-    payload.seriesId = seriesId || null;
-    payload.seriesOrder = seriesId && seriesOrder ? Number(seriesOrder) : null;
     payload.publishedAt = publishedAtOf(formData);
     res = await fetch(`${API_URL}/posts/${id}`, {
       method: 'PATCH',
@@ -72,10 +75,6 @@ export async function savePost(formData: FormData) {
       cache: 'no-store',
     });
   } else {
-    if (seriesId) {
-      payload.seriesId = seriesId;
-      if (seriesOrder) payload.seriesOrder = Number(seriesOrder);
-    }
     res = await fetch(`${API_URL}/posts`, {
       method: 'POST',
       headers: {
@@ -119,9 +118,6 @@ export async function autosavePost(formData: FormData): Promise<{
   const id = String(formData.get('id') ?? '').trim();
   const title = String(formData.get('title') ?? '').trim();
   const content = String(formData.get('content') ?? '').trim();
-  const categoryId = String(formData.get('categoryId') ?? '').trim();
-  const seriesId = String(formData.get('seriesId') ?? '').trim();
-  const seriesOrder = String(formData.get('seriesOrder') ?? '').trim();
   const excerpt = String(formData.get('excerpt') ?? '').trim() || undefined;
 
   try {
@@ -132,9 +128,7 @@ export async function autosavePost(formData: FormData): Promise<{
         title: String(formData.get('title') ?? ''),
         content: String(formData.get('content') ?? ''),
         excerpt,
-        categoryId,
-        seriesId: seriesId || null,
-        seriesOrder: seriesId && seriesOrder ? Number(seriesOrder) : null,
+        tags: tagsOf(formData),
         publishedAt: publishedAtOf(formData),
       };
       res = await fetch(`${API_URL}/posts/${id}`, {
@@ -147,22 +141,18 @@ export async function autosavePost(formData: FormData): Promise<{
         cache: 'no-store',
       });
     } else {
-      // Create needs title, content, and category — until all three exist there
-      // is nothing valid to persist yet.
-      if (!title || !content || !categoryId) {
+      // Create needs a title and content — until both exist there is nothing
+      // valid to persist yet.
+      if (!title || !content) {
         return { ok: false, reason: 'incomplete' };
       }
       const payload: Record<string, unknown> = {
         title: String(formData.get('title') ?? ''),
         content: String(formData.get('content') ?? ''),
         excerpt,
-        categoryId,
+        tags: tagsOf(formData),
         status: 'DRAFT',
       };
-      if (seriesId) {
-        payload.seriesId = seriesId;
-        if (seriesOrder) payload.seriesOrder = Number(seriesOrder);
-      }
       res = await fetch(`${API_URL}/posts`, {
         method: 'POST',
         headers: {
@@ -197,16 +187,25 @@ export async function deletePost(formData: FormData) {
   redirect('/admin');
 }
 
-export async function createSeries(formData: FormData) {
+/**
+ * Create or update a collection. Branches on a hidden `id` like savePost:
+ * present → PATCH, absent → POST. `rules` replaces the whole rule set.
+ */
+export async function saveCollection(formData: FormData) {
   const token = await adminToken();
 
-  const payload = {
-    title: String(formData.get('title') ?? ''),
-    description: String(formData.get('description') ?? '').trim() || undefined,
+  const id = String(formData.get('id') ?? '').trim();
+  const description = String(formData.get('description') ?? '').trim();
+  const payload: Record<string, unknown> = {
+    title: String(formData.get('title') ?? '').trim(),
+    rules: tagsOf(formData, 'rules'),
   };
+  // On update an empty description clears it (null); on create it is just omitted.
+  if (id) payload.description = description || null;
+  else if (description) payload.description = description;
 
-  await fetch(`${API_URL}/series`, {
-    method: 'POST',
+  const res = await fetch(`${API_URL}/collections${id ? `/${id}` : ''}`, {
+    method: id ? 'PATCH' : 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
@@ -215,22 +214,22 @@ export async function createSeries(formData: FormData) {
     cache: 'no-store',
   });
 
-  redirect('/admin/series');
+  redirect(res.ok ? '/admin/collections' : '/admin/collections?error=1');
 }
 
-export async function deleteSeries(formData: FormData) {
+export async function deleteCollection(formData: FormData) {
   const token = await adminToken();
 
   const id = String(formData.get('id') ?? '');
-  if (!id) redirect('/admin/series');
+  if (!id) redirect('/admin/collections');
 
-  await fetch(`${API_URL}/series/${id}`, {
+  await fetch(`${API_URL}/collections/${id}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
 
-  redirect('/admin/series');
+  redirect('/admin/collections');
 }
 
 export async function moderateComment(formData: FormData) {

@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: >
     HTTP contract for the inhology backend (NestJS). A single-author personal
-    blog: posts, taxonomy (categories, tags), series, and moderated comments.
+    blog: posts, tags, collections, and moderated comments.
 
     Auth: write/moderation endpoints require the internal shared admin token as
     an HTTP Bearer credential (`Authorization: Bearer <ADMIN_TOKEN>`). The API is
@@ -26,14 +26,12 @@ tags:
     description: Liveness / root.
   - name: posts
     description: Blog posts. Public reads are draft-aware when a valid admin token is sent.
-  - name: series
-    description: Ordered collections of posts.
   - name: comments
     description: Reader comments and author moderation.
-  - name: categories
-    description: Mutually-exclusive post buckets.
   - name: tags
-    description: Cross-cutting topic labels.
+    description: The only grouping of posts — topic and collection labels.
+  - name: collections
+    description: Titled views over the posts, defined by tag rules.
 
 security: []
 
@@ -78,8 +76,7 @@ paths:
       description: >
         Public callers see only PUBLISHED posts, newest first. An admin (valid
         Bearer token) sees all posts and may filter by `status`. Includes
-        `category`, `tags` and `series` relations (not `comments`); `series` is null
-        for a post outside any series.
+        the `tags` relation (not `comments`).
       security:
         - {}
         - bearerAuth: []
@@ -89,15 +86,6 @@ paths:
           required: false
           description: Admin-only filter; ignored for anonymous callers.
           schema: { $ref: '#/components/schemas/PostStatus' }
-        - name: categoryId
-          in: query
-          required: false
-          schema: { type: string }
-        - name: category
-          in: query
-          required: false
-          description: Category slug.
-          schema: { type: string }
         - name: tag
           in: query
           required: false
@@ -130,7 +118,7 @@ paths:
             schema: { $ref: '#/components/schemas/CreatePost' }
       responses:
         '201':
-          description: Created post (with `category`, `tags`, `series`)
+          description: Created post (with `tags`)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Post' }
@@ -149,7 +137,7 @@ paths:
       summary: Get one post
       operationId: getPost
       description: >
-        Returns the post with `category`, `tags`, `series`, and its APPROVED
+        Returns the post with its `tags` and its APPROVED
         `comments` (projected to public fields only). A non-published post is 404
         for anonymous callers; an admin (Bearer) may read drafts.
       security:
@@ -183,7 +171,7 @@ paths:
             schema: { $ref: '#/components/schemas/UpdatePost' }
       responses:
         '200':
-          description: Updated post (with `category`, `tags`, `series`)
+          description: Updated post (with `tags`)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Post' }
@@ -198,95 +186,6 @@ paths:
         Soft delete: marks the post deleted (sets `deletedAt`) and releases its
         slug for reuse. The post and its comments are hidden from every surface
         but retained in the database (recoverable there) — not a permanent erase.
-      security:
-        - bearerAuth: []
-      responses:
-        '204': { description: Deleted }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-
-  /series:
-    get:
-      tags: [series]
-      summary: List series
-      operationId: listSeries
-      description: Each item includes a `_count.posts` total.
-      responses:
-        '200':
-          description: All series
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/SeriesWithCount' }
-    post:
-      tags: [series]
-      summary: Create a series
-      operationId: createSeries
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/CreateSeries' }
-      responses:
-        '201':
-          description: Created series
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Series' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '409': { $ref: '#/components/responses/Conflict' }
-
-  /series/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        description: Series id. The GET operation also resolves by slug.
-        schema: { type: string }
-    get:
-      tags: [series]
-      summary: Get one series
-      operationId: getSeries
-      description: >
-        Includes its PUBLISHED `posts` in author-defined order (`seriesOrder`
-        asc, then `publishedAt` asc), each with `category` and `tags`.
-      responses:
-        '200':
-          description: The series
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/SeriesDetail' }
-        '404': { $ref: '#/components/responses/NotFound' }
-    patch:
-      tags: [series]
-      summary: Update a series
-      operationId: updateSeries
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateSeries' }
-      responses:
-        '200':
-          description: Updated series
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Series' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-    delete:
-      tags: [series]
-      summary: Delete a series
-      operationId: deleteSeries
-      description: Member posts are detached (their `seriesId` is nulled), not deleted.
       security:
         - bearerAuth: []
       responses:
@@ -384,99 +283,16 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
 
-  /categories:
-    get:
-      tags: [categories]
-      summary: List categories
-      operationId: listCategories
-      description: Ordered by name; each includes `_count.posts`.
-      responses:
-        '200':
-          description: All categories
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/CategoryWithCount' }
-    post:
-      tags: [categories]
-      summary: Create a category
-      operationId: createCategory
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/CreateCategory' }
-      responses:
-        '201':
-          description: Created category
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Category' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '409': { $ref: '#/components/responses/Conflict' }
-
-  /categories/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        description: Category id. The GET operation also resolves by slug.
-        schema: { type: string }
-    get:
-      tags: [categories]
-      summary: Get one category
-      operationId: getCategory
-      responses:
-        '200':
-          description: The category (with `_count.posts`)
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/CategoryWithCount' }
-        '404': { $ref: '#/components/responses/NotFound' }
-    patch:
-      tags: [categories]
-      summary: Update a category
-      operationId: updateCategory
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateCategory' }
-      responses:
-        '200':
-          description: Updated category
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Category' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-    delete:
-      tags: [categories]
-      summary: Delete a category
-      operationId: deleteCategory
-      description: Rejected with 409 if the category still has posts (reassign first).
-      security:
-        - bearerAuth: []
-      responses:
-        '204': { description: Deleted }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-
   /tags:
     get:
       tags: [tags]
       summary: List tags
       operationId: listTags
-      description: Ordered by name; each includes `_count.posts`.
+      description: >
+        Every tag with `_count.posts` — the number of PUBLISHED, non-deleted posts
+        carrying it — ordered by that count descending, then by name. Tags with a
+        count of 0 are included (the editor suggests them); readers' surfaces skip
+        them.
       responses:
         '200':
           description: All tags
@@ -519,7 +335,7 @@ paths:
       operationId: getTag
       responses:
         '200':
-          description: The tag (with `_count.posts`)
+          description: The tag (with `_count.posts`, published posts only)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/TagWithCount' }
@@ -550,6 +366,99 @@ paths:
       summary: Delete a tag
       operationId: deleteTag
       description: Removes join rows only; posts are untouched.
+      security:
+        - bearerAuth: []
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /collections:
+    get:
+      tags: [collections]
+      summary: List collections
+      operationId: listCollections
+      description: >
+        Every collection in creation order, each with its rule `tags` and
+        `postCount` — the number of PUBLISHED, non-deleted posts carrying every
+        rule tag (all published posts when there are no rules).
+      responses:
+        '200':
+          description: All collections
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Collection' }
+    post:
+      tags: [collections]
+      summary: Create a collection
+      operationId: createCollection
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateCollection' }
+      responses:
+        '201':
+          description: Created collection
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Collection' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /collections/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Collection id. The GET operation also resolves by slug.
+        schema: { type: string }
+    get:
+      tags: [collections]
+      summary: Get one collection
+      operationId: getCollection
+      description: >
+        The collection with its rule `tags`, `postCount`, and its `posts`: the
+        PUBLISHED posts satisfying every rule, newest first, each with `tags`.
+      responses:
+        '200':
+          description: The collection
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CollectionDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [collections]
+      summary: Update a collection
+      operationId: updateCollection
+      description: Changing the title re-derives the slug. `rules`, when sent, replaces the whole rule set.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateCollection' }
+      responses:
+        '200':
+          description: Updated collection
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Collection' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+    delete:
+      tags: [collections]
+      summary: Delete a collection
+      operationId: deleteCollection
+      description: Removes the collection and its rules only; posts and tags are untouched.
       security:
         - bearerAuth: []
       responses:
@@ -608,27 +517,6 @@ components:
           example: Post not found
         error: { type: string, example: Not Found }
 
-    Category:
-      type: object
-      required: [id, slug, name, createdAt, updatedAt]
-      properties:
-        id: { type: string }
-        slug: { type: string }
-        name: { type: string }
-        description:
-          type: [string, 'null']
-        createdAt: { type: string, format: date-time }
-        updatedAt: { type: string, format: date-time }
-    CategoryWithCount:
-      allOf:
-        - $ref: '#/components/schemas/Category'
-        - type: object
-          properties:
-            _count:
-              type: object
-              properties:
-                posts: { type: integer }
-
     Tag:
       type: object
       required: [id, slug, name, createdAt]
@@ -647,29 +535,28 @@ components:
               properties:
                 posts: { type: integer }
 
-    Series:
+    Collection:
       type: object
-      required: [id, slug, title, createdAt, updatedAt]
+      description: A titled view over the posts. `tags` are its rules.
+      required: [id, slug, title, tags, postCount, createdAt, updatedAt]
       properties:
         id: { type: string }
         slug: { type: string }
         title: { type: string }
         description:
           type: [string, 'null']
+        tags:
+          type: array
+          description: The rule tags; a post must carry every one. Empty means every post.
+          items: { $ref: '#/components/schemas/Tag' }
+        postCount:
+          type: integer
+          description: Published posts currently satisfying the rules.
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
-    SeriesWithCount:
+    CollectionDetail:
       allOf:
-        - $ref: '#/components/schemas/Series'
-        - type: object
-          properties:
-            _count:
-              type: object
-              properties:
-                posts: { type: integer }
-    SeriesDetail:
-      allOf:
-        - $ref: '#/components/schemas/Series'
+        - $ref: '#/components/schemas/Collection'
         - type: object
           properties:
             posts:
@@ -678,9 +565,9 @@ components:
 
     Post:
       type: object
-      description: A post with its `category` and `tags` (and `series` when returned by list/create/update/get).
+      description: A post with its `tags`.
       required:
-        [id, title, content, status, viewCount, createdAt, updatedAt, categoryId]
+        [id, title, content, status, viewCount, createdAt, updatedAt, tags]
       properties:
         id: { type: string }
         slug:
@@ -697,25 +584,15 @@ components:
         readingTime:
           type: [integer, 'null']
         viewCount: { type: integer }
-        categoryId: { type: string }
-        seriesId:
-          type: [string, 'null']
-        seriesOrder:
-          type: [integer, 'null']
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
         deletedAt:
           type: [string, 'null']
           format: date-time
           description: Soft-delete marker; always null in responses (deleted posts are never returned).
-        category: { $ref: '#/components/schemas/Category' }
         tags:
           type: array
           items: { $ref: '#/components/schemas/Tag' }
-        series:
-          oneOf:
-            - $ref: '#/components/schemas/Series'
-            - type: 'null'
     PostDetail:
       allOf:
         - $ref: '#/components/schemas/Post'
@@ -775,18 +652,18 @@ components:
 
     CreatePost:
       type: object
-      required: [title, content, categoryId]
+      required: [title, content]
       properties:
         title: { type: string, minLength: 1 }
         content: { type: string, minLength: 1, description: Markdown body }
         excerpt: { type: string }
         status: { $ref: '#/components/schemas/PostStatus' }
-        categoryId: { type: string }
-        tagIds:
+        tags:
           type: array
-          items: { type: string }
-        seriesId: { type: string }
-        seriesOrder: { type: integer, minimum: 0 }
+          items: { type: string, minLength: 1 }
+          description: >
+            Tag names. Each is matched to an existing tag by name
+            (case-insensitive) or slug, or created. Omitted means no tags.
     UpdatePost:
       type: object
       description: >
@@ -797,34 +674,16 @@ components:
         content: { type: string, minLength: 1 }
         excerpt: { type: string }
         status: { $ref: '#/components/schemas/PostStatus' }
-        categoryId: { type: string }
-        tagIds:
+        tags:
           type: array
-          items: { type: string }
-        seriesId:
-          type: [string, 'null']
-          description: null detaches the post from its series.
-        seriesOrder:
-          type: [integer, 'null']
-          minimum: 0
+          items: { type: string, minLength: 1 }
+          description: >
+            Tag names. Each is matched to an existing tag by name
+            (case-insensitive) or slug, or created. Replaces the post's whole tag set; omit to keep it.
         publishedAt:
           type: string
           format: date-time
           description: Overwrites the publication date. Omit to keep the current one.
-
-    CreateSeries:
-      type: object
-      required: [title]
-      properties:
-        title: { type: string, minLength: 1 }
-        slug: { type: string }
-        description: { type: string }
-    UpdateSeries:
-      type: object
-      properties:
-        title: { type: string, minLength: 1 }
-        slug: { type: string }
-        description: { type: string }
 
     CreateComment:
       type: object
@@ -841,20 +700,27 @@ components:
       properties:
         status: { $ref: '#/components/schemas/CommentStatus' }
 
-    CreateCategory:
+    CreateCollection:
       type: object
-      required: [name]
+      required: [title]
       properties:
-        name: { type: string, minLength: 1 }
-        slug: { type: string }
+        title: { type: string, minLength: 1 }
         description: { type: string }
-    UpdateCategory:
+        rules:
+          type: array
+          items: { type: string, minLength: 1 }
+          description: Tag names, matched or created like a post's tags. Omitted means no rules.
+    UpdateCollection:
       type: object
       properties:
-        name: { type: string, minLength: 1 }
-        slug: { type: string }
-        description: { type: string }
-
+        title: { type: string, minLength: 1 }
+        description:
+          type: [string, 'null']
+          description: null clears the description.
+        rules:
+          type: array
+          items: { type: string, minLength: 1 }
+          description: Replaces the whole rule set; omit to keep it.
     CreateTag:
       type: object
       required: [name]

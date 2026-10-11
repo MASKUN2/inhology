@@ -5,22 +5,20 @@ persistence schema (`apps/api/prisma/schema.prisma`) and expresses the same
 intent as [`../spec/README.md` §3 Domain Concepts](../spec/README.md#3-domain-concepts)
 and the integrity rules in [`../spec/policies.md` §5.3](../spec/policies.md#53-relationships--integrity).
 
-There are **five aggregate roots** — each with an independent lifecycle and its
+There are **four aggregate roots** — each with an independent lifecycle and its
 own API resource — documented one per file:
 
 - [`post.md`](./post.md) — **Post** (the central aggregate)
-- [`category.md`](./category.md) — **Category**
 - [`tag.md`](./tag.md) — **Tag**
-- [`series.md`](./series.md) — **Series**
+- [`collection.md`](./collection.md) — **Collection**
 - [`comment.md`](./comment.md) — **Comment**
 
 ## Full ERD
 
 ```mermaid
 erDiagram
-    CATEGORY ||--o{ POST : "categorizes (exactly one per post)"
-    SERIES   |o--o{ POST : "groups (optional, ordered)"
-    POST     }o--o{ TAG : "tagged (many-to-many)"
+    POST     }o--o{ TAG : "tagged (many-to-many, zero or more)"
+    COLLECTION }o--o{ TAG : "rules (post must carry every one)"
     POST     ||--o{ COMMENT : "receives"
     COMMENT  |o--o{ COMMENT : "replies to (threaded)"
 
@@ -34,20 +32,9 @@ erDiagram
         datetime   publishedAt "nullable, set on first publish, author-editable"
         int        readingTime "nullable, minutes"
         int        viewCount "default 0"
-        string     categoryId FK
-        string     seriesId FK "nullable"
-        int        seriesOrder "nullable"
         datetime   createdAt
         datetime   updatedAt
         datetime   deletedAt "nullable, soft-delete marker"
-    }
-    CATEGORY {
-        string   id PK
-        string   slug UK
-        string   name
-        string   description "nullable"
-        datetime createdAt
-        datetime updatedAt
     }
     TAG {
         string   id PK
@@ -55,7 +42,7 @@ erDiagram
         string   name
         datetime createdAt
     }
-    SERIES {
+    COLLECTION {
         string   id PK
         string   slug UK
         string   title
@@ -80,9 +67,8 @@ erDiagram
 
 | From | To | Cardinality | Notes |
 |---|---|---|---|
-| Category | Post | 1 — 0..* | Every post has **exactly one** category (`categoryId` required). No cascade — a category with posts cannot be deleted until reassigned. |
-| Series | Post | 0..1 — 0..* | A post belongs to **at most one** series; membership is optional and detachable. `seriesOrder` is its position. Deleting a series nulls its posts' `seriesId`. |
-| Post | Tag | 0..* — 0..* | Many-to-many via implicit join (`PostTags`). |
+| Post | Tag | 0..* — 0..* | Many-to-many via implicit join (`PostTags`). The only grouping of posts; a post needs no tag. |
+| Collection | Tag | 0..* — 0..* | Many-to-many via implicit join (`CollectionTags`). Each link is a **rule**; a collection's posts are computed (every rule tag present), never stored. |
 | Post | Comment | 1 — 0..* | `onDelete: Cascade` — deleting a post deletes its comments. |
 | Comment | Comment | 0..1 — 0..* | Self-relation (`CommentReplies`). A reply has one parent; `onDelete: Cascade` — deleting a parent deletes its replies. A reply must be on the **same post** as its parent. |
 

@@ -217,8 +217,8 @@ def main():
     r.layer("3. UI routes  (documented screens → real Next.js pages)")
     actual = web_routes()
     docs = documented_screen_routes()
-    r.check(len(docs) == 12, f"{len(docs)} screens declare a route",
-            f"expected 12 screens with routes, found {len(docs)}", warn=True)
+    r.check(len(docs) == 10, f"{len(docs)} screens declare a route",
+            f"expected 10 screens with routes, found {len(docs)}", warn=True)
     for name, route in sorted(docs.items()):
         ok = route in actual
         if not ok:

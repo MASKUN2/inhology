@@ -2,10 +2,8 @@ import { PostStatus } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
-  IsInt,
   IsOptional,
   IsString,
-  Min,
   MinLength,
 } from 'class-validator';
 
@@ -30,22 +28,14 @@ export class CreatePostDto {
   @IsEnum(PostStatus)
   status?: PostStatus;
 
-  /** Required: every post belongs to one category. */
-  @IsString()
-  categoryId: string;
-
-  /** Existing tag ids to attach. */
+  /**
+   * Tag names — the post's only grouping. Each is matched to an existing tag by
+   * name (case-insensitive) or slug, or created. On update this replaces the
+   * whole tag set.
+   */
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  tagIds?: string[];
-
-  @IsOptional()
-  @IsString()
-  seriesId?: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  seriesOrder?: number;
+  @MinLength(1, { each: true })
+  tags?: string[];
 }

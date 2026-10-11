@@ -3,15 +3,45 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { PostStatus, Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 
+const PUBLISHED: Prisma.PostWhereInput = {
+  status: PostStatus.PUBLISHED,
+  deletedAt: null,
+};
+
 @Injectable()
 export class TagsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Turn tag names into tag ids: each name is matched to an existing tag by slug
+  // or by name (case-insensitive), and only an unmatched name creates a tag.
+  // Blank and repeated names are dropped.
+  async resolve(names: string[]): Promise<{ id: string }[]> {
+    const ids = new Set<string>();
+    for (const raw of names) {
+      const name = raw.trim();
+      const slug = slugify(name);
+      if (!slug) continue;
+      const tag =
+        (await this.prisma.tag.findFirst({
+          where: {
+            OR: [{ slug }, { name: { equals: name, mode: 'insensitive' } }],
+          },
+          select: { id: true },
+        })) ??
+        (await this.prisma.tag.create({
+          data: { name, slug },
+          select: { id: true },
+        }));
+      ids.add(tag.id);
+    }
+    return [...ids].map((id) => ({ id }));
+  }
 
   async create(dto: CreateTagDto) {
     try {
@@ -26,21 +56,20 @@ export class TagsService {
     }
   }
 
-  findAll() {
-    return this.prisma.tag.findMany({
+  // Counts cover published, non-deleted posts only, so a draft never shows up in
+  // a public number. Ordered by that count, highest first, then by name.
+  async findAll() {
+    const tags = await this.prisma.tag.findMany({
       orderBy: { name: 'asc' },
-      include: {
-        _count: { select: { posts: { where: { deletedAt: null } } } },
-      },
+      include: { _count: { select: { posts: { where: PUBLISHED } } } },
     });
+    return tags.sort((a, b) => b._count.posts - a._count.posts);
   }
 
   async findOne(idOrSlug: string) {
     const tag = await this.prisma.tag.findFirst({
       where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
-      include: {
-        _count: { select: { posts: { where: { deletedAt: null } } } },
-      },
+      include: { _count: { select: { posts: { where: PUBLISHED } } } },
     });
     if (!tag) throw new NotFoundException(`Tag not found: ${idOrSlug}`);
     return tag;

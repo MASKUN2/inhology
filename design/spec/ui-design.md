@@ -22,7 +22,7 @@ live in [`../wireframe/`](../wireframe/).
 - **Generous vertical rhythm** — large top/bottom breathing room around the
   article; clear separation between meta, body, and comments.
 - **A persistent site header** on every page: the brand wordmark (links home)
-  plus a small primary nav (currently *Home*, *Series*).
+  plus a small primary nav (currently *Home*).
 - **Mobile-first and responsive.** The single-column layout collapses cleanly;
   multi-field rows (e.g. the comment form) stack on narrow viewports.
 
@@ -56,15 +56,23 @@ live in [`../wireframe/`](../wireframe/).
 ## 7.5 Shared UI patterns
 These are the recurring building blocks; reuse them rather than inventing new ones.
 
-- **Meta row** — a small, muted line carrying *category · series · publish date ·
-  reading time (N분)*. Series, reading time and tags appear only when present.
-- **Category chip** — a pill-shaped, subtle-background link; a post has exactly one.
-- **Tag** — an inline `#name` link in muted text; zero or more, wrap freely.
-- **Series label** — in a post list's meta row, an outlined pill naming the
-  post's series and linking to the series page; sits right after the category
-  chip and is outlined (not filled) so the two read apart. At most one per post.
-- **Series banner** — a bordered card on a post that belongs to a series, naming
-  the series and the post's position (*N편*), linking to the series page.
+- **Meta row** — a small, muted line carrying *publish date · reading time
+  (N분)*. Reading time appears only when present.
+- **Tag badge** — a pill-shaped, subtle-background link showing a tag's name;
+  the one visual for every tag everywhere. A post shows all of its tags as
+  badges (zero or more, wrapping freely); each links to that tag's page.
+- **Tag bar** — at the top of every post list (home and tag pages): all tags
+  with published posts as tag badges, each followed by its **post count**,
+  ordered by count descending. On a tag page the selected tag's badge is
+  inverted (`strong` surface) and an *All* badge leads back to the full list.
+- **Collection list** — on the home page, above the tag bar: one row per
+  collection with its title (linking to the collection page), post count, and
+  description. Hidden when there are no collections.
+- **Collection page** — eyebrow *Collection*, title, description, then its rules
+  as tag badges (*All posts* when it has none), then the usual post list.
+- **Tag input** — in the post editor and the collection form, one text field of comma-separated tag
+  names, with the existing tags listed beneath as badges that toggle a tag on
+  or off.
 - **Primary button** — solid `strong` surface with inverted text; one per form.
 - **Form field** — bordered input/textarea with placeholder; fields stack on
   mobile, may sit in a row on wider screens.
@@ -98,13 +106,14 @@ These are the recurring building blocks; reuse them rather than inventing new on
 
 ## 7.6 Copy & microcopy
 - **All UI copy is English**, in a plain, friendly register. **User content and
-  data — post titles/bodies, comments, and category/tag/series names — may be
+  data — post titles/bodies, comments, tag names, and collection titles and
+  descriptions — may be
   Korean or any language** and are shown exactly as authored; only the app's own
   chrome is translated. The brand name *inhology* is never translated.
-- **Dates** render in ISO form (`YYYY-MM-DD`, e.g. `2026-07-11`) and are entered
-  the same way (the editor's publication-date field is a date picker, day
-  precision); reading time as
-  *N min*; series position as *Part N*; counts as *N posts*.
+- **Dates are ISO by default** (`YYYY-MM-DD`, e.g. `2026-07-11`), both shown and
+  entered: the editor's publication-date field is a plain `YYYY-MM-DD` text
+  field, not a locale-formatted date picker. Reading time renders as
+  *N min*; counts as *N posts*.
 - Microcopy is reassuring and specific. Required, fixed strings:
   - Empty post list → *"No posts published yet."*
   - No comments yet → *"Be the first to comment."*

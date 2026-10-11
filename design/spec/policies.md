@@ -7,7 +7,8 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 ## 5.1 Content visibility
 - **Drafts are private.** A post that is not published must never be readable,
   listed, or discoverable through any public surface — not on lists, not by
-  direct slug, not via category/tag/series pages. Draft protection is a security
+  direct slug, not via tag pages, tag counts, collection pages or collection
+  counts. Draft protection is a security
   requirement, not a convenience.
 - Only the author, authenticated, may see drafts.
 - Public listings are ordered newest-first by publication date.
@@ -16,19 +17,28 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
   a date on a draft does not make it public.
 
 ## 5.2 Identifiers
-- Every category, tag, and series has a **unique, URL-safe slug**. A post's slug
+- Every tag has a **unique, URL-safe slug**, derived from its name. A post's slug
   is **service-managed**: it is **absent while the post is a draft**, generated
   from the title when the post is **published**, and **de-duplicated with a
   numeric suffix** (`-2`, `-3`…) on collision.
 - Slugs may contain non-ASCII characters (e.g. Hangul). The system must handle
   them correctly end-to-end in URLs.
 - A post's slug **can change when its title changes** (URL stability across edits
-  is not guaranteed for now). For **category, tag, and series**, attempting to
-  reuse an existing slug is **rejected**.
+  is not guaranteed for now). A **tag** is matched by name (case-insensitively)
+  or slug when typed on a post, so the same label never becomes two tags;
+  creating a tag with an existing slug directly is **rejected**. A **collection's**
+  slug is derived from its title and must be unique; a clash is **rejected**.
 
 ## 5.3 Relationships & integrity
-- A post must always have exactly one category.
-- A post's series membership is optional and may be detached without deleting the post.
+- A post has **zero or more tags**; none is required. Tags are the only grouping
+  — there is no category and no series, and posts under a tag are ordered by
+  publication date, not by an author-set position.
+- A **collection** is a saved filter, not a container: it lists the published
+  posts carrying **every** one of its rule tags, and **all** published posts when
+  it has no rules. Deleting a collection deletes no post and no tag; deleting a
+  tag removes the rules that named it.
+- Removing a tag from a post never deletes the tag's other links; a tag left
+  with no published posts simply stops being shown.
 - Deleting a post is a **soft delete**: the post and its comments are hidden from
   every public and admin surface and retained in the database (recoverable
   there), and the post's slug is **released for reuse** ([§5.2](#52-identifiers)).
