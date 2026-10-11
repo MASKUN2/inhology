@@ -11,7 +11,6 @@ export default async function Home() {
 
   return (
     <PageShell>
-      {/* No banner here: the site header already carries the wordmark. */}
       <HomeTagList tags={tags} postCount={posts.length} />
       <TagBar tags={tags} />
     </PageShell>

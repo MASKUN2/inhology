@@ -5,7 +5,7 @@ import { countPosts } from '@/lib/format';
 const title = 'font-semibold hover:underline underline-offset-4';
 
 /**
- * The home page's main list: the tags the author chose to show there, in the
+ * The home page's main list, under the "Recommended tags" heading: the tags the author chose to show there, in the
  * author's order, each with its post count and description, then a fixed last
  * row leading to every post (`postCount` of them).
  */
@@ -21,7 +21,10 @@ export function HomeTagList({
     .sort((a, b) => (a.homePosition ?? 0) - (b.homePosition ?? 0));
 
   return (
-    <section aria-label="Home tags" className="mb-10">
+    <section aria-labelledby="home-tags-title" className="mb-10">
+      <h2 id="home-tags-title" className="mb-3 text-lg font-bold tracking-tight">
+        Recommended tags
+      </h2>
       <ul className="flex flex-col divide-y divide-border border-y border-border">
         {shown.map((tag) => (
           <li key={tag.id} className="py-3">

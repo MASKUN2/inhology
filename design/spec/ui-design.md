@@ -77,7 +77,8 @@ These are the recurring building blocks; reuse them rather than inventing new on
   page: all tags with listed posts as tag badges, each followed by its **post
   count**, ordered by count descending. On a tag page the selected tag's badge
   is inverted (`strong` surface).
-- **Home tag list** — the home page's main content, above the tag bar: one row
+- **Home tag list** — the home page's main content, above the tag bar, under
+  the heading *Recommended tags*: one row
   per home tag, in the author-defined order, with its name (linking to the tag
   page), post count, and description; then a fixed last row, *All*, with the count of all
   posts, linking to the list of every post.
