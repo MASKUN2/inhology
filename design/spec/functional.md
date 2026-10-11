@@ -12,6 +12,12 @@ Part of the [inhology specification](./README.md).
   numeric suffix (`-2`, `-3`…). Editing a published post's title changes its slug
   — and thus its public URL ([§5.2](./policies.md#52-identifiers)).
 - Edit any field of an existing post, including changing its publication state.
+- **Change a post's publication date** from the editor. The date is stamped
+  automatically on first publish; the author may then set it to any day (e.g.
+  to backdate an imported post), which moves the post in the newest-first
+  listings. A draft's date may be set ahead of time and is kept when the draft
+  is published. Leaving the field blank leaves the date as it is
+  ([§5.1](./policies.md#51-content-visibility)).
 - **Autosave while writing.** The editor persists changes automatically — at most
   once a minute, and only when something changed since the last save — so
   in-progress writing survives an accidental navigation or reload. Autosave

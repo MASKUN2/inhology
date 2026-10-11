@@ -136,10 +136,17 @@ export class PostsService {
       }),
     };
 
-    // Stamp publishedAt the first time a post is published.
+    // The author may set the publication date explicitly; it is never cleared.
+    if (dto.publishedAt) data.publishedAt = new Date(dto.publishedAt);
+
+    // Otherwise stamp publishedAt the first time a post is published.
     if (dto.status !== undefined) {
       data.status = dto.status;
-      if (dto.status === PostStatus.PUBLISHED && !existing.publishedAt) {
+      if (
+        dto.status === PostStatus.PUBLISHED &&
+        !existing.publishedAt &&
+        !dto.publishedAt
+      ) {
         data.publishedAt = new Date();
       }
     }

@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { isAuthed } from '@/lib/auth';
 import { signIn, signOut } from '@/auth';
+import { publishedAtFromDate } from '@/lib/format';
 
 const API_URL = process.env.API_URL ?? 'http://localhost:4000';
 
@@ -10,6 +11,17 @@ const API_URL = process.env.API_URL ?? 'http://localhost:4000';
  * 관리자 세션(Authentik OIDC) 확인 후 API 호출용 토큰을 반환.
  * web→api 는 클러스터 내부 전용이라 공유 ADMIN_TOKEN(서버 환경변수)을 그대로 사용한다.
  */
+/**
+ * The edit form's publication date (`publishedDate`, YYYY-MM-DD) as the ISO
+ * date-time to send, or undefined (omitted → date left as is) when blank.
+ */
+function publishedAtOf(formData: FormData): string | undefined {
+  return publishedAtFromDate(
+    String(formData.get('publishedDate') ?? '').trim(),
+    String(formData.get('publishedAtOriginal') ?? '').trim() || null,
+  );
+}
+
 async function adminToken(): Promise<string> {
   if (!(await isAuthed())) redirect('/admin/login');
   return process.env.ADMIN_TOKEN ?? '';
@@ -49,6 +61,7 @@ export async function savePost(formData: FormData) {
     // null detaches the post from any series; @IsOptional() permits null.
     payload.seriesId = seriesId || null;
     payload.seriesOrder = seriesId && seriesOrder ? Number(seriesOrder) : null;
+    payload.publishedAt = publishedAtOf(formData);
     res = await fetch(`${API_URL}/posts/${id}`, {
       method: 'PATCH',
       headers: {
@@ -122,6 +135,7 @@ export async function autosavePost(formData: FormData): Promise<{
         categoryId,
         seriesId: seriesId || null,
         seriesOrder: seriesId && seriesOrder ? Number(seriesOrder) : null,
+        publishedAt: publishedAtOf(formData),
       };
       res = await fetch(`${API_URL}/posts/${id}`, {
         method: 'PATCH',

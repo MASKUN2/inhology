@@ -98,7 +98,9 @@ These are the recurring building blocks; reuse them rather than inventing new on
   data — post titles/bodies, comments, and category/tag/series names — may be
   Korean or any language** and are shown exactly as authored; only the app's own
   chrome is translated. The brand name *inhology* is never translated.
-- **Dates** render in ISO form (`YYYY-MM-DD`, e.g. `2026-07-11`); reading time as
+- **Dates** render in ISO form (`YYYY-MM-DD`, e.g. `2026-07-11`) and are entered
+  the same way (the editor's publication-date field is a date picker, day
+  precision); reading time as
   *N min*; series position as *Part N*; counts as *N posts*.
 - Microcopy is reassuring and specific. Required, fixed strings:
   - Empty post list → *"No posts published yet."*

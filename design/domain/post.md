@@ -39,7 +39,7 @@ erDiagram
 | `excerpt` | string | ✓ | Short summary for list views. |
 | `content` | string | — | Markdown; images embedded inline by reference. |
 | `status` | `PostStatus` | — | `DRAFT` (default) or `PUBLISHED`. |
-| `publishedAt` | datetime | ✓ | Stamped once, on first publish. |
+| `publishedAt` | datetime | ✓ | Stamped on first publish unless already set; **author-editable** afterwards. Never cleared by an edit. |
 | `readingTime` | int | ✓ | Minutes (~200 wpm, min 1); computed on save. |
 | `viewCount` | int | — | Default 0. |
 | `categoryId` | string | — | FK → Category (**required**). |
@@ -64,6 +64,10 @@ erDiagram
 - **Drafts are private** — never listed or reachable by a reader on any surface,
   including by direct slug ([§5.1](../spec/policies.md#51-content-visibility)).
 - Public listings are ordered newest-first by `publishedAt`.
+- `publishedAt` is stamped with the current time the first time a post is
+  published, unless the author already set one. The author may overwrite it on
+  any update; it is never cleared (reverting to draft keeps it), and it does not
+  affect visibility ([§5.1](../spec/policies.md#51-content-visibility)).
 - Deletion is a **soft delete**: `remove` sets `deletedAt` and rewrites the slug
   to release it, rather than deleting the row. A post with `deletedAt` set is
   excluded from every read (lists, detail, counts, series/category/tag pages) for

@@ -6,6 +6,7 @@ Series,시리즈,Domain,"An ordered collection of posts telling a longer story a
 Comment,댓글,Domain,"A reader's response attached to a published post. May reply to another comment (threaded). Always moderated."
 Draft,초안,Post state,"A post that has been saved but not published; private to the author."
 Published,발행,Post state,"A post visible to readers, with a publication timestamp."
+Publication date,발행일,Domain,"The date shown on a post and used to order public listings. Stamped automatically the first time a post is published; the author can change it afterwards in the editor. It is a label, not a schedule: a future date does not hide the post."
 Autosave,자동저장,Interaction,"Automatic, periodic saving while writing (at most once a minute, only when something changed). Never changes publication state: it never publishes a draft nor unpublishes a post. Applies to drafts and published posts alike — a published post's autosaved edits go live immediately."
 Soft delete,소프트 삭제,Interaction,"Deleting a post marks it deleted (deletedAt) and releases its slug rather than removing the row. The post and its comments are hidden from every surface but retained in the database, recoverable there."
 Pending,대기,Comment state,"A submitted comment awaiting the author's moderation; the default state of every new comment. Invisible to the public."

@@ -13,7 +13,15 @@ import { autosavePost } from '@/app/admin/actions';
 const INTERVAL_MS = 60_000;
 
 // dirty 판정에 쓰는 필드. status 는 자동저장이 건드리지 않으므로 제외한다.
-const TRACKED = ['title', 'excerpt', 'categoryId', 'seriesId', 'seriesOrder', 'content'];
+const TRACKED = [
+  'title',
+  'excerpt',
+  'categoryId',
+  'seriesId',
+  'seriesOrder',
+  'content',
+  'publishedDate',
+];
 
 type SaveState =
   | { kind: 'idle' }

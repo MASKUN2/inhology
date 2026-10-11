@@ -11,6 +11,9 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
   requirement, not a convenience.
 - Only the author, authenticated, may see drafts.
 - Public listings are ordered newest-first by publication date.
+- The **publication date is author-editable** and is a label only — it never
+  affects visibility. A published post with a future date is still public, and
+  a date on a draft does not make it public.
 
 ## 5.2 Identifiers
 - Every category, tag, and series has a **unique, URL-safe slug**. A post's slug

@@ -170,7 +170,9 @@ paths:
         (re)generated from its title and suffix-deduped on collision, so editing the
         title changes the slug; a DRAFT has its slug cleared to null. Also reused by
         the editor's draft autosave, which omits `status` so a save never changes the
-        post's publication state.
+        post's publication state. `publishedAt`, when sent, overwrites the publication
+        date; when omitted the date is kept (and stamped with the current time on a
+        first publish that has none).
       security:
         - bearerAuth: []
       requestBody:
@@ -786,7 +788,9 @@ components:
         seriesOrder: { type: integer, minimum: 0 }
     UpdatePost:
       type: object
-      description: All CreatePost fields, each optional (PATCH semantics).
+      description: >
+        All CreatePost fields, each optional (PATCH semantics), plus the
+        author-editable `publishedAt`.
       properties:
         title: { type: string, minLength: 1 }
         content: { type: string, minLength: 1 }
@@ -802,6 +806,10 @@ components:
         seriesOrder:
           type: [integer, 'null']
           minimum: 0
+        publishedAt:
+          type: string
+          format: date-time
+          description: Overwrites the publication date. Omit to keep the current one.
 
     CreateSeries:
       type: object

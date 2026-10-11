@@ -95,10 +95,11 @@ article:not(.card) > .meta { margin-top: 2rem; }   /* post-detail: space below t
 .form { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
 .row { display: flex; gap: .75rem; }
 .w24 { width: 6rem; flex: none; }
+.w40 { width: 10rem; flex: none; }
 .btn { border: 1px solid gray; padding: .55rem 1rem; }
 .comments .btn { align-self: flex-end; }        /* post-detail: right-aligned "Post comment" */
 .form > button:not(.btn) { align-self: flex-end; } /* series create: right-aligned "Add series" */
-@media (max-width: 520px) { .row { flex-direction: column; } .w24 { width: 100%; } }
+@media (max-width: 520px) { .row { flex-direction: column; } .w24, .w40 { width: 100%; } }
 
 /* ---------- Series index / detail ---------- */
 .item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-top: 1px solid gray; }

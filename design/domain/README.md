@@ -31,7 +31,7 @@ erDiagram
         string     excerpt "nullable"
         string     content "markdown"
         PostStatus status "DRAFT | PUBLISHED, default DRAFT"
-        datetime   publishedAt "nullable, set on first publish"
+        datetime   publishedAt "nullable, set on first publish, author-editable"
         int        readingTime "nullable, minutes"
         int        viewCount "default 0"
         string     categoryId FK

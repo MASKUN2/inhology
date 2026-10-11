@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { savePost } from '../../../actions';
 import { getAdminPost, getCategories, getSeriesList } from '@/lib/api';
+import { formatDate } from '@/lib/format';
 import { isAuthed } from '@/lib/auth';
 import { BodyEditor } from '@/components/body-editor';
 import { DeletePostButton } from '@/components/delete-post-button';
@@ -99,10 +100,29 @@ export default async function EditPostPage({
 
         <BodyEditor defaultValue={post.content} />
 
-        <select name="status" defaultValue={post.status} className={field}>
-          <option value="DRAFT">Draft</option>
-          <option value="PUBLISHED">Published</option>
-        </select>
+        <div className="flex gap-3">
+          <select
+            name="status"
+            defaultValue={post.status}
+            className={`${field} flex-1`}
+          >
+            <option value="DRAFT">Draft</option>
+            <option value="PUBLISHED">Published</option>
+          </select>
+          <input
+            name="publishedDate"
+            type="date"
+            aria-label="Publication date"
+            title="Publication date"
+            defaultValue={formatDate(post.publishedAt)}
+            className={`${field} w-40`}
+          />
+          <input
+            type="hidden"
+            name="publishedAtOriginal"
+            value={post.publishedAt ?? ''}
+          />
+        </div>
 
         <div className="flex items-center gap-3">
           <button
