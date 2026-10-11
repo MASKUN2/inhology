@@ -26,12 +26,20 @@
     <h3>This screen — Home / post list (<code>/</code>)</h3>
     <ul>
       <li>The entry screen: published posts, newest first.</li>
-      <li>Made of the site header (wordmark · Home · Admin menu) and, in the body, the home tag list and the tag bar. The list is headed <em>Recommended tags</em>; there is no site-title banner, since the header's wordmark is the only site title. There is no post list here: posts are reached through a tag or through <em>All</em> (§4.2).</li>
+      <li>Made of the site header (wordmark · Home · Admin menu) and, in the body, the tag bar and, below it, the home tag list. The list is headed <em>Recommended tags</em>; there is no site-title banner, since the header's wordmark is the only site title. There is no post list here: posts are reached through a tag or through <em>All</em> (§4.2).</li>
       <li>The home tag list shows the tags the author put on the home page, in the order set in the admin: name (opens the tag page), post count, and description. Its fixed last row, <em>All</em>, shows the number of all posts and opens the list of every post (§4.3, §7.5 Home tag list).</li>
       <li>The tag bar lists every tag that has published posts as a badge with its post count, highest count first; a badge opens that tag's page (§4.3, §7.5 Tag bar).</li>
       <li>Drafts are never shown or counted. Private posts are counted like published ones; only their body is withheld from readers (§5.1).</li>
     </ul>
   </aside>
+
+  <nav class="tagbar" aria-label="Tags">
+    <a class="badge" href="04-tag-archive.html">Tech Article <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">Architecture <span class="count">7</span></a>
+    <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
+    <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
+    <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>
+  </nav>
 
   <section class="home-tags" aria-label="Home tags">
     <h2>Recommended tags</h2>
@@ -48,14 +56,6 @@
       <p>Every post, newest first.</p>
     </div>
   </section>
-
-  <nav class="tagbar" aria-label="Tags">
-    <a class="badge" href="04-tag-archive.html">Tech Article <span class="count">8</span></a>
-    <a class="badge" href="04-tag-archive.html">Architecture <span class="count">7</span></a>
-    <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
-    <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
-    <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>
-  </nav>
 
 </main>
 </body>

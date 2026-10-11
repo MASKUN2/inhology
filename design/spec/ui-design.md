@@ -73,11 +73,11 @@ These are the recurring building blocks; reuse them rather than inventing new on
 - **Tag badge** — a pill-shaped, subtle-background link showing a tag's name;
   the one visual for every tag everywhere. A post shows all of its tags as
   badges (zero or more, wrapping freely); each links to that tag's page.
-- **Tag bar** — on the home page, the All page and at the top of every tag
-  page: all tags with listed posts as tag badges, each followed by its **post
+- **Tag bar** — at the top of the home page, the All page and every tag page,
+  always above the list: all tags with listed posts as tag badges, each followed by its **post
   count**, ordered by count descending. On a tag page the selected tag's badge
   is inverted (`strong` surface).
-- **Home tag list** — the home page's main content, above the tag bar, under
+- **Home tag list** — the home page's main content, below the tag bar, under
   the heading *Recommended tags*: one row
   per home tag, in the author-defined order, with its name (linking to the tag
   page), post count, and description; then a fixed last row, *All*, with the count of all
