@@ -67,8 +67,8 @@ Part of the [inhology specification](./README.md).
   It is created the first time a post uses it.
 - The **home page lists the home tags** — the tags the author chose to show
   there — each with its name, post count and description, in the
-  **author-defined order**, followed by a fixed last row, **All**, that opens
-  the list of every post. The home page has **no post list of its own**.
+  **author-defined order**, followed by a fixed last row, **All**, that shows the
+  number of all posts and opens the list of every post. The home page has **no post list of its own**.
 - The home page, the All page and every tag page carry a **tag bar**: all tags
   that have at least one listed post, each as a badge with its **post count**,
   ordered by count, **highest first** (ties by name).

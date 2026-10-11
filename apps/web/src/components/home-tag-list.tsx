@@ -7,9 +7,15 @@ const title = 'font-semibold hover:underline underline-offset-4';
 /**
  * The home page's main list: the tags the author chose to show there, in the
  * author's order, each with its post count and description, then a fixed last
- * row leading to every post.
+ * row leading to every post (`postCount` of them).
  */
-export function HomeTagList({ tags }: { tags: Tag[] }) {
+export function HomeTagList({
+  tags,
+  postCount,
+}: {
+  tags: Tag[];
+  postCount: number;
+}) {
   const shown = tags
     .filter((tag) => tag.homePosition !== null)
     .sort((a, b) => (a.homePosition ?? 0) - (b.homePosition ?? 0));
@@ -34,6 +40,9 @@ export function HomeTagList({ tags }: { tags: Tag[] }) {
           <Link href="/posts" className={title}>
             All
           </Link>
+          <span className="ml-2 text-sm text-muted">
+            {countPosts(postCount)}
+          </span>
           <p className="mt-0.5 text-sm text-muted">Every post, newest first.</p>
         </li>
       </ul>

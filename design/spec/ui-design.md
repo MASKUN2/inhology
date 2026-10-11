@@ -79,8 +79,8 @@ These are the recurring building blocks; reuse them rather than inventing new on
   is inverted (`strong` surface).
 - **Home tag list** — the home page's main content, above the tag bar: one row
   per home tag, in the author-defined order, with its name (linking to the tag
-  page), post count, and description; then a fixed last row, *All*, linking to
-  the list of every post.
+  page), post count, and description; then a fixed last row, *All*, with the count of all
+  posts, linking to the list of every post.
 - **Home tag order list** — in tag management, a compact list of the home
   tags' names in their current order. Each row has a drag handle and can be
   dragged to a new position; *move up* / *move down* buttons do the same
