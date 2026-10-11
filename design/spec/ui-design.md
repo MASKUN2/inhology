@@ -58,6 +58,9 @@ These are the recurring building blocks; reuse them rather than inventing new on
 
 - **Meta row** — a small, muted line carrying *publish date · reading time
   (N분)*. Reading time appears only when present.
+- **Code block** — a subtle-background, rounded block in monospace with syntax
+  colours. Long lines **soft-wrap** inside the block (indentation and line
+  breaks kept), so code never scrolls sideways or widens the page.
 - **Content table** — a table in rendered Markdown has a visible grid: a hairline
   border around every cell, a subtle-background header row, and comfortable
   cell padding. A table wider than the reading column scrolls horizontally

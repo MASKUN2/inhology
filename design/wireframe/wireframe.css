@@ -84,7 +84,7 @@ article:not(.card) > .meta { margin-top: 2rem; }   /* post-detail: space below t
 .body h2 { font-size: 1.25rem; margin-top: 1.75rem; }
 .body pre, .body code { border: 1px solid gray; font-family: ui-monospace, monospace; font-size: .85rem; }
 .body code { padding: 0 .25em; }
-.body pre { padding: .75rem; overflow-x: auto; }
+.body pre { padding: .75rem; white-space: pre-wrap; overflow-wrap: anywhere; }
 .body pre code { border: none; padding: 0; }
 .body table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: .875rem; }
 .body th, .body td { border: 1px solid gray; padding: .35rem .6rem; text-align: left; vertical-align: top; }
