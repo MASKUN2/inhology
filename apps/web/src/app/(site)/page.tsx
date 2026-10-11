@@ -1,14 +1,11 @@
 import { CollectionList } from '@/components/collection-list';
-import { PostList } from '@/components/post-list';
 import { TagBar } from '@/components/tag-bar';
-import { getCollections, getPublishedPosts, getTags } from '@/lib/api';
+import { getCollections, getTags } from '@/lib/api';
 
+// The home page lists collections and tags, not posts: posts are reached through
+// a collection (a rule-less one such as "All" lists every post) or a tag.
 export default async function Home() {
-  const [posts, tags, collections] = await Promise.all([
-    getPublishedPosts(),
-    getTags(),
-    getCollections(),
-  ]);
+  const [tags, collections] = await Promise.all([getTags(), getCollections()]);
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -19,7 +16,6 @@ export default async function Home() {
 
       <CollectionList collections={collections} />
       <TagBar tags={tags} />
-      <PostList posts={posts} />
     </main>
   );
 }

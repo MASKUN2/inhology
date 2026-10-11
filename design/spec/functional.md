@@ -47,24 +47,28 @@ Part of the [inhology specification](./README.md).
   Markdown — including uploaded images — before publishing.
 
 ## 4.2 Posts (Reader)
-- Browse a list of published posts, newest first.
+- Browse published posts, newest first, **through a collection or a tag** — the
+  home page itself lists collections and tags, not posts. The author keeps a
+  rule-less collection (e.g. *All*) for the full list
+  ([§4.4](#44-collections)).
 - Read a single published post by its slug.
 - Navigate from a post to any of its tags.
 - Reading time is shown when available.
 
 ## 4.3 Tags
-- Every post list opens with a **tag bar**: all tags that have at least one
+- The home page and every tag page carry a **tag bar**: all tags that have at least one
   published post, each as a badge with its **post count**, ordered by count,
   **highest first** (ties by name).
 - Selecting a tag shows the published posts carrying it, newest first; the tag
-  bar stays in place with the selected tag highlighted, plus a way back to all
-  posts.
+  bar stays in place with the selected tag highlighted.
 - Tag counts and tag pages consider **published posts only**.
 - Former category addresses redirect to the matching tag page.
 
 ## 4.4 Collections
 - The **home page lists the collections** — each with its title, description, and
-  the number of posts it currently shows — above the tag bar and the post list.
+  the number of posts it currently shows — above the tag bar. The home page has
+  **no post list of its own**; a collection with no rules (e.g. *All*) is the way
+  to every post.
 - Selecting a collection opens its page: title, description, its rules, and the
   **list of published posts that satisfy them**, newest first.
 - A collection has a **title**, an optional **description**, and **zero or more

@@ -67,10 +67,6 @@ async function getPosts(params: Record<string, string>): Promise<Post[]> {
   return res.json();
 }
 
-export function getPublishedPosts(): Promise<Post[]> {
-  return getPosts({});
-}
-
 export function getPostsByTag(slug: string): Promise<Post[]> {
   return getPosts({ tag: slug });
 }

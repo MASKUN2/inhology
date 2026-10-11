@@ -30,7 +30,7 @@ export default async function CollectionPage({ params }: Params) {
         href="/"
         className="text-sm text-muted hover:underline underline-offset-4"
       >
-        ← Back to list
+        ← Home
       </Link>
 
       <header className="mb-10 mt-8">

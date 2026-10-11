@@ -61,11 +61,11 @@ These are the recurring building blocks; reuse them rather than inventing new on
 - **Tag badge** — a pill-shaped, subtle-background link showing a tag's name;
   the one visual for every tag everywhere. A post shows all of its tags as
   badges (zero or more, wrapping freely); each links to that tag's page.
-- **Tag bar** — at the top of every post list (home and tag pages): all tags
+- **Tag bar** — on the home page and at the top of every tag page: all tags
   with published posts as tag badges, each followed by its **post count**,
   ordered by count descending. On a tag page the selected tag's badge is
-  inverted (`strong` surface) and an *All* badge leads back to the full list.
-- **Collection list** — on the home page, above the tag bar: one row per
+  inverted (`strong` surface).
+- **Collection list** — the home page's main content, above the tag bar: one row per
   collection with its title (linking to the collection page), post count, and
   description. Hidden when there are no collections.
 - **Collection page** — eyebrow *Collection*, title, description, then its rules

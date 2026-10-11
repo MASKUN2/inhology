@@ -39,7 +39,7 @@ export default async function PostPage({ params, searchParams }: Params) {
           href="/"
           className="text-sm text-muted hover:underline underline-offset-4"
         >
-          ← Back to list
+          ← Home
         </Link>
         {authed ? (
           <Link

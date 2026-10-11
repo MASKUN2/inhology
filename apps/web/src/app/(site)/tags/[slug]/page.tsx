@@ -26,7 +26,7 @@ export default async function TagPage({ params }: Params) {
         href="/"
         className="text-sm text-muted hover:underline underline-offset-4"
       >
-        ← Back to list
+        ← Home
       </Link>
 
       <header className="mb-8 mt-8">
