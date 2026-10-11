@@ -8,6 +8,19 @@ export function formatDate(iso: string | null): string {
   }).format(new Date(iso));
 }
 
+/** "1 post", "3 posts". */
+export function countPosts(n: number): string {
+  return `${n} ${n === 1 ? 'post' : 'posts'}`;
+}
+
+/** A comma-separated tag field as a list of names, blanks dropped. */
+export function splitTags(value: string): string[] {
+  return value
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
 /**
  * Turn the editor's publication-date field (YYYY-MM-DD) into the ISO date-time
  * to store. Moves `originalIso` by whole days so its time of day survives (an
