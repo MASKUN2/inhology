@@ -1,8 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-
-const API_URL = process.env.API_URL ?? 'http://localhost:4000';
+import { API_URL } from '@/lib/api';
 
 /** Public: submit a comment. It stays hidden until an admin approves it. */
 export async function createComment(formData: FormData) {
