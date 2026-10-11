@@ -5,6 +5,7 @@ import { deleteComment, moderateComment } from '../actions';
 import { getComments } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
+import { AdminBackLink, AdminHeader, PageShell } from '@/components/page';
 
 export const metadata: Metadata = { title: 'Manage comments' };
 
@@ -12,6 +13,25 @@ const TABS = [
   { key: 'PENDING', label: 'Pending' },
   { key: 'APPROVED', label: 'Approved' },
   { key: 'SPAM', label: 'Spam' },
+] as const;
+
+// The moves a comment can make; the one to the status being viewed is left out.
+const MOVES = [
+  {
+    status: 'APPROVED',
+    label: 'Approve',
+    className: 'text-green-700 hover:underline dark:text-green-400',
+  },
+  {
+    status: 'SPAM',
+    label: 'Spam',
+    className: 'text-amber-700 hover:underline dark:text-amber-400',
+  },
+  {
+    status: 'PENDING',
+    label: 'Set pending',
+    className: 'text-muted hover:underline',
+  },
 ] as const;
 
 export default async function AdminCommentsPage({
@@ -25,13 +45,10 @@ export default async function AdminCommentsPage({
   const comments = await getComments(active);
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Manage comments</h1>
-        <Link href="/admin" className="text-sm text-muted hover:underline">
-          ← Manage posts
-        </Link>
-      </div>
+    <PageShell>
+      <AdminHeader title="Manage comments">
+        <AdminBackLink>← Manage posts</AdminBackLink>
+      </AdminHeader>
 
       <nav className="mt-6 flex gap-2 text-sm">
         {TABS.map((t) => (
@@ -77,33 +94,13 @@ export default async function AdminCommentsPage({
               </div>
 
               <div className="mt-3 flex items-center gap-3 text-sm">
-                {active !== 'APPROVED' ? (
-                  <form action={moderateComment}>
+                {MOVES.filter((move) => move.status !== active).map((move) => (
+                  <form key={move.status} action={moderateComment}>
                     <input type="hidden" name="id" value={c.id} />
-                    <input type="hidden" name="status" value="APPROVED" />
-                    <button className="text-green-700 hover:underline dark:text-green-400">
-                      Approve
-                    </button>
+                    <input type="hidden" name="status" value={move.status} />
+                    <button className={move.className}>{move.label}</button>
                   </form>
-                ) : null}
-                {active !== 'SPAM' ? (
-                  <form action={moderateComment}>
-                    <input type="hidden" name="id" value={c.id} />
-                    <input type="hidden" name="status" value="SPAM" />
-                    <button className="text-amber-700 hover:underline dark:text-amber-400">
-                      Spam
-                    </button>
-                  </form>
-                ) : null}
-                {active !== 'PENDING' ? (
-                  <form action={moderateComment}>
-                    <input type="hidden" name="id" value={c.id} />
-                    <input type="hidden" name="status" value="PENDING" />
-                    <button className="text-muted hover:underline">
-                      Set pending
-                    </button>
-                  </form>
-                ) : null}
+                ))}
                 <form action={deleteComment}>
                   <input type="hidden" name="id" value={c.id} />
                   <button className="text-red-600 hover:underline">Delete</button>
@@ -113,6 +110,6 @@ export default async function AdminCommentsPage({
           ))}
         </ul>
       )}
-    </main>
+    </PageShell>
   );
 }

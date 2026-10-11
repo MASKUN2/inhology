@@ -2,21 +2,36 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { logout } from './actions';
-import { getAllPosts } from '@/lib/api';
+import { getAllPosts, type Post } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
+import { primaryButton } from '@/lib/styles';
 import { DeletePostButton } from '@/components/delete-post-button';
+import { AdminHeader, PageShell } from '@/components/page';
 
 export const metadata: Metadata = { title: 'Manage posts' };
+
+const STATUS_BADGE: Record<Post['status'], { label: string; color: string }> = {
+  PUBLISHED: {
+    label: 'Published',
+    color:
+      'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+  },
+  PRIVATE: { label: 'Private', color: 'bg-subtle text-muted' },
+  DRAFT: {
+    label: 'Draft',
+    color:
+      'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+  },
+};
 
 export default async function AdminPage() {
   if (!(await isAuthed())) redirect('/admin/login');
   const posts = await getAllPosts();
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Manage posts</h1>
+    <PageShell>
+      <AdminHeader title="Manage posts">
         <div className="flex items-center gap-4 text-sm">
           <Link href="/" className="text-muted hover:underline">
             View site
@@ -27,17 +42,14 @@ export default async function AdminPage() {
           <Link href="/admin/comments" className="text-muted hover:underline">
             Comments
           </Link>
-          <Link
-            href="/admin/new"
-            className="rounded-md bg-strong px-3 py-1.5 text-strong-foreground hover:opacity-90"
-          >
+          <Link href="/admin/new" className={`${primaryButton} px-3 py-1.5`}>
             New post
           </Link>
           <form action={logout}>
             <button className="text-muted hover:underline">Log out</button>
           </form>
         </div>
-      </div>
+      </AdminHeader>
 
       {posts.length === 0 ? (
         <p className="mt-8 text-muted">No posts yet.</p>
@@ -50,19 +62,11 @@ export default async function AdminPage() {
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2 text-xs">
-                  {post.status === 'PUBLISHED' ? (
-                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-900/40 dark:text-green-400">
-                      Published
-                    </span>
-                  ) : post.status === 'PRIVATE' ? (
-                    <span className="rounded-full bg-subtle px-2 py-0.5 text-muted">
-                      Private
-                    </span>
-                  ) : (
-                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
-                      Draft
-                    </span>
-                  )}
+                  <span
+                    className={`rounded-full px-2 py-0.5 ${STATUS_BADGE[post.status].color}`}
+                  >
+                    {STATUS_BADGE[post.status].label}
+                  </span>
                   {post.publishedAt ? (
                     <time className="text-muted">
                       {formatDate(post.publishedAt)}
@@ -99,6 +103,6 @@ export default async function AdminPage() {
           ))}
         </ul>
       )}
-    </main>
+    </PageShell>
   );
 }
