@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Collection } from '@/lib/api';
+import { countPosts } from '@/lib/format';
 
 /** The home page's list of collections: title, post count, description. */
 export function CollectionList({ collections }: { collections: Collection[] }) {
@@ -17,7 +18,7 @@ export function CollectionList({ collections }: { collections: Collection[] }) {
               {c.title}
             </Link>
             <span className="ml-2 text-sm text-muted">
-              {c.postCount} {c.postCount === 1 ? 'post' : 'posts'}
+              {countPosts(c.postCount)}
             </span>
             {c.description ? (
               <p className="mt-0.5 text-sm text-muted">{c.description}</p>

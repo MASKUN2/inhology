@@ -1,4 +1,5 @@
 import { CollectionList } from '@/components/collection-list';
+import { PageShell } from '@/components/page';
 import { TagBar } from '@/components/tag-bar';
 import { getCollections, getTags } from '@/lib/api';
 
@@ -8,10 +9,10 @@ export default async function Home() {
   const [tags, collections] = await Promise.all([getTags(), getCollections()]);
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+    <PageShell>
       {/* No banner here: the site header already carries the wordmark. */}
       <CollectionList collections={collections} />
       <TagBar tags={tags} />
-    </main>
+    </PageShell>
   );
 }

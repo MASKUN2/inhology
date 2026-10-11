@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPostBySlug } from '@/lib/api';
 import { isAuthed } from '@/lib/auth';
-import { formatDate } from '@/lib/format';
 import { Comments } from '@/components/comments';
 import { Markdown } from '@/components/markdown';
-import { PrivateBadge } from '@/components/private-badge';
+import { HomeLink, PageShell } from '@/components/page';
+import { PostMeta } from '@/components/post-meta';
 import { TagBadge } from '@/components/tag-badge';
 
 type Params = {
@@ -36,14 +36,9 @@ export default async function PostPage({ params, searchParams }: Params) {
   const authed = await isAuthed();
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+    <PageShell>
       <div className="flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-sm text-muted hover:underline underline-offset-4"
-        >
-          ← Home
-        </Link>
+        <HomeLink />
         {authed ? (
           <Link
             href={`/admin/posts/${post.id}/edit`}
@@ -56,13 +51,7 @@ export default async function PostPage({ params, searchParams }: Params) {
 
       <article className="mt-8">
         <header className="mb-8">
-          <div className="flex items-center gap-2 text-xs text-muted">
-            {post.status === 'PRIVATE' ? <PrivateBadge /> : null}
-            <time dateTime={post.publishedAt ?? undefined}>
-              {formatDate(post.publishedAt)}
-            </time>
-            {post.readingTime ? <span>· {post.readingTime} min</span> : null}
-          </div>
+          <PostMeta post={post} />
           <h1 className="mt-3 text-3xl font-bold tracking-tight">
             {post.title}
           </h1>
@@ -91,6 +80,6 @@ export default async function PostPage({ params, searchParams }: Params) {
           flash={flash}
         />
       ) : null}
-    </main>
+    </PageShell>
   );
 }

@@ -3,15 +3,8 @@
 // 에디터의 태그 입력. 쉼표로 구분한 태그 이름을 한 필드(name)에 담아 폼과 자동저장이
 // 그대로 읽게 하고, 기존 태그는 아래 배지로 보여 눌러서 켜고 끌 수 있게 한다.
 import { useState } from 'react';
-
-const field = 'rounded-md border border-border bg-background px-3 py-2';
-
-function parse(value: string): string[] {
-  return value
-    .split(',')
-    .map((name) => name.trim())
-    .filter(Boolean);
-}
+import { splitTags } from '@/lib/format';
+import { field, pill } from '@/lib/styles';
 
 const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 
@@ -27,7 +20,7 @@ export function TagInput({
   placeholder?: string;
 }) {
   const [value, setValue] = useState(defaultValue.join(', '));
-  const current = parse(value);
+  const current = splitTags(value);
 
   function toggle(tag: string) {
     const next = current.some((t) => same(t, tag))
@@ -56,9 +49,7 @@ export function TagInput({
                 type="button"
                 aria-pressed={on}
                 onClick={() => toggle(tag)}
-                className={`whitespace-nowrap rounded-full px-2 py-0.5 text-xs hover:opacity-80 ${
-                  on ? 'bg-strong text-strong-foreground' : 'bg-subtle text-muted'
-                }`}
+                className={pill(on)}
               >
                 {tag}
               </button>

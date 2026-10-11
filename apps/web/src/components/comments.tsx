@@ -1,8 +1,7 @@
 import type { PostComment } from '@/lib/api';
 import { formatDate } from '@/lib/format';
+import { field, primaryButton } from '@/lib/styles';
 import { createComment } from '@/app/(site)/posts/actions';
-
-const field = 'rounded-md border border-border bg-background px-3 py-2';
 
 export function Comments({
   postId,
@@ -81,7 +80,7 @@ export function Comments({
         />
         <button
           type="submit"
-          className="self-end rounded-md bg-strong px-4 py-2 text-sm text-strong-foreground hover:opacity-90"
+          className={`self-end ${primaryButton} px-4 py-2 text-sm`}
         >
           Post comment
         </button>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Tag } from '@/lib/api';
+import { pill } from '@/lib/styles';
 
 /** The one visual for a tag: a pill linking to the tag's page. */
 export function TagBadge({
@@ -15,9 +16,7 @@ export function TagBadge({
     <Link
       href={`/tags/${tag.slug}`}
       aria-current={active ? 'page' : undefined}
-      className={`whitespace-nowrap rounded-full px-2 py-0.5 text-xs hover:opacity-80 ${
-        active ? 'bg-strong text-strong-foreground' : 'bg-subtle text-muted'
-      }`}
+      className={pill(active)}
     >
       {tag.name}
       {count !== undefined ? (

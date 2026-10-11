@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { HomeLink, PageShell } from '@/components/page';
 import { PostList } from '@/components/post-list';
 import { TagBadge } from '@/components/tag-badge';
 import { getCollection } from '@/lib/api';
+import { countPosts } from '@/lib/format';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -22,16 +23,11 @@ export default async function CollectionPage({ params }: Params) {
   const collection = await getCollection(slug);
   if (!collection) notFound();
   const posts = collection.posts ?? [];
-  const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
+  const count = countPosts(posts.length);
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <Link
-        href="/"
-        className="text-sm text-muted hover:underline underline-offset-4"
-      >
-        ← Home
-      </Link>
+    <PageShell>
+      <HomeLink />
 
       <header className="mb-10 mt-8">
         <p className="text-sm text-muted">Collection</p>
@@ -57,6 +53,6 @@ export default async function CollectionPage({ params }: Params) {
       </header>
 
       <PostList posts={posts} />
-    </main>
+    </PageShell>
   );
 }

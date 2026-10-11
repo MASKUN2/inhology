@@ -4,9 +4,8 @@
 // 커서 위치에 ![](url) 을 자동 삽입한다. 업로드 중엔 플레이스홀더를 두었다가 완료 시 치환.
 // [편집|미리보기] 토글로 공개 글과 동일 렌더러로 확인. 폼 제출은 항상 살아있는 textarea(name)로.
 import { useRef, useState } from 'react';
+import { field } from '@/lib/styles';
 import { Markdown } from './markdown';
-
-const field = 'rounded-md border border-border bg-background px-3 py-2';
 
 export function BodyEditor({
   name = 'content',

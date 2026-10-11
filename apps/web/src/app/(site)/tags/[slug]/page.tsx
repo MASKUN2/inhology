@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { HomeLink, PageShell } from '@/components/page';
 import { PostList } from '@/components/post-list';
 import { TagBar } from '@/components/tag-bar';
 import { getPostsByTag, getTag, getTags } from '@/lib/api';
+import { countPosts } from '@/lib/format';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -21,24 +22,17 @@ export default async function TagPage({ params }: Params) {
   const [posts, tags] = await Promise.all([getPostsByTag(slug), getTags()]);
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <Link
-        href="/"
-        className="text-sm text-muted hover:underline underline-offset-4"
-      >
-        ← Home
-      </Link>
+    <PageShell>
+      <HomeLink />
 
       <header className="mb-8 mt-8">
         <p className="text-sm text-muted">Tag</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">{tag.name}</h1>
-        <p className="mt-2 text-sm text-muted">
-          {posts.length} {posts.length === 1 ? 'post' : 'posts'}
-        </p>
+        <p className="mt-2 text-sm text-muted">{countPosts(posts.length)}</p>
       </header>
 
       <TagBar tags={tags} activeSlug={tag.slug} />
       <PostList posts={posts} />
-    </main>
+    </PageShell>
   );
 }
