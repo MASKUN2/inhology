@@ -56,10 +56,13 @@ live in [`../wireframe/`](../wireframe/).
 ## 7.5 Shared UI patterns
 These are the recurring building blocks; reuse them rather than inventing new ones.
 
-- **Meta row** — a small, muted line carrying *category · publish date · reading
-  time (N분)*. Reading time and tags appear only when present.
+- **Meta row** — a small, muted line carrying *category · series · publish date ·
+  reading time (N분)*. Series, reading time and tags appear only when present.
 - **Category chip** — a pill-shaped, subtle-background link; a post has exactly one.
 - **Tag** — an inline `#name` link in muted text; zero or more, wrap freely.
+- **Series label** — in a post list's meta row, an outlined pill naming the
+  post's series and linking to the series page; sits right after the category
+  chip and is outlined (not filled) so the two read apart. At most one per post.
 - **Series banner** — a bordered card on a post that belongs to a series, naming
   the series and the post's position (*N편*), linking to the series page.
 - **Primary button** — solid `strong` surface with inverted text; one per form.

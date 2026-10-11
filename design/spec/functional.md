@@ -46,6 +46,8 @@ Part of the [inhology specification](./README.md).
 
 ## 4.2 Posts (Reader)
 - Browse a list of published posts, newest first.
+- In any post list, a post that belongs to a series **shows the series name**,
+  linking to that series' page ([§7.5](./ui-design.md#75-shared-ui-patterns)).
 - Read a single published post by its slug.
 - Navigate to a post's category, its tags, and its series.
 - Reading time is shown when available.

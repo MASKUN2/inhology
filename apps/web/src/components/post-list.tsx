@@ -19,6 +19,14 @@ export function PostList({ posts }: { posts: Post[] }) {
               >
                 {post.category.name}
               </Link>
+              {post.series ? (
+                <Link
+                  href={`/series/${post.series.slug}`}
+                  className="rounded-full border border-border px-2 py-0.5 hover:opacity-80"
+                >
+                  {post.series.title}
+                </Link>
+              ) : null}
               <time dateTime={post.publishedAt ?? undefined}>
                 {formatDate(post.publishedAt)}
               </time>

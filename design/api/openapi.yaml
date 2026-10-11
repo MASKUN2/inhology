@@ -78,7 +78,8 @@ paths:
       description: >
         Public callers see only PUBLISHED posts, newest first. An admin (valid
         Bearer token) sees all posts and may filter by `status`. Includes
-        `category` and `tags` relations (not `series`, not `comments`).
+        `category`, `tags` and `series` relations (not `comments`); `series` is null
+        for a post outside any series.
       security:
         - {}
         - bearerAuth: []
@@ -677,7 +678,7 @@ components:
 
     Post:
       type: object
-      description: A post with its `category` and `tags` (and `series` when returned by create/update/get).
+      description: A post with its `category` and `tags` (and `series` when returned by list/create/update/get).
       required:
         [id, title, content, status, viewCount, createdAt, updatedAt, categoryId]
       properties:

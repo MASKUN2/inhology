@@ -76,7 +76,7 @@ export class PostsService {
     };
     return this.prisma.post.findMany({
       where,
-      include: { category: true, tags: true },
+      include: { category: true, tags: true, series: true },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
     });
   }
