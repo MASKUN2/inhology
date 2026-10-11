@@ -6,6 +6,7 @@ import { isAuthed } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
 import { Comments } from '@/components/comments';
 import { Markdown } from '@/components/markdown';
+import { PrivateBadge } from '@/components/private-badge';
 import { TagBadge } from '@/components/tag-badge';
 
 type Params = {
@@ -27,7 +28,9 @@ export default async function PostPage({ params, searchParams }: Params) {
   ]);
   const slug = decodeURIComponent(rawSlug);
   const post = await getPostBySlug(slug);
-  if (!post || post.status !== 'PUBLISHED') notFound();
+  // The API only returns a private post to the signed-in author; a draft has no
+  // page for anyone.
+  if (!post || post.status === 'DRAFT') notFound();
   const flash =
     comment === 'ok' ? 'ok' : comment === 'error' ? 'error' : undefined;
   const authed = await isAuthed();
@@ -54,6 +57,7 @@ export default async function PostPage({ params, searchParams }: Params) {
       <article className="mt-8">
         <header className="mb-8">
           <div className="flex items-center gap-2 text-xs text-muted">
+            {post.status === 'PRIVATE' ? <PrivateBadge /> : null}
             <time dateTime={post.publishedAt ?? undefined}>
               {formatDate(post.publishedAt)}
             </time>
@@ -74,12 +78,15 @@ export default async function PostPage({ params, searchParams }: Params) {
         <Markdown>{post.content}</Markdown>
       </article>
 
-      <Comments
-        postId={post.id}
-        slug={post.slug}
-        comments={post.comments ?? []}
-        flash={flash}
-      />
+      {/* Comments are for published posts only. */}
+      {post.status === 'PUBLISHED' ? (
+        <Comments
+          postId={post.id}
+          slug={post.slug}
+          comments={post.comments ?? []}
+          flash={flash}
+        />
+      ) : null}
     </main>
   );
 }

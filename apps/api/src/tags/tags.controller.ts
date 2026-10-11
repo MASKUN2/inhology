@@ -3,20 +3,26 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AdminGuard } from '../auth/admin.guard';
+import { isAdminToken } from '../auth/is-admin';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { TagsService } from './tags.service';
 import { UpdateTagDto } from './dto/update-tag.dto';
 
 @Controller('tags')
 export class TagsController {
-  constructor(private readonly tags: TagsService) {}
+  constructor(
+    private readonly tags: TagsService,
+    private readonly config: ConfigService,
+  ) {}
 
   @Post()
   @UseGuards(AdminGuard)
@@ -25,13 +31,16 @@ export class TagsController {
   }
 
   @Get()
-  findAll() {
-    return this.tags.findAll();
+  findAll(@Headers('authorization') auth?: string) {
+    return this.tags.findAll(isAdminToken(auth, this.config));
   }
 
   @Get(':idOrSlug')
-  findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.tags.findOne(idOrSlug);
+  findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Headers('authorization') auth?: string,
+  ) {
+    return this.tags.findOne(idOrSlug, isAdminToken(auth, this.config));
   }
 
   @Patch(':id')

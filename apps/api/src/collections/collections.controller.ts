@@ -3,13 +3,16 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AdminGuard } from '../auth/admin.guard';
+import { isAdminToken } from '../auth/is-admin';
 import { CollectionsService } from './collections.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { ReorderCollectionsDto } from './dto/reorder-collections.dto';
@@ -17,7 +20,10 @@ import { UpdateCollectionDto } from './dto/update-collection.dto';
 
 @Controller('collections')
 export class CollectionsController {
-  constructor(private readonly collections: CollectionsService) {}
+  constructor(
+    private readonly collections: CollectionsService,
+    private readonly config: ConfigService,
+  ) {}
 
   @Post()
   @UseGuards(AdminGuard)
@@ -26,13 +32,16 @@ export class CollectionsController {
   }
 
   @Get()
-  findAll() {
-    return this.collections.findAll();
+  findAll(@Headers('authorization') auth?: string) {
+    return this.collections.findAll(isAdminToken(auth, this.config));
   }
 
   @Get(':idOrSlug')
-  findOne(@Param('idOrSlug') idOrSlug: string) {
-    return this.collections.findOne(idOrSlug);
+  findOne(
+    @Param('idOrSlug') idOrSlug: string,
+    @Headers('authorization') auth?: string,
+  ) {
+    return this.collections.findOne(idOrSlug, isAdminToken(auth, this.config));
   }
 
   // Declared before ':id' so "order" is not taken for a collection id.

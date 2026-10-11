@@ -15,16 +15,17 @@ datasource db {
 enum PostStatus {
   DRAFT
   PUBLISHED
+  PRIVATE // finished, but readable by the admin only
 }
 
 model Post {
   id          String     @id @default(cuid())
-  slug        String?    @unique // URL identifier, e.g. /posts/<slug>; null while draft, set on publish
+  slug        String?    @unique // URL identifier, e.g. /posts/<slug>; null while draft
   title       String
   excerpt     String? // short summary for list views
   content     String // markdown body
   status      PostStatus @default(DRAFT)
-  publishedAt DateTime? // set when first published
+  publishedAt DateTime? // set when first published or made private
   readingTime Int? // minutes, computed on save
   viewCount   Int        @default(0)
   createdAt   DateTime   @default(now())

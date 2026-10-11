@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostStatus, Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
 import { PrismaService } from '../prisma/prisma.service';
+import { readablePosts } from './post-visibility';
 import { TagsService } from '../tags/tags.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { QueryPostsDto } from './dto/query-posts.dto';
@@ -48,14 +49,13 @@ export class PostsService {
       title: dto.title,
       content: dto.content,
       excerpt: dto.excerpt,
-      // Drafts carry no slug; a published post gets one derived from its title.
+      // Drafts carry no slug; a published or private post gets one derived from
+      // its title, and its date.
       slug:
-        status === PostStatus.PUBLISHED
-          ? await this.uniqueSlug(dto.title)
-          : null,
+        status === PostStatus.DRAFT ? null : await this.uniqueSlug(dto.title),
       status,
       readingTime: readingTimeMinutes(dto.content),
-      publishedAt: status === PostStatus.PUBLISHED ? new Date() : null,
+      publishedAt: status === PostStatus.DRAFT ? null : new Date(),
       ...(dto.tags?.length && {
         tags: { connect: await this.tags.resolve(dto.tags) },
       }),
@@ -65,10 +65,17 @@ export class PostsService {
 
   findAll(query: QueryPostsDto, isAdmin = false) {
     const where: Prisma.PostWhereInput = {
-      deletedAt: null, // soft-deleted posts are hidden from everyone, admin included
-      // Non-admins only ever see published posts; any client-supplied
-      // status filter is ignored so drafts can't leak.
-      status: isAdmin ? query.status : PostStatus.PUBLISHED,
+      // `visible=true` is the site's view: what this caller may read. Otherwise
+      // non-admins only ever see published posts — any client-supplied status
+      // filter is ignored so drafts and private posts can't leak — and the admin
+      // gets every status (the dashboard) or the one asked for. Soft-deleted
+      // posts are hidden from everyone, admin included.
+      ...(query.visible === 'true'
+        ? readablePosts(isAdmin)
+        : {
+            deletedAt: null,
+            status: isAdmin ? query.status : PostStatus.PUBLISHED,
+          }),
       ...(query.tag && { tags: { some: { slug: query.tag } } }),
     };
     return this.prisma.post.findMany({
@@ -97,7 +104,7 @@ export class PostsService {
         },
       },
     });
-    // Hide a draft's existence from non-admins (404, not 403).
+    // Hide a draft's or private post's existence from non-admins (404, not 403).
     if (!post || (!isAdmin && post.status !== PostStatus.PUBLISHED)) {
       throw new NotFoundException(`Post not found: ${idOrSlug}`);
     }
@@ -125,11 +132,12 @@ export class PostsService {
     // The author may set the publication date explicitly; it is never cleared.
     if (dto.publishedAt) data.publishedAt = new Date(dto.publishedAt);
 
-    // Otherwise stamp publishedAt the first time a post is published.
+    // Otherwise stamp publishedAt the first time a post leaves draft (published
+    // or private).
     if (dto.status !== undefined) {
       data.status = dto.status;
       if (
-        dto.status === PostStatus.PUBLISHED &&
+        dto.status !== PostStatus.DRAFT &&
         !existing.publishedAt &&
         !dto.publishedAt
       ) {
@@ -137,14 +145,15 @@ export class PostsService {
       }
     }
 
-    // Slug is service-managed by the effective status: a published post's slug is
-    // (re)derived from its title and de-duplicated on collision (so editing the
-    // title changes the slug); a draft has no slug. Applies to autosave too.
+    // Slug is service-managed by the effective status: a published or private
+    // post's slug is (re)derived from its title and de-duplicated on collision (so
+    // editing the title changes the slug); a draft has no slug. Applies to
+    // autosave too.
     const effectiveStatus = dto.status ?? existing.status;
     data.slug =
-      effectiveStatus === PostStatus.PUBLISHED
-        ? await this.uniqueSlug(dto.title ?? existing.title, id)
-        : null;
+      effectiveStatus === PostStatus.DRAFT
+        ? null
+        : await this.uniqueSlug(dto.title ?? existing.title, id);
 
     return this.prisma.post.update({
       where: { id },

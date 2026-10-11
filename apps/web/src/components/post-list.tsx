@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Post } from '@/lib/api';
 import { formatDate } from '@/lib/format';
+import { PrivateBadge } from '@/components/private-badge';
 import { TagBadge } from '@/components/tag-badge';
 
 export function PostList({ posts }: { posts: Post[] }) {
@@ -14,6 +15,7 @@ export function PostList({ posts }: { posts: Post[] }) {
         <li key={post.id}>
           <article>
             <div className="flex items-center gap-2 text-xs text-muted">
+              {post.status === 'PRIVATE' ? <PrivateBadge /> : null}
               <time dateTime={post.publishedAt ?? undefined}>
                 {formatDate(post.publishedAt)}
               </time>

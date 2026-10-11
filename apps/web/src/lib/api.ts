@@ -1,3 +1,5 @@
+import { isAuthed } from '@/lib/auth';
+
 // Server-side base URL for the Nest API. Override with API_URL in .env.local.
 const API_URL = process.env.API_URL ?? 'http://localhost:4000';
 
@@ -50,7 +52,7 @@ export interface Post {
   title: string;
   excerpt: string | null;
   content: string;
-  status: 'DRAFT' | 'PUBLISHED';
+  status: 'DRAFT' | 'PUBLISHED' | 'PRIVATE';
   publishedAt: string | null;
   readingTime: number | null;
   viewCount: number;
@@ -60,22 +62,35 @@ export interface Post {
   comments?: PostComment[];
 }
 
+// Server-only: the admin token unlocks drafts on the API's read endpoints.
+// Never import this into a Client Component — it would ship the token.
+function adminHeaders(): Record<string, string> {
+  const token = process.env.ADMIN_TOKEN;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+/**
+ * Headers for the public site's reads. A signed-in author's requests carry the
+ * admin token, so the API also returns their private posts (and counts them);
+ * a reader's requests carry nothing and see published posts only.
+ */
+async function siteHeaders(): Promise<Record<string, string>> {
+  return (await isAuthed()) ? adminHeaders() : {};
+}
+
 async function getPosts(params: Record<string, string>): Promise<Post[]> {
-  const qs = new URLSearchParams({ status: 'PUBLISHED', ...params });
-  const res = await fetch(`${API_URL}/posts?${qs}`, { cache: 'no-store' });
+  // visible=true: what this viewer may read (published; plus private for the author).
+  const qs = new URLSearchParams({ visible: 'true', ...params });
+  const res = await fetch(`${API_URL}/posts?${qs}`, {
+    cache: 'no-store',
+    headers: await siteHeaders(),
+  });
   if (!res.ok) throw new Error(`Failed to load posts (${res.status})`);
   return res.json();
 }
 
 export function getPostsByTag(slug: string): Promise<Post[]> {
   return getPosts({ tag: slug });
-}
-
-// Server-only: the admin token unlocks drafts on the API's read endpoints.
-// Never import this into a Client Component — it would ship the token.
-function adminHeaders(): Record<string, string> {
-  const token = process.env.ADMIN_TOKEN;
-  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 /**
@@ -115,14 +130,20 @@ export async function getComments(status?: string): Promise<AdminComment[]> {
 
 /** Every tag with its published-post count, highest count first. */
 export async function getTags(): Promise<Tag[]> {
-  const res = await fetch(`${API_URL}/tags`, { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/tags`, {
+    cache: 'no-store',
+    headers: await siteHeaders(),
+  });
   if (!res.ok) throw new Error(`Failed to load tags (${res.status})`);
   return res.json();
 }
 
 /** Every collection, in the author-defined order, with its rules and post count. */
 export async function getCollections(): Promise<Collection[]> {
-  const res = await fetch(`${API_URL}/collections`, { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/collections`, {
+    cache: 'no-store',
+    headers: await siteHeaders(),
+  });
   if (!res.ok) throw new Error(`Failed to load collections (${res.status})`);
   return res.json();
 }
@@ -131,7 +152,7 @@ export async function getCollections(): Promise<Collection[]> {
 export async function getCollection(slug: string): Promise<Collection | null> {
   const res = await fetch(
     `${API_URL}/collections/${encodeURIComponent(slug)}`,
-    { cache: 'no-store' },
+    { cache: 'no-store', headers: await siteHeaders() },
   );
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to load collection (${res.status})`);
@@ -141,15 +162,18 @@ export async function getCollection(slug: string): Promise<Collection | null> {
 export async function getTag(slug: string): Promise<Tag | null> {
   const res = await fetch(`${API_URL}/tags/${encodeURIComponent(slug)}`, {
     cache: 'no-store',
+    headers: await siteHeaders(),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to load tag (${res.status})`);
   return res.json();
 }
 
+/** A post by slug as this viewer may read it: a private post only for the author. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const res = await fetch(`${API_URL}/posts/${encodeURIComponent(slug)}`, {
     cache: 'no-store',
+    headers: await siteHeaders(),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Failed to load post (${res.status})`);

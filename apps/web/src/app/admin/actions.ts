@@ -94,7 +94,7 @@ export async function savePost(formData: FormData) {
   // Encode the slug: Hangul slugs are non-Latin1 and would otherwise crash the
   // server-action redirect (Next sets it as the x-action-redirect header).
   redirect(
-    post.status === 'PUBLISHED'
+    post.status !== 'DRAFT'
       ? `/posts/${encodeURIComponent(post.slug)}`
       : '/admin',
   );

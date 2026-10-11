@@ -72,6 +72,7 @@ export default async function EditPostPage({
           >
             <option value="DRAFT">Draft</option>
             <option value="PUBLISHED">Published</option>
+            <option value="PRIVATE">Private</option>
           </select>
           <input
             name="publishedDate"

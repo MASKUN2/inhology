@@ -8,8 +8,12 @@ Part of the [inhology specification](./README.md).
   becomes a new tag on save, and existing tags are offered as suggestions. The
   **URL slug is not
   entered by the author** — it is generated automatically (see below).
-- Save a post as a **draft** or **publish** it.
-- **The URL slug is service-managed.** A draft has **no slug**; on **publish** the
+- Save a post as a **draft**, **publish** it, or make it **private**. A private
+  post is a finished post kept to the author: it has its page, date and tags
+  like a published one, but only the signed-in author can open it or see it in
+  lists ([§5.1](./policies.md#51-content-visibility)).
+- **The URL slug is service-managed.** A draft has **no slug**; when a post is
+  **published or made private** the
   slug is generated from the title, and any collision is resolved by appending a
   numeric suffix (`-2`, `-3`…). Editing a published post's title changes its slug
   — and thus its public URL ([§5.2](./policies.md#52-identifiers)).
@@ -54,6 +58,9 @@ Part of the [inhology specification](./README.md).
 - Read a single published post by its slug.
 - Navigate from a post to any of its tags.
 - Reading time is shown when available.
+- **The signed-in author sees private posts too**, wherever a reader sees
+  published ones — collection pages, tag pages, counts, and the post page —
+  each marked with a **Private** badge. A reader sees none of it.
 
 ## 4.3 Tags
 - The home page and every tag page carry a **tag bar**: all tags that have at least one

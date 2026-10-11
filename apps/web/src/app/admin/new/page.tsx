@@ -54,6 +54,7 @@ export default async function NewPostPage({
         <select name="status" defaultValue="DRAFT" className={field}>
           <option value="DRAFT">Draft</option>
           <option value="PUBLISHED">Published</option>
+          <option value="PRIVATE">Private</option>
         </select>
 
         <div className="flex items-center gap-3">

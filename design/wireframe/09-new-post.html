@@ -13,7 +13,7 @@
     <h3>This screen — New post (<code>/admin/new</code>)</h3>
     <ul>
       <li>The form for writing a new post (§4.1).</li>
-      <li>Title (required) · Excerpt (optional) · Tags (optional, zero or more) · the body editor · status (Draft/Published).</li>
+      <li>Title (required) · Excerpt (optional) · Tags (optional, zero or more) · the body editor · status (Draft/Published/Private). Private keeps a finished post to the signed-in author (§5.1).</li>
       <li>Tags are typed comma-separated; the existing tags sit beneath as badges that toggle a tag on or off. A new name becomes a new tag on save (§4.1, §7.5 Tag input).</li>
       <li>The editor's Edit | Preview toggle uses the same renderer as the public post; the preview keeps the editor's height and scrolls inside, so switching never jumps the page.</li>
       <li>"Add image" uploads, then inserts <code>![](…)</code> at the cursor (§7.5).</li>
@@ -49,7 +49,7 @@
       <div class="preview" id="preview"><em style="opacity:.7">Nothing to preview.</em></div>
     </div>
 
-    <select><option selected>Draft</option><option>Published</option></select>
+    <select><option selected>Draft</option><option>Published</option><option>Private</option></select>
     <div class="row">
       <button class="btn" type="button">Save</button>
       <span style="opacity:.7;font-size:.85rem;align-self:center">Saved at 14:32</span>

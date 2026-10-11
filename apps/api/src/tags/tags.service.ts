@@ -3,16 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PostStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
+import { readablePosts } from '../posts/post-visibility';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
-
-const PUBLISHED: Prisma.PostWhereInput = {
-  status: PostStatus.PUBLISHED,
-  deletedAt: null,
-};
 
 @Injectable()
 export class TagsService {
@@ -56,20 +52,25 @@ export class TagsService {
     }
   }
 
-  // Counts cover published, non-deleted posts only, so a draft never shows up in
-  // a public number. Ordered by that count, highest first, then by name.
-  async findAll() {
+  // Counts cover only the posts the caller may read (published; plus private for
+  // the admin), so a draft or private post never shows up in a public number.
+  // Ordered by that count, highest first, then by name.
+  async findAll(isAdmin = false) {
     const tags = await this.prisma.tag.findMany({
       orderBy: { name: 'asc' },
-      include: { _count: { select: { posts: { where: PUBLISHED } } } },
+      include: {
+        _count: { select: { posts: { where: readablePosts(isAdmin) } } },
+      },
     });
     return tags.sort((a, b) => b._count.posts - a._count.posts);
   }
 
-  async findOne(idOrSlug: string) {
+  async findOne(idOrSlug: string, isAdmin = false) {
     const tag = await this.prisma.tag.findFirst({
       where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
-      include: { _count: { select: { posts: { where: PUBLISHED } } } },
+      include: {
+        _count: { select: { posts: { where: readablePosts(isAdmin) } } },
+      },
     });
     if (!tag) throw new NotFoundException(`Tag not found: ${idOrSlug}`);
     return tag;

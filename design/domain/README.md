@@ -24,11 +24,11 @@ erDiagram
 
     POST {
         string     id PK
-        string     slug UK "nullable; null while draft, set on publish"
+        string     slug UK "nullable; null while draft"
         string     title
         string     excerpt "nullable"
         string     content "markdown"
-        PostStatus status "DRAFT | PUBLISHED, default DRAFT"
+        PostStatus status "DRAFT | PUBLISHED | PRIVATE, default DRAFT"
         datetime   publishedAt "nullable, set on first publish, author-editable"
         int        readingTime "nullable, minutes"
         int        viewCount "default 0"
@@ -75,7 +75,7 @@ erDiagram
 
 ## Enums
 
-- **`PostStatus`**: `DRAFT`, `PUBLISHED` (default `DRAFT`).
+- **`PostStatus`**: `DRAFT`, `PUBLISHED`, `PRIVATE` (default `DRAFT`). `PRIVATE` is a finished post only the admin can read.
 - **`CommentStatus`**: `PENDING`, `APPROVED`, `SPAM` (default `PENDING`).
 
 ## Legend

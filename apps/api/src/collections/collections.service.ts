@@ -3,8 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PostStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { slugify } from '../common/slug.util';
+import { readablePosts } from '../posts/post-visibility';
 import { PrismaService } from '../prisma/prisma.service';
 import { TagsService } from '../tags/tags.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
@@ -28,19 +29,22 @@ export class CollectionsService {
     private readonly tags: TagsService,
   ) {}
 
-  // The posts a collection shows: published, not deleted, and carrying every rule
-  // tag. No rules means no extra condition, i.e. every published post.
-  private matching(rules: { id: string }[]): Prisma.PostWhereInput {
+  // The posts a collection shows a caller: the ones they may read (published;
+  // plus private for the admin) that carry every rule tag. No rules means no
+  // extra condition, i.e. every readable post.
+  private matching(
+    rules: { id: string }[],
+    isAdmin: boolean,
+  ): Prisma.PostWhereInput {
     return {
-      status: PostStatus.PUBLISHED,
-      deletedAt: null,
+      ...readablePosts(isAdmin),
       AND: rules.map((tag) => ({ tags: { some: { id: tag.id } } })),
     };
   }
 
-  private async withCount(collection: WithRules) {
+  private async withCount(collection: WithRules, isAdmin: boolean) {
     const postCount = await this.prisma.post.count({
-      where: this.matching(collection.tags),
+      where: this.matching(collection.tags, isAdmin),
     });
     return { ...collection, postCount };
   }
@@ -63,18 +67,18 @@ export class CollectionsService {
         },
         include: RULES,
       });
-      return await this.withCount(created);
+      return await this.withCount(created, true);
     } catch (err) {
       this.rethrow(err);
     }
   }
 
-  async findAll() {
+  async findAll(isAdmin = false) {
     const collections = await this.prisma.collection.findMany({
       orderBy: IN_ORDER,
       include: RULES,
     });
-    return Promise.all(collections.map((c) => this.withCount(c)));
+    return Promise.all(collections.map((c) => this.withCount(c, isAdmin)));
   }
 
   // Put the collections in the given order. Any collection left out of `ids`
@@ -100,11 +104,11 @@ export class CollectionsService {
         this.prisma.collection.update({ where: { id }, data: { position } }),
       ),
     );
-    return this.findAll();
+    return this.findAll(true);
   }
 
-  /** A collection with the published posts that satisfy its rules, newest first. */
-  async findOne(idOrSlug: string) {
+  /** A collection with the posts the caller may read that satisfy its rules, newest first. */
+  async findOne(idOrSlug: string, isAdmin = false) {
     const collection = await this.prisma.collection.findFirst({
       where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
       include: RULES,
@@ -113,7 +117,7 @@ export class CollectionsService {
       throw new NotFoundException(`Collection not found: ${idOrSlug}`);
     }
     const posts = await this.prisma.post.findMany({
-      where: this.matching(collection.tags),
+      where: this.matching(collection.tags, isAdmin),
       include: { tags: { orderBy: { name: 'asc' } } },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
     });
@@ -139,7 +143,7 @@ export class CollectionsService {
         },
         include: RULES,
       });
-      return await this.withCount(updated);
+      return await this.withCount(updated, true);
     } catch (err) {
       this.rethrow(err, id);
     }

@@ -65,6 +65,9 @@ These are the recurring building blocks; reuse them rather than inventing new on
   border around every cell, a subtle-background header row, and comfortable
   cell padding. A table wider than the reading column scrolls horizontally
   inside its own box instead of stretching the page.
+- **Private badge** — a small pill reading *Private*, shown only to the signed-in
+  author: in the meta row of a private post's page and of its card in any list.
+  Readers never see it, because they never see the post.
 - **Tag badge** — a pill-shaped, subtle-background link showing a tag's name;
   the one visual for every tag everywhere. A post shows all of its tags as
   badges (zero or more, wrapping freely); each links to that tag's page.
@@ -74,7 +77,9 @@ These are the recurring building blocks; reuse them rather than inventing new on
   inverted (`strong` surface).
 - **Collection list** — the home page's main content, above the tag bar: one row per
   collection, in the author-defined order, with its title (linking to the
-  collection page), post count, and description. Hidden when there are no collections.
+  collection page), post count, and description. Hidden when there are no collections; a collection that would
+  show a reader **0 posts** (e.g. all its posts are private) is left out for
+  readers and shown to the signed-in author.
 - **Collection order list** — in collection management, a compact list of the
   collection titles in their current order. Each row has a drag handle and can
   be dragged to a new position; *move up* / *move down* buttons do the same

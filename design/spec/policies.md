@@ -11,6 +11,12 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
   counts. Draft protection is a security
   requirement, not a convenience.
 - Only the author, authenticated, may see drafts.
+- **Private posts are the author's alone.** A private post is readable only by
+  the authenticated author. To everyone else it must be indistinguishable from
+  a post that does not exist: its page is a 404, and it is left out of every
+  list and **every count** (tags, collections). A tag or collection whose only
+  posts are private is not shown to readers. This is the same security
+  requirement as draft protection.
 - Public listings are ordered newest-first by publication date.
 - The **publication date is author-editable** and is a label only — it never
   affects visibility. A published post with a future date is still public, and
@@ -49,7 +55,8 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 - A reply may only attach to a comment **on the same post**.
 
 ## 5.4 Comments
-- Comments may only be submitted on **published** posts.
+- Comments may only be submitted on **published** posts (not on drafts or
+  private posts).
 - Every new comment starts in the **pending** state and is invisible to the
   public until the author approves it. There is no auto-approval.
 - A commenter's **email is never exposed publicly** — it exists only for the

@@ -54,6 +54,10 @@ export default async function AdminPage() {
                     <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-900/40 dark:text-green-400">
                       Published
                     </span>
+                  ) : post.status === 'PRIVATE' ? (
+                    <span className="rounded-full bg-subtle px-2 py-0.5 text-muted">
+                      Private
+                    </span>
                   ) : (
                     <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
                       Draft
@@ -74,8 +78,8 @@ export default async function AdminPage() {
               </div>
 
               <div className="flex shrink-0 items-center gap-3 text-sm">
-                {/* A draft has no public page (it 404s), so only published posts get View. */}
-                {post.status === 'PUBLISHED' ? (
+                {/* A draft has no page (it 404s); published and private posts get View. */}
+                {post.status !== 'DRAFT' ? (
                   <Link
                     href={`/posts/${post.slug}`}
                     className="text-muted hover:underline"
