@@ -29,14 +29,14 @@ DESIGN = Path(__file__).resolve().parent
 ROOT = DESIGN.parent
 SCHEMA = ROOT / "apps" / "api" / "prisma" / "schema.prisma"
 
-# The four aggregate roots (see design/domain/). Also the models we expect
+# The three aggregate roots (see design/domain/). Also the models we expect
 # in the Prisma schema and the domain terms in the glossary's "Domain" category.
-AGGREGATES = ["Post", "Tag", "Collection", "Comment"]
+AGGREGATES = ["Post", "Tag", "Comment"]
 
 SCREENS = [
-    "01-home", "02-post-detail", "03-collection-detail", "04-tag-archive",
+    "01-home", "02-post-detail", "03-all-posts", "04-tag-archive",
     "07-admin-login", "08-post-dashboard", "09-new-post", "10-edit-post",
-    "11-comment-moderation", "12-collection-management",
+    "11-comment-moderation", "12-tag-management",
 ]
 
 QUIET = "-q" in sys.argv or "--quiet" in sys.argv
@@ -256,7 +256,7 @@ def check_api_spec(r: Report, prisma, gloss):
             f"expected OpenAPI 3.1, got {api['version']}")
 
     # each resource has a base path
-    for res in ("posts", "comments", "tags", "collections"):
+    for res in ("posts", "comments", "tags"):
         r.check(f"/{res}" in api["paths"],
                 f"path /{res} present",
                 f"path /{res} missing")

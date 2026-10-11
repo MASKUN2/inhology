@@ -51,10 +51,9 @@ Part of the [inhology specification](./README.md).
   Markdown — including uploaded images — before publishing.
 
 ## 4.2 Posts (Reader)
-- Browse published posts, newest first, **through a collection or a tag** — the
-  home page itself lists collections and tags, not posts. The author keeps a
-  rule-less collection (e.g. *All*) for the full list
-  ([§4.4](#44-collections)).
+- Browse published posts, newest first, **through a tag** or through the
+  **All** page, which lists every post — the home page itself lists tags, not
+  posts ([§4.3](#43-tags)).
 - Read a single published post by its slug.
 - Navigate from a post to any of its tags.
 - Reading time is shown when available.
@@ -64,34 +63,32 @@ Part of the [inhology specification](./README.md).
   author gets the full post.
 
 ## 4.3 Tags
-- The home page and every tag page carry a **tag bar**: all tags that have at least one
-  published post, each as a badge with its **post count**, ordered by count,
-  **highest first** (ties by name).
-- Selecting a tag shows the published posts carrying it, newest first; the tag
-  bar stays in place with the selected tag highlighted.
-- Tag counts and tag pages consider **published posts only**.
-- Former category addresses redirect to the matching tag page.
+- A tag has a **name**, an optional **description**, and a slug (its address).
+  It is created the first time a post uses it.
+- The **home page lists the home tags** — the tags the author chose to show
+  there — each with its name, post count and description, in the
+  **author-defined order**, followed by a fixed last row, **All**, that opens
+  the list of every post. The home page has **no post list of its own**.
+- The home page, the All page and every tag page carry a **tag bar**: all tags
+  that have at least one listed post, each as a badge with its **post count**,
+  ordered by count, **highest first** (ties by name).
+- Selecting a tag shows its name, its description, and the posts carrying it,
+  newest first; the tag bar stays in place with the selected tag highlighted.
+- Tag counts and tag pages cover published and private posts, never drafts
+  ([§5.1](./policies.md#51-content-visibility)).
+- Former category, series and collection addresses redirect to the matching tag
+  page (or to the All page where no tag matches).
 
-## 4.4 Collections
-- The **home page lists the collections** — each with its title, description, and
-  the number of posts it currently shows — above the tag bar. The home page has
-  **no post list of its own**; a collection with no rules (e.g. *All*) is the way
-  to every post.
-- Selecting a collection opens its page: title, description, its rules, and the
-  **list of published posts that satisfy them**, newest first.
-- A collection has a **title**, an optional **description**, and **zero or more
-  tag rules**. Each rule names a tag the post must carry. With several rules a
-  post must satisfy **all** of them; with **no rules the collection shows every
-  post**.
-- A collection never stores posts: a post enters or leaves it only by gaining or
-  losing tags ([§5.3](./policies.md#53-relationships--integrity)).
-- Author can create, edit (title, description, rules), and delete collections.
-  Rule tags are typed by name, like a post's tags.
-- Collections appear in an **author-defined order**. A new collection goes last;
-  the author **reorders them by drag and drop** in the admin (with move up / move
-  down controls as the non-pointer alternative), and the home page follows that
-  order at once ([§7.5](./ui-design.md#75-shared-ui-patterns)).
-- Former series addresses redirect to the collection of the same name.
+## 4.4 Tag management (Author)
+- The author can **edit a tag**: rename it, write or clear its description, and
+  switch **Show on the home page** on or off. Renaming keeps the tag's address.
+- A tag newly shown on the home page goes last. The author **reorders the home
+  tags by drag and drop** (with move up / move down controls as the non-pointer
+  alternative), and the home page follows that order at once
+  ([§7.5](./ui-design.md#75-shared-ui-patterns)).
+- The author can **delete a tag**, after confirming. It comes off every post
+  that carried it; no post is deleted
+  ([§5.3](./policies.md#53-relationships--integrity)).
 
 ## 4.5 Comments (Reader)
 - Submit a comment on a published post with: name (required), comment body

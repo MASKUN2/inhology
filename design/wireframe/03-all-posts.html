@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Work Recap · inhology</title>
+<title>All posts · inhology</title>
 <link rel="stylesheet" href="wireframe.css">
 </head>
 <body>
@@ -17,35 +17,41 @@
 <main class="wrap">
   <aside class="note">
     <a href="index.html">← UI screens</a>
-    <h3>This screen — Collection (<code>/collections/{slug}</code>)</h3>
+    <h3>This screen — All posts (<code>/posts</code>)</h3>
     <ul>
-      <li>Reached from the collection list on the home page (§4.4).</li>
-      <li>Shows the collection's title, description, and its rules as tag badges; with no rules it reads "All posts".</li>
-      <li>Lists the published posts that carry <strong>every</strong> rule tag, newest first. The collection stores no posts — a post appears here only because of its tags (§5.3).</li>
+      <li>Reached from the <em>All</em> row that ends the home tag list (§4.3).</li>
+      <li>Lists every published and private post, newest first, under the tag bar (§4.2).</li>
       <li>Private posts are listed for everyone with a <em>Private</em> badge in the meta row and no excerpt; only the signed-in author can open their body (§5.1, §7.5 Private badge).</li>
-      <li>When nothing matches: "No posts published yet."</li>
-      <li>Old <code>/series/{slug}</code> addresses redirect here.</li>
+      <li>When there is nothing: "No posts published yet."</li>
+      <li>Old <code>/collections/all</code> redirects here.</li>
     </ul>
   </aside>
 
   <a class="back" href="01-home.html">← Home</a>
-  <p class="eyebrow">Collection</p>
-  <h1>Work Recap</h1>
-  <p class="subtitle">What I built at work, period by period.</p>
-  <div class="rules"><span>2 posts tagged</span> <a class="badge" href="04-tag-archive.html">Work Recap</a> <a class="badge" href="04-tag-archive.html">Development</a></div>
+  <h1>All</h1>
+  <p class="subtitle">Every post, newest first.</p>
+  <p class="eyebrow">28 posts</p>
+
+  <nav class="tagbar" aria-label="Tags">
+    <a class="badge" href="04-tag-archive.html">Tech Article <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">Architecture <span class="count">7</span></a>
+    <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
+    <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
+    <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>
+  </nav>
 
   <div class="list">
     <article class="card">
       <div class="meta"><time datetime="2026-09-21">2026-09-21</time><span>· 10 min</span></div>
       <h2><a href="02-post-detail.html">Work Recap 2026-06 to 2026-09 : Rejoining the Company</a></h2>
       <p class="excerpt">After a career break I rejoined the company.</p>
-      <div class="tags"><a class="badge" href="04-tag-archive.html">Development</a> <a class="badge" href="04-tag-archive.html">Work Recap</a></div>
+      <div class="tags"><a class="badge" href="04-tag-archive.html">Work Recap</a></div>
     </article>
     <article class="card">
       <div class="meta"><span class="badge">Private</span><time datetime="2025-08-31">2025-08-31</time><span>· 20 min</span></div>
       <h2><a href="02-post-detail.html">Work Recap 2024-03 to 2025-08 : My First Developer Job at a Clinical-Trial Startup</a></h2>
       <p class="excerpt">Eighteen months as the only backend developer.</p>
-      <div class="tags"><a class="badge" href="04-tag-archive.html">Development</a> <a class="badge" href="04-tag-archive.html">Work Recap</a></div>
+      <div class="tags"><a class="badge" href="04-tag-archive.html">Work Recap</a></div>
     </article>
   </div>
 </main>

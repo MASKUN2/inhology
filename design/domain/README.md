@@ -5,12 +5,11 @@ persistence schema (`apps/api/prisma/schema.prisma`) and expresses the same
 intent as [`../spec/README.md` §3 Domain Concepts](../spec/README.md#3-domain-concepts)
 and the integrity rules in [`../spec/policies.md` §5.3](../spec/policies.md#53-relationships--integrity).
 
-There are **four aggregate roots** — each with an independent lifecycle and its
+There are **three aggregate roots** — each with an independent lifecycle and its
 own API resource — documented one per file:
 
 - [`post.md`](./post.md) — **Post** (the central aggregate)
 - [`tag.md`](./tag.md) — **Tag**
-- [`collection.md`](./collection.md) — **Collection**
 - [`comment.md`](./comment.md) — **Comment**
 
 ## Full ERD
@@ -18,7 +17,6 @@ own API resource — documented one per file:
 ```mermaid
 erDiagram
     POST     }o--o{ TAG : "tagged (many-to-many, zero or more)"
-    COLLECTION }o--o{ TAG : "rules (post must carry every one)"
     POST     ||--o{ COMMENT : "receives"
     COMMENT  |o--o{ COMMENT : "replies to (threaded)"
 
@@ -40,16 +38,9 @@ erDiagram
         string   id PK
         string   slug UK
         string   name
-        datetime createdAt
-    }
-    COLLECTION {
-        string   id PK
-        string   slug UK
-        string   title
         string   description "nullable"
-        int      position "author-defined order"
+        int      homePosition "nullable; null = not on the home page"
         datetime createdAt
-        datetime updatedAt
     }
     COMMENT {
         string        id PK
@@ -69,7 +60,6 @@ erDiagram
 | From | To | Cardinality | Notes |
 |---|---|---|---|
 | Post | Tag | 0..* — 0..* | Many-to-many via implicit join (`PostTags`). The only grouping of posts; a post needs no tag. |
-| Collection | Tag | 0..* — 0..* | Many-to-many via implicit join (`CollectionTags`). Each link is a **rule**; a collection's posts are computed (every rule tag present), never stored. |
 | Post | Comment | 1 — 0..* | `onDelete: Cascade` — deleting a post deletes its comments. |
 | Comment | Comment | 0..1 — 0..* | Self-relation (`CommentReplies`). A reply has one parent; `onDelete: Cascade` — deleting a parent deletes its replies. A reply must be on the **same post** as its parent. |
 

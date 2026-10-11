@@ -1,11 +1,11 @@
 'use client';
 
-// 컬렉션 순서 편집. 행을 끌어다 놓거나(HTML5 drag and drop) ↑↓ 버튼으로 옮기면 즉시
+// 홈 화면 태그 순서 편집. 행을 끌어다 놓거나(HTML5 drag and drop) ↑↓ 버튼으로 옮기면 즉시
 // 화면에 반영하고 서버 액션으로 저장한다. 실패하면 직전 순서로 되돌린다. 저장 후
 // router.refresh() 로 아래 편집 폼 목록도 새 순서로 다시 그린다.
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { reorderCollections } from '@/app/admin/actions';
+import { reorderHomeTags } from '@/app/admin/actions';
 
 type Item = { id: string; title: string };
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
@@ -17,18 +17,18 @@ function move(items: Item[], from: number, to: number): Item[] {
   return next;
 }
 
-export function CollectionOrder({ collections }: { collections: Item[] }) {
+export function HomeTagOrder({ tags }: { tags: Item[] }) {
   const router = useRouter();
-  const [items, setItems] = useState(collections);
+  const [items, setItems] = useState(tags);
   const [dragging, setDragging] = useState<number | null>(null);
   const [over, setOver] = useState<number | null>(null);
   const [state, setState] = useState<SaveState>('idle');
 
   // 서버에서 목록이 바뀌어 내려오면(추가·삭제·이름 변경) 그 목록을 따른다.
-  const [seen, setSeen] = useState(collections);
-  if (seen !== collections) {
-    setSeen(collections);
-    setItems(collections);
+  const [seen, setSeen] = useState(tags);
+  if (seen !== tags) {
+    setSeen(tags);
+    setItems(tags);
   }
 
   async function apply(from: number, to: number) {
@@ -37,7 +37,7 @@ export function CollectionOrder({ collections }: { collections: Item[] }) {
     const next = move(items, from, to);
     setItems(next);
     setState('saving');
-    const ok = await reorderCollections(next.map((item) => item.id));
+    const ok = await reorderHomeTags(next.map((item) => item.id));
     if (ok) {
       setState('saved');
       router.refresh();
@@ -61,7 +61,7 @@ export function CollectionOrder({ collections }: { collections: Item[] }) {
   return (
     <section aria-label="Order" className="mt-10">
       <div className="flex items-baseline justify-between">
-        <p className="text-sm text-muted">Order · drag to reorder</p>
+        <p className="text-sm text-muted">Home order · drag to reorder</p>
         <span
           className={`text-sm ${state === 'error' ? 'text-red-600' : 'text-muted'}`}
           aria-live="polite"

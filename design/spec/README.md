@@ -69,13 +69,10 @@ multi-author need is explicitly out of scope for this version.
 - **Post** — the central unit of content. A Markdown article with a title, a
   URL slug, optional summary, and a publication state. The aggregate everything
   else hangs off of.
-- **Tag** — the only way posts are grouped: a topic or collection label (e.g.
-  *Development*, *Work Recap*). A post carries **zero or more** tags; a tag spans
-  many posts. There are no categories and no series.
-- **Collection** — a titled, described view over the posts, defined by **tag
-  rules**. It holds no posts itself: it lists every published post that carries
-  **all** of its rule tags, and with **no rules it lists every post**. The home
-  page lists the collections.
+- **Tag** — the only way posts are grouped: a named label (e.g. *Work Recap*,
+  *Java*) with an optional **description**. A post carries **zero or more**
+  tags; a tag spans many posts. The author chooses which tags the **home page**
+  lists, and in what order. There are no categories, series or collections.
 - **Comment** — a reader's response attached to a published post. May reply to
   another comment (threaded). Always moderated.
 
@@ -110,8 +107,8 @@ The canonical, machine-readable glossary lives in
 | **Draft** | A post that has been saved but not published; private to the author. |
 | **Published** | A post visible to readers, with a publication timestamp. |
 | **Private** | A finished post whose body only the signed-in author can read; readers see its header only. |
-| **Slug** | The URL-safe identifier for a post, a tag, or a collection. |
-| **Collection rule** | One condition of a collection: the post must carry a given tag. |
+| **Slug** | The URL-safe identifier for a post or a tag. |
+| **Home tag** | A tag the author chose to show in the home page's main list, in an author-set order. |
 | **Pending** | A submitted comment awaiting the author's moderation. |
 | **Author** | The single privileged user (Inho). |
 | **Reader** | Any anonymous public visitor. |

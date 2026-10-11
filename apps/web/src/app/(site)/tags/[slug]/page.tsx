@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { HomeLink, PageShell } from '@/components/page';
 import { PostList } from '@/components/post-list';
 import { TagBar } from '@/components/tag-bar';
-import { getPostsByTag, getTag, getTags } from '@/lib/api';
+import { getPosts, getTag, getTags } from '@/lib/api';
 import { countPosts } from '@/lib/format';
 
 type Params = { params: Promise<{ slug: string }> };
@@ -11,7 +11,8 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const slug = decodeURIComponent((await params).slug);
   const tag = await getTag(slug);
-  return { title: tag ? tag.name : 'Tag not found' };
+  if (!tag) return { title: 'Tag not found' };
+  return { title: tag.name, description: tag.description ?? undefined };
 }
 
 export default async function TagPage({ params }: Params) {
@@ -19,7 +20,7 @@ export default async function TagPage({ params }: Params) {
   const tag = await getTag(slug);
   if (!tag) notFound();
 
-  const [posts, tags] = await Promise.all([getPostsByTag(slug), getTags()]);
+  const [posts, tags] = await Promise.all([getPosts(slug), getTags()]);
 
   return (
     <PageShell>
@@ -28,6 +29,9 @@ export default async function TagPage({ params }: Params) {
       <header className="mb-8 mt-8">
         <p className="text-sm text-muted">Tag</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">{tag.name}</h1>
+        {tag.description ? (
+          <p className="mt-2 text-muted">{tag.description}</p>
+        ) : null}
         <p className="mt-2 text-sm text-muted">{countPosts(posts.length)}</p>
       </header>
 

@@ -42,28 +42,14 @@ model Post {
 // ─── Tags ────────────────────────────────────────────────────────────────────
 
 model Tag {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  name      String
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  name         String
+  description  String?
+  homePosition Int? // place in the home page's tag list; null = not shown there
+  createdAt    DateTime @default(now())
 
-  posts       Post[]       @relation("PostTags")
-  collections Collection[] @relation("CollectionTags") // collections whose rules name this tag
-}
-
-// ─── Collections (titled views over the posts, defined by tag rules) ─────────
-
-model Collection {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  description String?
-  position    Int      @default(0) // author-defined order in collection lists
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // the rules: a post must carry every one of these tags; none = every post
-  tags Tag[] @relation("CollectionTags")
+  posts Post[] @relation("PostTags")
 }
 
 // ─── Comments (reader engagement, moderated) ─────────────────────────────────

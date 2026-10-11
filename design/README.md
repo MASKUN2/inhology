@@ -18,7 +18,7 @@ glossary  <-  spec  <-  domain  <-  api & wireframe
 |---|---|
 | [`glossary.csv`](./glossary.csv) | **Glossary** — the canonical, machine-readable list of domain terms (`term,korean,category,definition`). The `Domain` rows are the aggregate roots. |
 | [`spec/`](./spec/) | **Product specification** — purpose, actors, functional requirements, policies, non-functional requirements, and the visual-design system. [`spec/README.md`](./spec/README.md) is the entry point. **This is the source of truth for intent.** |
-| [`domain/`](./domain/) | **Domain model** — Mermaid ER diagrams: a full overview plus one file per aggregate root (Post, Tag, Collection, Comment). Derived from `apps/api/prisma/schema.prisma`. |
+| [`domain/`](./domain/) | **Domain model** — Mermaid ER diagrams: a full overview plus one file per aggregate root (Post, Tag, Comment). Derived from `apps/api/prisma/schema.prisma`. |
 | [`api/`](./api/) | **API contract** — [`api/openapi.yaml`](./api/openapi.yaml), an OpenAPI 3.1 description of all HTTP endpoints, auth, request/response schemas, and error codes, plus [`api/.spectral.yaml`](./api/.spectral.yaml) to lint it. Derived from `apps/api`. |
 | [`wireframe/`](./wireframe/) | **UI wireframes** — one bare-wireframe HTML file per user-facing screen (10 total) plus an [`index.html`](./wireframe/index.html) gallery, all sharing [`wireframe.css`](./wireframe/wireframe.css). Deliberately minimal (one hairline border, system font, one foreground/background pair, auto light/dark) — structure and copy only, with an `<aside class="note">` explanation on each screen. Derived from the Next.js pages. |
 | [`validate.py`](./validate.py) | **Design consistency linter** — checks the artifacts against each other and the Prisma schema. Stdlib only. |

@@ -7,21 +7,11 @@ export interface Tag {
   id: string;
   slug: string;
   name: string;
+  description: string | null;
+  /** Place in the home page's tag list; null when the tag is not shown there. */
+  homePosition: number | null;
   /** Listed (published or private) posts carrying the tag; present on tag endpoints. */
   _count?: { posts: number };
-}
-
-/** A titled view over the posts. `tags` are its rules: a post must carry every one. */
-export interface Collection {
-  id: string;
-  slug: string;
-  title: string;
-  description: string | null;
-  tags: Tag[];
-  /** Listed (published or private) posts currently satisfying the rules. */
-  postCount: number;
-  /** Present on the detail endpoint only. */
-  posts?: Post[];
 }
 
 /** Public, approved comment as returned on a post detail. */
@@ -103,9 +93,12 @@ async function load<T>(
   return found;
 }
 
-export async function getPostsByTag(slug: string): Promise<Post[]> {
-  // visible=true: the posts shown on the site (published and private, no drafts).
-  const qs = new URLSearchParams({ visible: 'true', tag: slug });
+/**
+ * The posts shown on the site (published and private, no drafts), newest
+ * first; with `tag`, only the ones carrying that tag.
+ */
+export async function getPosts(tag?: string): Promise<Post[]> {
+  const qs = new URLSearchParams({ visible: 'true', ...(tag && { tag }) });
   return load(`/posts?${qs}`, 'posts', await siteHeaders());
 }
 
@@ -128,23 +121,9 @@ export function getComments(status?: string): Promise<AdminComment[]> {
   return load(`/comments${qs}`, 'comments', adminHeaders());
 }
 
-/** Every tag with its published-post count, highest count first. */
+/** Every tag with its post count, highest count first. */
 export function getTags(): Promise<Tag[]> {
   return load('/tags', 'tags');
-}
-
-/** Every collection, in the author-defined order, with its rules and post count. */
-export function getCollections(): Promise<Collection[]> {
-  return load('/collections', 'collections');
-}
-
-/** One collection with the published posts that satisfy its rules. */
-export async function getCollection(slug: string): Promise<Collection | null> {
-  return find(
-    `/collections/${encodeURIComponent(slug)}`,
-    'collection',
-    await siteHeaders(),
-  );
 }
 
 export function getTag(slug: string): Promise<Tag | null> {

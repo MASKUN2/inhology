@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: >
     HTTP contract for the inhology backend (NestJS). A single-author personal
-    blog: posts, tags, collections, and moderated comments.
+    blog: posts, tags, and moderated comments.
 
     Auth: write/moderation endpoints require the internal shared admin token as
     an HTTP Bearer credential (`Authorization: Bearer <ADMIN_TOKEN>`). The API is
@@ -29,9 +29,7 @@ tags:
   - name: comments
     description: Reader comments and author moderation.
   - name: tags
-    description: The only grouping of posts — topic and collection labels.
-  - name: collections
-    description: Titled views over the posts, defined by tag rules.
+    description: The only grouping of posts — named, optionally described labels.
 
 security: []
 
@@ -302,7 +300,8 @@ paths:
         PRIVATE posts carrying it (never drafts) — ordered by that count
         descending, then by name. Tags with a
         count of 0 are included (the editor suggests them); readers' surfaces skip
-        them.
+        them. The home page's list is the tags whose `homePosition` is not null,
+        in that order.
       responses:
         '200':
           description: All tags
@@ -332,6 +331,35 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         '409': { $ref: '#/components/responses/Conflict' }
 
+  /tags/home-order:
+    patch:
+      tags: [tags]
+      summary: Reorder the home page's tags
+      operationId: reorderHomeTags
+      description: >
+        Sets the order of the tags shown on the home page. `ids` lists home tag
+        ids in the wanted order; a home tag left out keeps its relative order
+        after the listed ones. An id that is not a home tag is a 404. Returns
+        all tags, as the list operation does.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReorderHomeTags' }
+      responses:
+        '200':
+          description: All tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/TagWithCount' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
   /tags/{id}:
     parameters:
       - name: id
@@ -354,6 +382,10 @@ paths:
       tags: [tags]
       summary: Update a tag
       operationId: updateTag
+      description: >
+        Renaming does not change the slug unless `slug` is sent. `home: true`
+        puts the tag last in the home page's list (no change when it is already
+        there); `home: false` takes it off.
       security:
         - bearerAuth: []
       requestBody:
@@ -376,132 +408,6 @@ paths:
       summary: Delete a tag
       operationId: deleteTag
       description: Removes join rows only; posts are untouched.
-      security:
-        - bearerAuth: []
-      responses:
-        '204': { description: Deleted }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-
-  /collections:
-    get:
-      tags: [collections]
-      summary: List collections
-      operationId: listCollections
-      description: >
-        Every collection in the author-defined order (`position`), each with its rule `tags` and
-        `postCount` — the number of non-deleted PUBLISHED or PRIVATE posts that
-        carry every rule tag (all such posts when there are no rules).
-      responses:
-        '200':
-          description: All collections
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/Collection' }
-    post:
-      tags: [collections]
-      summary: Create a collection
-      operationId: createCollection
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/CreateCollection' }
-      responses:
-        '201':
-          description: Created collection
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Collection' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '409': { $ref: '#/components/responses/Conflict' }
-
-  /collections/order:
-    patch:
-      tags: [collections]
-      summary: Reorder collections
-      operationId: reorderCollections
-      description: >
-        Sets the author-defined order. `ids` lists collection ids in the wanted
-        order; any collection left out keeps its relative order after the listed
-        ones. Returns all collections in the new order.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/ReorderCollections' }
-      responses:
-        '200':
-          description: All collections, in the new order
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/Collection' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-
-  /collections/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        description: Collection id. The GET operation also resolves by slug.
-        schema: { type: string }
-    get:
-      tags: [collections]
-      summary: Get one collection
-      operationId: getCollection
-      security:
-        - {}
-        - bearerAuth: []
-      description: >
-        The collection with its rule `tags`, `postCount`, and its `posts`: the
-        PUBLISHED and PRIVATE posts that satisfy every rule, newest first, each
-        with `tags`. For anonymous callers each PRIVATE post comes locked (empty
-        `content`, null `excerpt`).
-      responses:
-        '200':
-          description: The collection
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/CollectionDetail' }
-        '404': { $ref: '#/components/responses/NotFound' }
-    patch:
-      tags: [collections]
-      summary: Update a collection
-      operationId: updateCollection
-      description: Changing the title re-derives the slug. `rules`, when sent, replaces the whole rule set.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateCollection' }
-      responses:
-        '200':
-          description: Updated collection
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Collection' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-    delete:
-      tags: [collections]
-      summary: Delete a collection
-      operationId: deleteCollection
-      description: Removes the collection and its rules only; posts and tags are untouched.
       security:
         - bearerAuth: []
       responses:
@@ -567,6 +473,11 @@ components:
         id: { type: string }
         slug: { type: string }
         name: { type: string }
+        description:
+          type: [string, 'null']
+        homePosition:
+          type: [integer, 'null']
+          description: 0-based place in the home page's tag list; null when the tag is not shown there.
         createdAt: { type: string, format: date-time }
     TagWithCount:
       allOf:
@@ -577,37 +488,6 @@ components:
               type: object
               properties:
                 posts: { type: integer }
-
-    Collection:
-      type: object
-      description: A titled view over the posts. `tags` are its rules.
-      required: [id, slug, title, position, tags, postCount, createdAt, updatedAt]
-      properties:
-        id: { type: string }
-        slug: { type: string }
-        title: { type: string }
-        description:
-          type: [string, 'null']
-        position:
-          type: integer
-          description: Place in the author-defined order (0-based).
-        tags:
-          type: array
-          description: The rule tags; a post must carry every one. Empty means every post.
-          items: { $ref: '#/components/schemas/Tag' }
-        postCount:
-          type: integer
-          description: Published posts currently satisfying the rules.
-        createdAt: { type: string, format: date-time }
-        updatedAt: { type: string, format: date-time }
-    CollectionDetail:
-      allOf:
-        - $ref: '#/components/schemas/Collection'
-        - type: object
-          properties:
-            posts:
-              type: array
-              items: { $ref: '#/components/schemas/Post' }
 
     Post:
       type: object
@@ -748,28 +628,25 @@ components:
       properties:
         status: { $ref: '#/components/schemas/CommentStatus' }
 
-    CreateCollection:
+    CreateTag:
       type: object
-      required: [title]
+      required: [name]
       properties:
-        title: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        slug: { type: string }
         description: { type: string }
-        rules:
-          type: array
-          items: { type: string, minLength: 1 }
-          description: Tag names, matched or created like a post's tags. Omitted means no rules.
-    UpdateCollection:
+    UpdateTag:
       type: object
       properties:
-        title: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        slug: { type: string }
         description:
           type: [string, 'null']
           description: null clears the description.
-        rules:
-          type: array
-          items: { type: string, minLength: 1 }
-          description: Replaces the whole rule set; omit to keep it.
-    ReorderCollections:
+        home:
+          type: boolean
+          description: Show the tag in the home page's list (true) or take it off (false).
+    ReorderHomeTags:
       type: object
       required: [ids]
       properties:
@@ -777,15 +654,4 @@ components:
           type: array
           uniqueItems: true
           items: { type: string }
-          description: Collection ids in the wanted order.
-    CreateTag:
-      type: object
-      required: [name]
-      properties:
-        name: { type: string, minLength: 1 }
-        slug: { type: string }
-    UpdateTag:
-      type: object
-      properties:
-        name: { type: string, minLength: 1 }
-        slug: { type: string }
+          description: Home tag ids in the wanted order.

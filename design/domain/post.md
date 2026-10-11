@@ -55,7 +55,7 @@ erDiagram
   ([§5.2](../spec/policies.md#52-identifiers)).
 - **A `PRIVATE` post is listed for everyone but readable by the admin only.** It
   counts and appears wherever a published post does (lists, tag counts,
-  collections, `GET /posts/{slug}`). To an anonymous caller it is returned
+  `GET /posts/{slug}`). To an anonymous caller it is returned
   **locked**: `content` is an empty string, `excerpt` is null and `comments` is
   empty; the rest of the header is intact. The admin gets it whole
   ([§5.1](../spec/policies.md#51-content-visibility)).

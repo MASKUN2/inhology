@@ -26,31 +26,31 @@
     <h3>This screen — Home / post list (<code>/</code>)</h3>
     <ul>
       <li>The entry screen: published posts, newest first.</li>
-      <li>Made of the site header (wordmark · Home · Admin menu) and, in the body, the collection list and the tag bar. There is no title banner: the header's wordmark is the only site title. There is no post list here: posts are reached through a collection or a tag (§4.2).</li>
-      <li>The collection list shows every collection, in the order the author set in the admin: title (opens the collection page), the number of posts it currently shows, and its description. A rule-less collection such as <em>All</em> lists every post. It is hidden when there are none (§4.4, §7.5 Collection list).</li>
+      <li>Made of the site header (wordmark · Home · Admin menu) and, in the body, the home tag list and the tag bar. There is no title banner: the header's wordmark is the only site title. There is no post list here: posts are reached through a tag or through <em>All</em> (§4.2).</li>
+      <li>The home tag list shows the tags the author put on the home page, in the order set in the admin: name (opens the tag page), post count, and description. Its fixed last row, <em>All</em>, opens the list of every post (§4.3, §7.5 Home tag list).</li>
       <li>The tag bar lists every tag that has published posts as a badge with its post count, highest count first; a badge opens that tag's page (§4.3, §7.5 Tag bar).</li>
       <li>Drafts are never shown or counted. Private posts are counted like published ones; only their body is withheld from readers (§5.1).</li>
     </ul>
   </aside>
 
-  <section class="collections" aria-label="Collections">
+  <section class="home-tags" aria-label="Home tags">
     <div class="item">
-      <div><a href="03-collection-detail.html">Work Recap</a><span class="count">2 posts</span></div>
+      <div><a href="04-tag-archive.html">Work Recap</a><span class="count">2 posts</span></div>
       <p>What I built at work, period by period.</p>
     </div>
     <div class="item">
-      <div><a href="03-collection-detail.html">What I Read</a><span class="count">5 posts</span></div>
+      <div><a href="04-tag-archive.html">What I Read</a><span class="count">5 posts</span></div>
       <p>Notes from the books and reference documentation I read.</p>
     </div>
     <div class="item">
-      <div><a href="03-collection-detail.html">All</a><span class="count">27 posts</span></div>
+      <div><a href="03-all-posts.html">All</a></div>
       <p>Every post, newest first.</p>
     </div>
   </section>
 
   <nav class="tagbar" aria-label="Tags">
-    <a class="badge" href="04-tag-archive.html">Development <span class="count">12</span></a>
-    <a class="badge" href="04-tag-archive.html">Essay <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">Tech Article <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">Architecture <span class="count">7</span></a>
     <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
     <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
     <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>

@@ -7,13 +7,12 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 ## 5.1 Content visibility
 - **Drafts are hidden.** A draft must never be readable,
   listed, or discoverable through any public surface — not on lists, not by
-  direct slug, not via tag pages, tag counts, collection pages or collection
-  counts. Draft protection is a security
+  direct slug, not via tag pages or tag counts. Draft protection is a security
   requirement, not a convenience.
 - Only the author, authenticated, may see drafts.
 - **A private post's body is the author's alone.** Readers may see a private
   post's **header only** — title, publication date, reading time and tags — in
-  lists, in tag and collection counts, and on its page. Its **body, excerpt and
+  lists, in tag counts, and on its page. Its **body, excerpt and
   comments are never sent to a reader**: the server leaves them out, it is not
   merely hidden by the page. Only the authenticated author receives them.
   Protecting a private body is the same security requirement as draft
@@ -33,19 +32,17 @@ These are the non-negotiable rules. They hold regardless of how the system is bu
 - A post's slug **can change when its title changes** (URL stability across edits
   is not guaranteed for now). A **tag** is matched by name (case-insensitively)
   or slug when typed on a post, so the same label never becomes two tags;
-  creating a tag with an existing slug directly is **rejected**. A **collection's**
-  slug is derived from its title and must be unique; a clash is **rejected**.
+  creating a tag with an existing slug directly is **rejected**. **Renaming a
+  tag keeps its slug**, so its address stays stable.
 
 ## 5.3 Relationships & integrity
 - A post has **zero or more tags**; none is required. Tags are the only grouping
   — there is no category and no series, and posts under a tag are ordered by
   publication date, not by an author-set position.
-- Collections have one **author-defined order**, shared by every surface that
-  lists them. Reordering changes nothing but that order.
-- A **collection** is a saved filter, not a container: it lists the published
-  posts carrying **every** one of its rule tags, and **all** published posts when
-  it has no rules. Deleting a collection deletes no post and no tag; deleting a
-  tag removes the rules that named it.
+- The **home tags** have one author-defined order. Putting a tag on the home
+  page, taking it off, or reordering changes nothing but the home page's list.
+- **Deleting a tag** removes it from every post that carried it and deletes no
+  post. It is not reversible, so it asks for confirmation first.
 - Removing a tag from a post never deletes the tag's other links; a tag left
   with no published posts simply stops being shown.
 - Deleting a post is a **soft delete**: the post and its comments are hidden from

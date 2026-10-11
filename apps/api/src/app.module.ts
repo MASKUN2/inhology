@@ -6,7 +6,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { PostsModule } from './posts/posts.module';
 import { TagsModule } from './tags/tags.module';
 import { CommentsModule } from './comments/comments.module';
-import { CollectionsModule } from './collections/collections.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { CollectionsModule } from './collections/collections.module';
     PrismaModule,
     PostsModule,
     TagsModule,
-    CollectionsModule,
     CommentsModule,
   ],
   controllers: [AppController],

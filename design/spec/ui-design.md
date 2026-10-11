@@ -73,21 +73,22 @@ These are the recurring building blocks; reuse them rather than inventing new on
 - **Tag badge** — a pill-shaped, subtle-background link showing a tag's name;
   the one visual for every tag everywhere. A post shows all of its tags as
   badges (zero or more, wrapping freely); each links to that tag's page.
-- **Tag bar** — on the home page and at the top of every tag page: all tags
-  with published posts as tag badges, each followed by its **post count**,
-  ordered by count descending. On a tag page the selected tag's badge is
-  inverted (`strong` surface).
-- **Collection list** — the home page's main content, above the tag bar: one row per
-  collection, in the author-defined order, with its title (linking to the
-  collection page), post count, and description. Hidden when there are no collections.
-- **Collection order list** — in collection management, a compact list of the
-  collection titles in their current order. Each row has a drag handle and can
-  be dragged to a new position; *move up* / *move down* buttons do the same
+- **Tag bar** — on the home page, the All page and at the top of every tag
+  page: all tags with listed posts as tag badges, each followed by its **post
+  count**, ordered by count descending. On a tag page the selected tag's badge
+  is inverted (`strong` surface).
+- **Home tag list** — the home page's main content, above the tag bar: one row
+  per home tag, in the author-defined order, with its name (linking to the tag
+  page), post count, and description; then a fixed last row, *All*, linking to
+  the list of every post.
+- **Home tag order list** — in tag management, a compact list of the home
+  tags' names in their current order. Each row has a drag handle and can be
+  dragged to a new position; *move up* / *move down* buttons do the same
   without a pointer. The new order is saved on drop, with no separate save
   step, and a quiet line reports *Saved* or a failure.
-- **Collection page** — eyebrow *Collection*, title, description, then its rules
-  as tag badges (*All posts* when it has none), then the usual post list.
-- **Tag input** — in the post editor and the collection form, one text field of comma-separated tag
+- **Tag page** — eyebrow *Tag*, the tag's name, its description when it has
+  one, the post count, the tag bar, then the usual post list.
+- **Tag input** — in the post editor, one text field of comma-separated tag
   names, with the existing tags listed beneath as badges that toggle a tag on
   or off.
 - **Primary button** — solid `strong` surface with inverted text; one per form.
@@ -110,7 +111,7 @@ These are the recurring building blocks; reuse them rather than inventing new on
   list with nothing to show still says so).
 - **Flash message** — a coloured, dismissible-feeling banner confirming an action
   (success) or reporting a problem (error), shown after a form submission.
-- **Confirm dialog** — a destructive action (deleting a post) never fires on the
+- **Confirm dialog** — a destructive action (deleting a post or a tag) never fires on the
   first click. It opens a small modal dialog asking the author to confirm; the
   dialog can be dismissed (cancel, escape, or clicking outside) without acting,
   and only the explicit confirm carries the action out. Used wherever a delete
@@ -123,8 +124,7 @@ These are the recurring building blocks; reuse them rather than inventing new on
 
 ## 7.6 Copy & microcopy
 - **All UI copy is English**, in a plain, friendly register. **User content and
-  data — post titles/bodies, comments, tag names, and collection titles and
-  descriptions — may be
+  data — post titles/bodies, comments, and tag names and descriptions — may be
   Korean or any language** and are shown exactly as authored; only the app's own
   chrome is translated. The brand name *inhology* is never translated.
 - **Dates are ISO by default** (`YYYY-MM-DD`, e.g. `2026-07-11`), both shown and

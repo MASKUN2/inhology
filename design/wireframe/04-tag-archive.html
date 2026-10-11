@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Development · inhology</title>
+<title>Tech Article · inhology</title>
 <link rel="stylesheet" href="wireframe.css">
 </head>
 <body>
@@ -19,21 +19,23 @@
     <a href="index.html">← UI screens</a>
     <h3>This screen — Tag archive (<code>/tags/{slug}</code>)</h3>
     <ul>
-      <li>Shows only published posts carrying one tag (§4.3).</li>
-      <li>Reached by selecting a badge in the tag bar or on a post. The title is the tag's name with its post count.</li>
+      <li>Shows the posts carrying one tag, newest first (§4.3).</li>
+      <li>Reached from the home tag list, a badge in the tag bar, or a badge on a post. The header is the tag's name, its description when it has one, and its post count (§7.5 Tag page).</li>
       <li>The tag bar stays, with the selected tag inverted (§7.5 Tag bar).</li>
-      <li>Old <code>/categories/{slug}</code> addresses redirect here.</li>
+      <li>Private posts are listed with a <em>Private</em> badge; only the signed-in author can open their body (§5.1).</li>
+      <li>Old <code>/categories/{slug}</code>, <code>/series/{slug}</code> and <code>/collections/{slug}</code> addresses redirect here.</li>
     </ul>
   </aside>
 
   <a class="back" href="01-home.html">← Home</a>
   <p class="eyebrow">Tag</p>
-  <h1>Development</h1>
-  <p class="eyebrow">12 posts</p>
+  <h1>Tech Article</h1>
+  <p class="subtitle">Standalone technical write-ups.</p>
+  <p class="eyebrow">8 posts</p>
 
   <nav class="tagbar" aria-label="Tags">
-    <a class="badge active" href="04-tag-archive.html">Development <span class="count">12</span></a>
-    <a class="badge" href="04-tag-archive.html">Essay <span class="count">8</span></a>
+    <a class="badge active" href="04-tag-archive.html">Tech Article <span class="count">8</span></a>
+    <a class="badge" href="04-tag-archive.html">Architecture <span class="count">7</span></a>
     <a class="badge" href="04-tag-archive.html">What I Read <span class="count">5</span></a>
     <a class="badge" href="04-tag-archive.html">Work Recap <span class="count">2</span></a>
     <a class="badge" href="04-tag-archive.html">Daily <span class="count">1</span></a>
@@ -44,7 +46,7 @@
       <div class="meta"><time datetime="2026-07-04">2026-07-04</time><span>· 6 min</span></div>
       <h2><a href="02-post-detail.html">본문 이미지 업로드를 MinIO로 옮긴 이야기</a></h2>
       <p class="excerpt">사이트 도메인 뒤로 객체 저장소를 숨기고, 이미지를 스트리밍으로 서빙하기.</p>
-      <div class="tags"><a class="badge" href="04-tag-archive.html">Development</a> <a class="badge" href="04-tag-archive.html">Work Recap</a> <a class="badge" href="04-tag-archive.html">MinIO</a></div>
+      <div class="tags"><a class="badge" href="04-tag-archive.html">Tech Article</a> <a class="badge" href="04-tag-archive.html">Architecture</a></div>
     </article>
   </div>
 </main>

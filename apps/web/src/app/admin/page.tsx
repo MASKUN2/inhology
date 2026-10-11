@@ -36,8 +36,8 @@ export default async function AdminPage() {
           <Link href="/" className="text-muted hover:underline">
             View site
           </Link>
-          <Link href="/admin/collections" className="text-muted hover:underline">
-            Collections
+          <Link href="/admin/tags" className="text-muted hover:underline">
+            Tags
           </Link>
           <Link href="/admin/comments" className="text-muted hover:underline">
             Comments

@@ -159,53 +159,49 @@ export async function deletePost(formData: FormData) {
 }
 
 /**
- * Create or update a collection. Branches on a hidden `id` like savePost:
- * present → PATCH, absent → POST. `rules` replaces the whole rule set.
+ * Edit a tag: its name, its description, and whether the home page lists it.
+ * An empty description clears it. The slug (the tag's address) stays as is.
  */
-export async function saveCollection(formData: FormData) {
+export async function saveTag(formData: FormData) {
   const token = await adminToken();
 
-  const id = text(formData, 'id').trim();
-  const description = text(formData, 'description').trim();
-  const payload: Record<string, unknown> = {
-    title: text(formData, 'title').trim(),
-    rules: splitTags(text(formData, 'rules')),
-  };
-  // On update an empty description clears it (null); on create it is just omitted.
-  if (id) payload.description = description || null;
-  else if (description) payload.description = description;
+  const id = text(formData, 'id');
+  if (!id) redirect('/admin/tags');
 
-  const res = id
-    ? await apiRequest(token, 'PATCH', `/collections/${id}`, payload)
-    : await apiRequest(token, 'POST', '/collections', payload);
+  const res = await apiRequest(token, 'PATCH', `/tags/${id}`, {
+    name: text(formData, 'name').trim(),
+    description: text(formData, 'description').trim() || null,
+    home: formData.get('home') === 'on',
+  });
 
-  redirect(res.ok ? '/admin/collections' : '/admin/collections?error=1');
+  redirect(res.ok ? '/admin/tags' : '/admin/tags?error=1');
 }
 
 /**
- * Save the collections' order. Called from the drag-and-drop list (not a form
- * submit), so it returns a result instead of redirecting.
+ * Save the order of the home page's tags. Called from the drag-and-drop list
+ * (not a form submit), so it returns a result instead of redirecting.
  */
-export async function reorderCollections(ids: string[]): Promise<boolean> {
+export async function reorderHomeTags(ids: string[]): Promise<boolean> {
   const token = await adminToken();
 
   try {
-    const res = await apiRequest(token, 'PATCH', '/collections/order', { ids });
+    const res = await apiRequest(token, 'PATCH', '/tags/home-order', { ids });
     return res.ok;
   } catch {
     return false;
   }
 }
 
-export async function deleteCollection(formData: FormData) {
+/** Delete a tag. It comes off every post that carried it; no post is deleted. */
+export async function deleteTag(formData: FormData) {
   const token = await adminToken();
 
   const id = text(formData, 'id');
-  if (!id) redirect('/admin/collections');
+  if (!id) redirect('/admin/tags');
 
-  await apiRequest(token, 'DELETE', `/collections/${id}`);
+  await apiRequest(token, 'DELETE', `/tags/${id}`);
 
-  redirect('/admin/collections');
+  redirect('/admin/tags');
 }
 
 export async function moderateComment(formData: FormData) {

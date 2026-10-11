@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AdminGuard } from '../auth/admin.guard';
 import { CreateTagDto } from './dto/create-tag.dto';
+import { ReorderHomeTagsDto } from './dto/reorder-home-tags.dto';
 import { TagsService } from './tags.service';
 import { UpdateTagDto } from './dto/update-tag.dto';
 
@@ -32,6 +33,13 @@ export class TagsController {
   @Get(':idOrSlug')
   findOne(@Param('idOrSlug') idOrSlug: string) {
     return this.tags.findOne(idOrSlug);
+  }
+
+  // Declared before ':id' so "home-order" is not taken for a tag id.
+  @Patch('home-order')
+  @UseGuards(AdminGuard)
+  reorderHome(@Body() dto: ReorderHomeTagsDto) {
+    return this.tags.reorderHome(dto.ids);
   }
 
   @Patch(':id')

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manage tags · inhology</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<main class="wrap">
+  <aside class="note">
+    <a href="index.html">← UI screens</a>
+    <h3>This screen — Tag management (<code>/admin/tags</code>)</h3>
+    <ul>
+      <li>The author edits and deletes tags and controls the home page's tag list (§4.4). There is no create form: a tag is created the first time a post uses it.</li>
+      <li>A <strong>Home order</strong> list of the home tags' names: drag a row by its handle, or use the up/down buttons, to change the order shown on the home page. It saves on drop. It appears when two or more tags are on the home page (§7.5 Home tag order list).</li>
+      <li>Below, every tag is its own form: a link to its public page with <code>N posts</code>, name (required), description (optional), a <em>Show on the home page</em> checkbox, and Save · Delete.</li>
+      <li>Delete opens a confirm dialog first; the tag then comes off every post that carried it, and no post is deleted (§5.3, §7.5 Confirm dialog).</li>
+      <li>When there are none: "No tags yet. A tag is created the first time a post uses it."</li>
+    </ul>
+  </aside>
+
+  <div class="toolbar">
+    <h1>Manage tags</h1>
+    <div class="actions"><a href="08-post-dashboard.html">← Manage posts</a></div>
+  </div>
+
+  <section aria-label="Order" style="margin-top:2rem">
+    <p class="eyebrow">Home order · drag to reorder</p>
+    <div class="item"><div>⠿ Work Recap</div><div class="ops"><button type="button" aria-label="Move up" disabled>↑</button><button type="button" aria-label="Move down">↓</button></div></div>
+    <div class="item"><div>⠿ What I Read</div><div class="ops"><button type="button" aria-label="Move up">↑</button><button type="button" aria-label="Move down" disabled>↓</button></div></div>
+  </section>
+
+  <form class="form">
+    <div><a href="04-tag-archive.html">Work Recap</a> <span class="count">2 posts</span></div>
+    <input value="Work Recap" required>
+    <input value="What I built at work, period by period.">
+    <label><input type="checkbox" checked> Show on the home page</label>
+    <div class="row"><button class="btn" type="button">Save</button><button type="button">Delete</button></div>
+  </form>
+
+  <form class="form">
+    <div><a href="04-tag-archive.html">Java</a> <span class="count">6 posts</span></div>
+    <input value="Java" required>
+    <input placeholder="Description (optional)">
+    <label><input type="checkbox"> Show on the home page</label>
+    <div class="row"><button class="btn" type="button">Save</button><button type="button">Delete</button></div>
+  </form>
+
+  <p class="help">A tag is created the first time a post uses it. Renaming a tag keeps its address. Deleting a tag takes it off its posts; no post is deleted.</p>
+</main>
+</body>
+</html>

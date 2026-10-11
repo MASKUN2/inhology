@@ -9,4 +9,8 @@ export class CreateTagDto {
   @IsOptional()
   @IsString()
   slug?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
 }
