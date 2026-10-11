@@ -102,6 +102,28 @@ body {
   background: transparent;
   padding: 0;
 }
+/* Tables (GFM): a visible grid. `display: block` lets a table wider than the
+   reading column scroll inside its own box instead of stretching the page. */
+.markdown table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+.markdown th,
+.markdown td {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+.markdown th {
+  background: var(--subtle);
+  font-weight: 600;
+}
 
 /* ── 코드 syntax 하이라이팅 (rehype-highlight/hljs). GitHub 스타일, 배경은 위 pre 를 그대로 사용.
    라이트 기본값 + 다크는 prefers-color-scheme 로 스왑. ── */

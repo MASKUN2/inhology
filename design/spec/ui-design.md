@@ -58,6 +58,10 @@ These are the recurring building blocks; reuse them rather than inventing new on
 
 - **Meta row** — a small, muted line carrying *publish date · reading time
   (N분)*. Reading time appears only when present.
+- **Content table** — a table in rendered Markdown has a visible grid: a hairline
+  border around every cell, a subtle-background header row, and comfortable
+  cell padding. A table wider than the reading column scrolls horizontally
+  inside its own box instead of stretching the page.
 - **Tag badge** — a pill-shaped, subtle-background link showing a tag's name;
   the one visual for every tag everywhere. A post shows all of its tags as
   badges (zero or more, wrapping freely); each links to that tag's page.
